@@ -40,7 +40,7 @@
     <properties>
         <componentName>gismap</componentName>
         <jiraProjectName>GISMAP</jiraProjectName>
-        <jiraComponentId></jiraComponentId>
+        <jiraComponentId>12932</jiraComponentId>
     </properties>
 
     <scm>
