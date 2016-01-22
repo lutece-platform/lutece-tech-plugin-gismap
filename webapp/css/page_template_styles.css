@@ -1,0 +1,22 @@
+/******************************************
+/* SPECIFIC LUTECE DEFAULT THEME STYLES   *
+******************************************/
+/* CORE STYLES */
+/* Fix for fixed-nav-bar*/
+body{padding-top:60px;}
+
+.container{min-height:600px;}
+
+/* img list styles */
+img.thumblist-mini{width:24px;height:24px;}
+img.thumblist-small{width:32px;height:32px;}
+img.thumblist-medium{width:64px;height:64px;}
+img.thumblist-large{width:128px;height:128px;}
+/* END CORE STYLES */
+
+/* avatar default styles */
+.avatar{margin:2px; border:1px solid #000;padding:2px;margin-right:10px; }
+.avatar-mini{width:18px;height:18px;}
+.avatar-small{width:32px;height:32px;}
+.avatar-large{width:64px;height:64px;}
+.avatar-huge{width:128px;height:128px;}
