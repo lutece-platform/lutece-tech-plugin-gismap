@@ -1,0 +1,13 @@
+<#include "managegismap_tabs.html" />
+<@tabs tab="view" />
+
+<@rowBoxHeader i18nTitleKey="gismap.create_view.pageTitle">
+    <form class="form-horizontal" method="post" name="create_view" action="jsp/admin/plugins/gismap/ManageViews.jsp">
+        <@messages errors=errors />
+        <input type="hidden" id="id" name="id"/>
+        
+        <@fieldInputText i18nLabelKey="gismap.create_view.labelServerName" inputName="servername"  value="${view.serverName!''}" i18nHelpBlockKey="gismap.create_view.labelServerName.help" />
+        <@actionButtons button1Name="action_createView" button2Name="view_manageViews"/>
+    </form>
+</@rowBoxHeader>
+

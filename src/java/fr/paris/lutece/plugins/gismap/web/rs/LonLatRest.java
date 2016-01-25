@@ -33,8 +33,8 @@
  */
 package fr.paris.lutece.plugins.gismap.web.rs;
 
-import fr.paris.lutece.plugins.gismap.business.HtmlView;
-import fr.paris.lutece.plugins.gismap.business.ViewHome;
+import fr.paris.lutece.plugins.gismap.business.LonLat;
+import fr.paris.lutece.plugins.gismap.business.LonLatHome;
 import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.plugins.rest.util.json.JSONUtil;
 import fr.paris.lutece.plugins.rest.util.xml.XMLUtil;
@@ -61,30 +61,30 @@ import javax.ws.rs.core.Response;
  * Page resource
  */
  
-@Path( RestConstants.BASE_PATH + Constants.PLUGIN_PATH + Constants.VIEW_PATH )
-public class ViewRest
+@Path( RestConstants.BASE_PATH + Constants.PLUGIN_PATH + Constants.LONLAT_PATH )
+public class LonLatRest
 {
-    private static final String KEY_VIEWS = "views";
-    private static final String KEY_VIEW = "view";
+    private static final String KEY_LONLATS = "lonlats";
+    private static final String KEY_LONLAT = "lonlat";
     
     private static final String KEY_ID = "id";
-    private static final String KEY_SERVERNAME = "servername";
+    private static final String KEY_LONGITUDE = "longitude";
     
     @GET
     @Path( Constants.ALL_PATH )
-    public Response getViews( @HeaderParam(HttpHeaders.ACCEPT) String accept , @QueryParam( Constants.FORMAT_QUERY ) String format ) throws IOException
+    public Response getLonLats( @HeaderParam(HttpHeaders.ACCEPT) String accept , @QueryParam( Constants.FORMAT_QUERY ) String format ) throws IOException
     {
         String entity;
         String mediaType;
         
         if ( (accept != null && accept.contains(MediaType.APPLICATION_JSON)) || (format != null && format.equals(Constants.MEDIA_TYPE_JSON)) )
         {
-            entity = getViewsJson();
+            entity = getLonLatsJson();
             mediaType = MediaType.APPLICATION_JSON;
         }
         else
         {
-            entity = getViewsXml();
+            entity = getLonLatsXml();
             mediaType = MediaType.APPLICATION_XML;
         }
         return Response
@@ -96,19 +96,19 @@ public class ViewRest
      * Gets all resources list in XML format
      * @return The list
      */
-    public String getViewsXml( )
+    public String getLonLatsXml( )
     {
         StringBuffer sbXML = new StringBuffer( XmlUtil.getXmlHeader() );
-        Collection<HtmlView> list = ViewHome.getViewsList();
+        Collection<LonLat> list = LonLatHome.getLonLatsList();
         
-        XmlUtil.beginElement( sbXML , KEY_VIEWS );
+        XmlUtil.beginElement( sbXML , KEY_LONLATS );
 
-        for ( HtmlView view : list )
+        for ( LonLat lonlat : list )
         {
-            addViewXml( sbXML, view );
+            addLonLatXml( sbXML, lonlat );
         }
         
-        XmlUtil.endElement( sbXML , KEY_VIEWS );
+        XmlUtil.endElement( sbXML , KEY_LONLATS );
 
         return sbXML.toString(  );
     }
@@ -117,38 +117,38 @@ public class ViewRest
      * Gets all resources list in JSON format
      * @return The list
      */
-    public String getViewsJson( )
+    public String getLonLatsJson( )
     {
-        JSONObject jsonView = new JSONObject(  );
+        JSONObject jsonLonLat = new JSONObject(  );
         JSONObject json = new JSONObject(  );
         
-        Collection<HtmlView> list = ViewHome.getViewsList();
+        Collection<LonLat> list = LonLatHome.getLonLatsList();
         
-        for ( HtmlView view : list )
+        for ( LonLat lonlat : list )
         {
-            addViewJson( jsonView, view );
+            addLonLatJson( jsonLonLat, lonlat );
         }
         
-        json.accumulate( KEY_VIEWS, jsonView );
+        json.accumulate( KEY_LONLATS, jsonLonLat );
         
         return json.toString( );
     }
     
     @GET
     @Path( "{" + Constants.ID_PATH + "}" )
-    public Response getView( @PathParam( Constants.ID_PATH ) String strId, @HeaderParam(HttpHeaders.ACCEPT) String accept , @QueryParam( Constants.FORMAT_QUERY ) String format ) throws IOException
+    public Response getLonLat( @PathParam( Constants.ID_PATH ) String strId, @HeaderParam(HttpHeaders.ACCEPT) String accept , @QueryParam( Constants.FORMAT_QUERY ) String format ) throws IOException
     {
         String entity;
         String mediaType;
         
         if ( (accept != null && accept.contains(MediaType.APPLICATION_JSON)) || (format != null && format.equals(Constants.MEDIA_TYPE_JSON)) )
         {
-            entity = getViewJson( strId );
+            entity = getLonLatJson( strId );
             mediaType = MediaType.APPLICATION_JSON;
         }
         else
         {
-            entity = getViewXml( strId );
+            entity = getLonLatXml( strId );
             mediaType = MediaType.APPLICATION_XML;
         }
         return Response
@@ -161,28 +161,28 @@ public class ViewRest
      * @param strId The resource ID
      * @return The XML output
      */
-    public String getViewXml( String strId )
+    public String getLonLatXml( String strId )
     {
         StringBuffer sbXML = new StringBuffer(  );
         
         try
         {
             int nId = Integer.parseInt( strId );
-            HtmlView view = ViewHome.findByPrimaryKey( nId );
+            LonLat lonlat = LonLatHome.findByPrimaryKey( nId );
 
-            if ( view != null )
+            if ( lonlat != null )
             {
                 sbXML.append( "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" );
-                addViewXml( sbXML, view );
+                addLonLatXml( sbXML, lonlat );
             }
         }
         catch ( NumberFormatException e )
         {
-            sbXML.append( XMLUtil.formatError( "Invalid view number", 3 ) );
+            sbXML.append( XMLUtil.formatError( "Invalid lonlat number", 3 ) );
         }
         catch ( Exception e )
         {
-            sbXML.append( XMLUtil.formatError( "View not found", 1 ) );
+            sbXML.append( XMLUtil.formatError( "LonLat not found", 1 ) );
         }
 
         return sbXML.toString(  );
@@ -193,7 +193,7 @@ public class ViewRest
      * @param strId The resource ID
      * @return The JSON output
      */
-    public String getViewJson( String strId )
+    public String getLonLatJson( String strId )
     {
         JSONObject json = new JSONObject(  );
         String strJson = "";
@@ -201,21 +201,21 @@ public class ViewRest
         try
         {
             int nId = Integer.parseInt( strId );
-            HtmlView view = ViewHome.findByPrimaryKey( nId );
+            LonLat lonlat = LonLatHome.findByPrimaryKey( nId );
 
-            if ( view != null )
+            if ( lonlat != null )
             {
-                addViewJson( json, view );
+                addLonLatJson( json, lonlat );
                 strJson = json.toString( );
             }
         }
         catch ( NumberFormatException e )
         {
-            strJson = JSONUtil.formatError( "Invalid view number", 3 );
+            strJson = JSONUtil.formatError( "Invalid lonlat number", 3 );
         }
         catch ( Exception e )
         {
-            strJson = JSONUtil.formatError( "View not found", 1 );
+            strJson = JSONUtil.formatError( "LonLat not found", 1 );
         }
 
         return strJson;
@@ -223,75 +223,75 @@ public class ViewRest
     
     @DELETE
     @Path( "{" + Constants.ID_PATH + "}" )
-    public Response deleteView( @PathParam( Constants.ID_PATH ) String strId, @HeaderParam(HttpHeaders.ACCEPT) String accept, @QueryParam( Constants.FORMAT_QUERY ) String format ) throws IOException
+    public Response deleteLonLat( @PathParam( Constants.ID_PATH ) String strId, @HeaderParam(HttpHeaders.ACCEPT) String accept, @QueryParam( Constants.FORMAT_QUERY ) String format ) throws IOException
     {
         try
         {
             int nId = Integer.parseInt( strId );
             
-            if ( ViewHome.findByPrimaryKey( nId ) != null )
+            if ( LonLatHome.findByPrimaryKey( nId ) != null )
             {
-                ViewHome.remove( nId );
+                LonLatHome.remove( nId );
             }
         }
         catch ( NumberFormatException e )
         {
-            AppLogService.error( "Invalid view number" );
+            AppLogService.error( "Invalid lonlat number" );
         }
-        return getViews(accept, format);
+        return getLonLats(accept, format);
     }
     
     @POST
-    public Response createView(
+    public Response createLonLat(
     @FormParam( KEY_ID ) String id,
-    @FormParam( "servername" ) String servername, 
+    @FormParam( "longitude" ) String longitude, 
     @HeaderParam(HttpHeaders.ACCEPT) String accept, @QueryParam( Constants.FORMAT_QUERY ) String format) throws IOException
     {
         if( id != null )
         {
             int nId = Integer.parseInt( KEY_ID );
 
-            HtmlView view = ViewHome.findByPrimaryKey( nId );
+            LonLat lonlat = LonLatHome.findByPrimaryKey( nId );
 
-            if ( view != null )
+            if ( lonlat != null )
             {
-                view.setServerName( servername );
-                ViewHome.update( view );
+                lonlat.setLongitude( Integer.parseInt( longitude ) );
+                LonLatHome.update( lonlat );
             }
         }
         else
         {
-            HtmlView view = new HtmlView( );
+            LonLat lonlat = new LonLat( );
             
-            view.setServerName( servername );
-            ViewHome.create( view );
+            lonlat.setLongitude( Integer.parseInt( longitude ) );
+            LonLatHome.create( lonlat );
         }
-        return getViews(accept, format);
+        return getLonLats(accept, format);
     }
     
     /**
-     * Write a view into a buffer
+     * Write a lonlat into a buffer
      * @param sbXML The buffer
-     * @param view The view
+     * @param lonlat The lonlat
      */
-    private void addViewXml( StringBuffer sbXML, HtmlView view )
+    private void addLonLatXml( StringBuffer sbXML, LonLat lonlat )
     {
-        XmlUtil.beginElement( sbXML, KEY_VIEW );
-        XmlUtil.addElement( sbXML, KEY_ID , view.getId( ) );
-        XmlUtil.addElement( sbXML, KEY_SERVERNAME , view.getServerName( ) );
-        XmlUtil.endElement( sbXML, KEY_VIEW );
+        XmlUtil.beginElement( sbXML, KEY_LONLAT );
+        XmlUtil.addElement( sbXML, KEY_ID , lonlat.getId( ) );
+        XmlUtil.addElement( sbXML, KEY_LONGITUDE , lonlat.getLongitude( ) );
+        XmlUtil.endElement( sbXML, KEY_LONLAT );
     }
     
     /**
-     * Write a view into a JSON Object
+     * Write a lonlat into a JSON Object
      * @param json The JSON Object
-     * @param view The view
+     * @param lonlat The lonlat
      */
-    private void addViewJson( JSONObject json, HtmlView view )
+    private void addLonLatJson( JSONObject json, LonLat lonlat )
     {
-        JSONObject jsonView = new JSONObject(  );
-        jsonView.accumulate( KEY_ID , view.getId( ) );
-        jsonView.accumulate( KEY_SERVERNAME, view.getServerName( ) );
-        json.accumulate( KEY_VIEW, jsonView );
+        JSONObject jsonLonLat = new JSONObject(  );
+        jsonLonLat.accumulate( KEY_ID , lonlat.getId( ) );
+        jsonLonLat.accumulate( KEY_LONGITUDE, lonlat.getLongitude( ) );
+        json.accumulate( KEY_LONLAT, jsonLonLat );
     }
 }

@@ -30,43 +30,57 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * License 1.0
- */
-
+ */ 
 package fr.paris.lutece.plugins.gismap.business;
 
-import fr.paris.lutece.test.LuteceTestCase;
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.*;
 
 
-public class ViewBusinessTest extends LuteceTestCase
+/**
+ * This is the business class for the object View
+ */ 
+public class HtmlView
 {
-    private final static String SERVERNAME1 = "ServerName1";
-    private final static String SERVERNAME2 = "ServerName2";
+    // Variables declarations 
+    private int _nId;
+    
+    @Size( max = 50 , message = "#i18n{gismap.validation.view.ServerName.size}" ) 
+    private String _strServerName;
 
-    public void testBusiness(  )
+    /**
+     * Returns the Id
+     * @return The Id
+     */
+    public int getId( )
     {
-        // Initialize an object
-        HtmlView view = new HtmlView();
-        view.setServerName( SERVERNAME1 );
-
-        // Create test
-        ViewHome.create( view );
-        HtmlView viewStored = ViewHome.findByPrimaryKey( view.getId( ) );
-        assertEquals( viewStored.getServerName() , view.getServerName( ) );
-
-        // Update test
-        view.setServerName( SERVERNAME2 );
-        ViewHome.update( view );
-        viewStored = ViewHome.findByPrimaryKey( view.getId( ) );
-        assertEquals( viewStored.getServerName() , view.getServerName( ) );
-
-        // List test
-        ViewHome.getViewsList();
-
-        // Delete test
-        ViewHome.remove( view.getId( ) );
-        viewStored = ViewHome.findByPrimaryKey( view.getId( ) );
-        assertNull( viewStored );
-        
+        return _nId;
     }
 
+    /**
+     * Sets the Id
+     * @param nId The Id
+     */ 
+    public void setId( int nId )
+    {
+        _nId = nId;
+    }
+
+    /**
+     * Returns the ServerName
+     * @return The ServerName
+     */
+    public String getServerName( )
+    {
+        return _strServerName;
+    }
+
+    /**
+     * Sets the ServerName
+     * @param strServerName The ServerName
+     */ 
+    public void setServerName( String strServerName )
+    {
+        _strServerName = strServerName;
+    }
 }

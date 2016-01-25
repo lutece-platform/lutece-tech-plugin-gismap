@@ -30,57 +30,43 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * License 1.0
- */ 
+ */
+
 package fr.paris.lutece.plugins.gismap.business;
 
-import javax.validation.constraints.*;
-import org.hibernate.validator.constraints.*;
+import fr.paris.lutece.test.LuteceTestCase;
 
 
-/**
- * This is the business class for the object View
- */ 
-public class View
+public class LonLatBusinessTest extends LuteceTestCase
 {
-    // Variables declarations 
-    private int _nId;
-    
-    @Size( max = 50 , message = "#i18n{gismap.validation.view.ServerName.size}" ) 
-    private String _strServerName;
+    private final static int LONGITUDE1 = 1;
+    private final static int LONGITUDE2 = 2;
 
-    /**
-     * Returns the Id
-     * @return The Id
-     */
-    public int getId( )
+    public void testBusiness(  )
     {
-        return _nId;
+        // Initialize an object
+        LonLat lonLat = new LonLat();
+        lonLat.setLongitude( LONGITUDE1 );
+
+        // Create test
+        LonLatHome.create( lonLat );
+        LonLat lonLatStored = LonLatHome.findByPrimaryKey( lonLat.getId( ) );
+        assertEquals( lonLatStored.getLongitude() , lonLat.getLongitude( ) );
+
+        // Update test
+        lonLat.setLongitude( LONGITUDE2 );
+        LonLatHome.update( lonLat );
+        lonLatStored = LonLatHome.findByPrimaryKey( lonLat.getId( ) );
+        assertEquals( lonLatStored.getLongitude() , lonLat.getLongitude( ) );
+
+        // List test
+        LonLatHome.getLonLatsList();
+
+        // Delete test
+        LonLatHome.remove( lonLat.getId( ) );
+        lonLatStored = LonLatHome.findByPrimaryKey( lonLat.getId( ) );
+        assertNull( lonLatStored );
+        
     }
 
-    /**
-     * Sets the Id
-     * @param nId The Id
-     */ 
-    public void setId( int nId )
-    {
-        _nId = nId;
-    }
-
-    /**
-     * Returns the ServerName
-     * @return The ServerName
-     */
-    public String getServerName( )
-    {
-        return _strServerName;
-    }
-
-    /**
-     * Sets the ServerName
-     * @param strServerName The ServerName
-     */ 
-    public void setServerName( String strServerName )
-    {
-        _strServerName = strServerName;
-    }
 }

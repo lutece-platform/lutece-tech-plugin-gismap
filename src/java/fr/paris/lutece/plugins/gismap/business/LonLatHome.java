@@ -40,50 +40,50 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 import java.util.Collection;
 
 /**
- * This class provides instances management methods (create, find, ...) for View objects
+ * This class provides instances management methods (create, find, ...) for LonLat objects
  */
 
-public final class ViewHome
+public final class LonLatHome
 {
     // Static variable pointed at the DAO instance
 
-    private static IViewDAO _dao = SpringContextService.getBean( "gismap.viewDAO" );
+    private static ILonLatDAO _dao = SpringContextService.getBean( "gismap.lonLatDAO" );
     private static Plugin _plugin = PluginService.getPlugin( "gismap" );
 
     /**
      * Private constructor - this class need not be instantiated
      */
-    private ViewHome(  )
+    private LonLatHome(  )
     {
     }
 
     /**
-     * Create an instance of the view class
-     * @param view The instance of the View which contains the informations to store
-     * @return The  instance of view which has been created with its primary key.
+     * Create an instance of the lonLat class
+     * @param lonLat The instance of the LonLat which contains the informations to store
+     * @return The  instance of lonLat which has been created with its primary key.
      */
-    public static HtmlView create( HtmlView view )
+    public static LonLat create( LonLat lonLat )
     {
-        _dao.insert( view, _plugin );
+        _dao.insert( lonLat, _plugin );
 
-        return view;
+        return lonLat;
     }
 
     /**
-     * Update of the view which is specified in parameter
-     * @param view The instance of the View which contains the data to store
-     * @return The instance of the  view which has been updated
+     * Update of the lonLat which is specified in parameter
+     * @param lonLat The instance of the LonLat which contains the data to store
+     * @return The instance of the  lonLat which has been updated
      */
-    public static HtmlView update( HtmlView view )
+    public static LonLat update( LonLat lonLat )
     {
-        _dao.store( view, _plugin );
+        _dao.store( lonLat, _plugin );
 
-        return view;
+        return lonLat;
     }
 
     /**
-     * Remove the view whose identifier is specified in parameter
-     * @param nKey The view Id
+     * Remove the lonLat whose identifier is specified in parameter
+     * @param nKey The lonLat Id
      */
     public static void remove( int nKey )
     {
@@ -94,31 +94,31 @@ public final class ViewHome
     // Finders
 
     /**
-     * Returns an instance of a view whose identifier is specified in parameter
-     * @param nKey The view primary key
-     * @return an instance of View
+     * Returns an instance of a lonLat whose identifier is specified in parameter
+     * @param nKey The lonLat primary key
+     * @return an instance of LonLat
      */
-    public static HtmlView findByPrimaryKey( int nKey )
+    public static LonLat findByPrimaryKey( int nKey )
     {
         return _dao.load( nKey, _plugin);
     }
 
     /**
-     * Load the data of all the view objects and returns them in form of a collection
-     * @return the collection which contains the data of all the view objects
+     * Load the data of all the lonLat objects and returns them in form of a collection
+     * @return the collection which contains the data of all the lonLat objects
      */
-    public static Collection<HtmlView> getViewsList( )
+    public static Collection<LonLat> getLonLatsList( )
     {
-        return _dao.selectViewsList( _plugin );
+        return _dao.selectLonLatsList( _plugin );
     }
     
     /**
-     * Load the id of all the view objects and returns them in form of a collection
-     * @return the collection which contains the id of all the view objects
+     * Load the id of all the lonLat objects and returns them in form of a collection
+     * @return the collection which contains the id of all the lonLat objects
      */
-    public static Collection<Integer> getIdViewsList( )
+    public static Collection<Integer> getIdLonLatsList( )
     {
-        return _dao.selectIdViewsList( _plugin );
+        return _dao.selectIdLonLatsList( _plugin );
     }
 }
 

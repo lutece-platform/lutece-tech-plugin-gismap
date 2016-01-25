@@ -31,42 +31,48 @@
  *
  * License 1.0
  */
+package fr.paris.lutece.plugins.gismap.business.portlet;
 
-package fr.paris.lutece.plugins.gismap.business;
+import fr.paris.lutece.portal.business.portlet.IPortletInterfaceDAO;
+import fr.paris.lutece.portal.business.portlet.Portlet;
 
-import fr.paris.lutece.test.LuteceTestCase;
 
-
-public class ViewBusinessTest extends LuteceTestCase
+/**
+ *
+ * @author 
+ */
+public interface IGismapPortletDAO extends IPortletInterfaceDAO
 {
-    private final static String SERVERNAME1 = "ServerName1";
-    private final static String SERVERNAME2 = "ServerName2";
+    /**
+     * Delete record from table
+     *
+     *
+     * @param nPortletId The indentifier of the Portlet
+     */
+    void delete( int nPortletId );
 
-    public void testBusiness(  )
-    {
-        // Initialize an object
-        HtmlView view = new HtmlView();
-        view.setServerName( SERVERNAME1 );
+    /**
+     * Insert a new record in the table.
+     *
+     *
+     * @param portlet The Instance of the Portlet
+     */
+    void insert( Portlet portlet );
 
-        // Create test
-        ViewHome.create( view );
-        HtmlView viewStored = ViewHome.findByPrimaryKey( view.getId( ) );
-        assertEquals( viewStored.getServerName() , view.getServerName( ) );
+    /**
+     * load the data of dbpagePortlet from the table
+     *
+     * @param nIdPortlet The identifier of the portlet
+     * @return portlet The instance of the object portlet
+     */
+    Portlet load( int nIdPortlet );
 
-        // Update test
-        view.setServerName( SERVERNAME2 );
-        ViewHome.update( view );
-        viewStored = ViewHome.findByPrimaryKey( view.getId( ) );
-        assertEquals( viewStored.getServerName() , view.getServerName( ) );
-
-        // List test
-        ViewHome.getViewsList();
-
-        // Delete test
-        ViewHome.remove( view.getId( ) );
-        viewStored = ViewHome.findByPrimaryKey( view.getId( ) );
-        assertNull( viewStored );
-        
-    }
+    /**
+     * Update the record in the table
+     *
+     *
+     * @param portlet The reference of the portlet
+     */
+    void store( Portlet portlet );
 
 }

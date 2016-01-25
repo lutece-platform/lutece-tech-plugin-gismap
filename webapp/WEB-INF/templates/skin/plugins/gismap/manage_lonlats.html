@@ -1,0 +1,48 @@
+<#include "gismap_tabs.html" />
+<@tabs tab="lonlat" />
+
+<div class="row" >
+    <div class="col-sm-12">
+
+        <@messages infos=infos />
+
+        <form method="post"  action="jsp/site/Portal.jsp?page=lonlat">
+            <button name="view_createLonLat" class="btn btn-primary pull-right" type="submit">
+                <span class="glyphicon glyphicon-plus"></span>
+                #i18n{gismap.manage_lonlats.buttonAdd}
+            </button>
+        </form>
+
+    <h4>#i18n{gismap.manage_lonlats.tableLabel}</h4>
+        
+    <table class="table table-condensed table-striped">
+        <tr>
+            <input type="hidden" id="id" name="id"/>
+            <th>#i18n{gismap.manage_lonlats.columnLongitude}</th>
+            <th>#i18n{portal.util.labelActions}</th>
+        </tr>
+            <#list lonlat_list as lonlat >
+        <tr>
+            <input type="hidden" id="id" name="id" />
+            <td>
+                ${lonlat.longitude}
+            </td>    
+        <td>
+            <a href="jsp/site/Portal.jsp?page=lonlat&view=modifyLonLat&id=${lonlat.id}"
+               class="btn btn-primary btn-small" title="#i18n{portal.util.labelModify}">
+                <span class="glyphicon glyphicon-edit"></span>
+            </a>
+
+            <a href="jsp/site/Portal.jsp?page=lonlat&action=confirmRemoveLonLat&id=${lonlat.id}"
+               class="btn btn-danger btn-small" title="#i18n{portal.util.labelDelete}" >
+                <span class="glyphicon glyphicon-trash"></span>
+            </a>
+        </td>
+        </tr>
+        </#list>
+    </table>
+    
+    </div>
+</div>
+
+  

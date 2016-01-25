@@ -1,0 +1,13 @@
+<#include "managegismap_tabs.html" />
+<@tabs tab="lonlat" />
+
+<@rowBoxHeader i18nTitleKey="gismap.modify_lonlat.pageTitle">
+    <form class="form-horizontal" method="post" name="modify_lonlat" action="jsp/admin/plugins/gismap/ManageLonLats.jsp">
+        <@messages errors=errors />
+        <input type="hidden" id="id" name="id" value="${lonlat.id}"/>
+        
+        <@fieldInputText i18nLabelKey="gismap.modify_lonlat.labelLongitude" inputName="longitude"  value="${lonlat.longitude}" i18nHelpBlockKey="gismap.modify_lonlat.labelLongitude.help" />
+        <@actionButtons button1Name="action_modifyLonLat" button2Name="view_manageLonLats"/>
+    </form>
+</@rowBoxHeader>
+

@@ -41,27 +41,27 @@ import java.util.Collection;
 
 
 /**
- * IViewDAO Interface
+ * ILonLatDAO Interface
  */
-public interface IViewDAO
+public interface ILonLatDAO
 {
     /**
      * Insert a new record in the table.
-     * @param view instance of the View object to insert
+     * @param lonLat instance of the LonLat object to insert
      * @param plugin the Plugin
      */
-    void insert( HtmlView view, Plugin plugin );
+    void insert( LonLat lonLat, Plugin plugin );
 
     /**
      * Update the record in the table
-     * @param view the reference of the View
+     * @param lonLat the reference of the LonLat
      * @param plugin the Plugin
      */
-    void store( HtmlView view, Plugin plugin );
+    void store( LonLat lonLat, Plugin plugin );
 
     /**
      * Delete a record from the table
-     * @param nKey The identifier of the View to delete
+     * @param nKey The identifier of the LonLat to delete
      * @param plugin the Plugin
      */
     void delete( int nKey, Plugin plugin );
@@ -71,24 +71,24 @@ public interface IViewDAO
 
     /**
      * Load the data from the table
-     * @param nKey The identifier of the view
+     * @param nKey The identifier of the lonLat
      * @param plugin the Plugin
-     * @return The instance of the view
+     * @return The instance of the lonLat
      */
-    HtmlView load( int nKey, Plugin plugin );
+    LonLat load( int nKey, Plugin plugin );
 
     /**
-     * Load the data of all the view objects and returns them as a collection
+     * Load the data of all the lonLat objects and returns them as a collection
      * @param plugin the Plugin
-     * @return The collection which contains the data of all the view objects
+     * @return The collection which contains the data of all the lonLat objects
      */
-    Collection<HtmlView> selectViewsList( Plugin plugin );
+    Collection<LonLat> selectLonLatsList( Plugin plugin );
     
     /**
-     * Load the id of all the view objects and returns them as a collection
+     * Load the id of all the lonLat objects and returns them as a collection
      * @param plugin the Plugin
-     * @return The collection which contains the id of all the view objects
+     * @return The collection which contains the id of all the lonLat objects
      */
-    Collection<Integer> selectIdViewsList( Plugin plugin );
+    Collection<Integer> selectIdLonLatsList( Plugin plugin );
 }
 
