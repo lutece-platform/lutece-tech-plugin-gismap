@@ -1,0 +1,13 @@
+<#include "managegismap_tabs.html" />
+<@tabs tab="htlmview" />
+
+<@rowBoxHeader i18nTitleKey="gismap.modify_htlmview.pageTitle">
+    <form class="form-horizontal" method="post" name="modify_htlmview" action="jsp/admin/plugins/gismap/ManageHtlmViews.jsp">
+        <@messages errors=errors />
+        <input type="hidden" id="id" name="id" value="${htlmview.id}"/>
+        
+        <@fieldInputText i18nLabelKey="gismap.modify_htlmview.labelServerName" inputName="servername"  value="${htlmview.serverName}" i18nHelpBlockKey="gismap.modify_htlmview.labelServerName.help" />
+        <@actionButtons button1Name="action_modifyHtlmView" button2Name="view_manageHtlmViews"/>
+    </form>
+</@rowBoxHeader>
+

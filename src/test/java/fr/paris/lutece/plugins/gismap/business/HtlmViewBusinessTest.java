@@ -30,57 +30,43 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * License 1.0
- */ 
+ */
+
 package fr.paris.lutece.plugins.gismap.business;
 
-import javax.validation.constraints.*;
-import org.hibernate.validator.constraints.*;
+import fr.paris.lutece.test.LuteceTestCase;
 
 
-/**
- * This is the business class for the object LonLat
- */ 
-public class LonLat
+public class HtlmViewBusinessTest extends LuteceTestCase
 {
-    // Variables declarations 
-    private int _nId;
-    
-    @Size( max = 50 , message = "#i18n{gismap.validation.lonlat.Longitude.size}" ) 
-    private String _strLongitude;
+    private final static String SERVERNAME1 = "ServerName1";
+    private final static String SERVERNAME2 = "ServerName2";
 
-    /**
-     * Returns the Id
-     * @return The Id
-     */
-    public int getId( )
+    public void testBusiness(  )
     {
-        return _nId;
+        // Initialize an object
+        HtlmView htlmView = new HtlmView();
+        htlmView.setServerName( SERVERNAME1 );
+
+        // Create test
+        HtlmViewHome.create( htlmView );
+        HtlmView htlmViewStored = HtlmViewHome.findByPrimaryKey( htlmView.getId( ) );
+        assertEquals( htlmViewStored.getServerName() , htlmView.getServerName( ) );
+
+        // Update test
+        htlmView.setServerName( SERVERNAME2 );
+        HtlmViewHome.update( htlmView );
+        htlmViewStored = HtlmViewHome.findByPrimaryKey( htlmView.getId( ) );
+        assertEquals( htlmViewStored.getServerName() , htlmView.getServerName( ) );
+
+        // List test
+        HtlmViewHome.getHtlmViewsList();
+
+        // Delete test
+        HtlmViewHome.remove( htlmView.getId( ) );
+        htlmViewStored = HtlmViewHome.findByPrimaryKey( htlmView.getId( ) );
+        assertNull( htlmViewStored );
+        
     }
 
-    /**
-     * Sets the Id
-     * @param nId The Id
-     */ 
-    public void setId( int nId )
-    {
-        _nId = nId;
-    }
-
-    /**
-     * Returns the Longitude
-     * @return The Longitude
-     */
-    public String getLongitude( )
-    {
-        return _strLongitude;
-    }
-
-    /**
-     * Sets the Longitude
-     * @param strLongitude The Longitude
-     */ 
-    public void setLongitude( String strLongitude )
-    {
-        _strLongitude = strLongitude;
-    }
 }

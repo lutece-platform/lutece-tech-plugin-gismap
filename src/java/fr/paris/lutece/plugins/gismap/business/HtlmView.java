@@ -38,15 +38,15 @@ import org.hibernate.validator.constraints.*;
 
 
 /**
- * This is the business class for the object LonLat
+ * This is the business class for the object HtlmView
  */ 
-public class LonLat
+public class HtlmView
 {
     // Variables declarations 
     private int _nId;
     
-    @Size( max = 50 , message = "#i18n{gismap.validation.lonlat.Longitude.size}" ) 
-    private String _strLongitude;
+    @Size( max = 50 , message = "#i18n{gismap.validation.htlmview.ServerName.size}" ) 
+    private String _strServerName;
 
     /**
      * Returns the Id
@@ -67,20 +67,20 @@ public class LonLat
     }
 
     /**
-     * Returns the Longitude
-     * @return The Longitude
+     * Returns the ServerName
+     * @return The ServerName
      */
-    public String getLongitude( )
+    public String getServerName( )
     {
-        return _strLongitude;
+        return _strServerName;
     }
 
     /**
-     * Sets the Longitude
-     * @param strLongitude The Longitude
+     * Sets the ServerName
+     * @param strServerName The ServerName
      */ 
-    public void setLongitude( String strLongitude )
+    public void setServerName( String strServerName )
     {
-        _strLongitude = strLongitude;
+        _strServerName = strServerName;
     }
 }

@@ -39,8 +39,8 @@ import fr.paris.lutece.test.LuteceTestCase;
 
 public class LonLatBusinessTest extends LuteceTestCase
 {
-    private final static int LONGITUDE1 = 1;
-    private final static int LONGITUDE2 = 2;
+    private final static String LONGITUDE1 = "Longitude1";
+    private final static String LONGITUDE2 = "Longitude2";
 
     public void testBusiness(  )
     {

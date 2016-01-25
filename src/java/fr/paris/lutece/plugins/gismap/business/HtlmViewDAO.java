@@ -42,19 +42,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * This class provides Data Access methods for LonLat objects
+ * This class provides Data Access methods for HtlmView objects
  */
 
-public final class LonLatDAO implements ILonLatDAO
+public final class HtlmViewDAO implements IHtlmViewDAO
 {
     // Constants
-    private static final String SQL_QUERY_NEW_PK = "SELECT max( id_lonlat ) FROM gismap_lonlat";
-    private static final String SQL_QUERY_SELECT = "SELECT id_lonlat, longitude FROM gismap_lonlat WHERE id_lonlat = ?";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO gismap_lonlat ( id_lonlat, longitude ) VALUES ( ?, ? ) ";
-    private static final String SQL_QUERY_DELETE = "DELETE FROM gismap_lonlat WHERE id_lonlat = ? ";
-    private static final String SQL_QUERY_UPDATE = "UPDATE gismap_lonlat SET id_lonlat = ?, longitude = ? WHERE id_lonlat = ?";
-    private static final String SQL_QUERY_SELECTALL = "SELECT id_lonlat, longitude FROM gismap_lonlat";
-    private static final String SQL_QUERY_SELECTALL_ID = "SELECT id_lonlat FROM gismap_lonlat";
+    private static final String SQL_QUERY_NEW_PK = "SELECT max( id_htlmview ) FROM gismap_html_view";
+    private static final String SQL_QUERY_SELECT = "SELECT id_htlmview, serverName FROM gismap_html_view WHERE id_htlmview = ?";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO gismap_html_view ( id_htlmview, serverName ) VALUES ( ?, ? ) ";
+    private static final String SQL_QUERY_DELETE = "DELETE FROM gismap_html_view WHERE id_htlmview = ? ";
+    private static final String SQL_QUERY_UPDATE = "UPDATE gismap_html_view SET id_htlmview = ?, serverName = ? WHERE id_htlmview = ?";
+    private static final String SQL_QUERY_SELECTALL = "SELECT id_htlmview, serverName FROM gismap_html_view";
+    private static final String SQL_QUERY_SELECTALL_ID = "SELECT id_htlmview FROM gismap_html_view";
 
     /**
      * Generates a new primary key
@@ -82,14 +82,14 @@ public final class LonLatDAO implements ILonLatDAO
      * {@inheritDoc }
      */
     @Override
-    public void insert( LonLat lonLat, Plugin plugin )
+    public void insert( HtlmView htlmView, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
 
-        lonLat.setId( newPrimaryKey( plugin ) );
+        htlmView.setId( newPrimaryKey( plugin ) );
 
-        daoUtil.setInt( 1, lonLat.getId( ) );
-        daoUtil.setString( 2, lonLat.getLongitude( ) );
+        daoUtil.setInt( 1, htlmView.getId( ) );
+        daoUtil.setString( 2, htlmView.getServerName( ) );
 
         daoUtil.executeUpdate( );
         daoUtil.free( );
@@ -99,23 +99,23 @@ public final class LonLatDAO implements ILonLatDAO
      * {@inheritDoc }
      */
     @Override
-    public LonLat load( int nKey, Plugin plugin )
+    public HtlmView load( int nKey, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
         daoUtil.setInt( 1 , nKey );
         daoUtil.executeQuery( );
 
-        LonLat lonLat = null;
+        HtlmView htlmView = null;
 
         if ( daoUtil.next( ) )
         {
-            lonLat = new LonLat();
-            lonLat.setId( daoUtil.getInt( 1 ) );
-            lonLat.setLongitude( daoUtil.getString( 2 ) );
+            htlmView = new HtlmView();
+            htlmView.setId( daoUtil.getInt( 1 ) );
+            htlmView.setServerName( daoUtil.getString( 2 ) );
         }
 
         daoUtil.free( );
-        return lonLat;
+        return htlmView;
     }
 
     /**
@@ -134,13 +134,13 @@ public final class LonLatDAO implements ILonLatDAO
      * {@inheritDoc }
      */
     @Override
-    public void store( LonLat lonLat, Plugin plugin )
+    public void store( HtlmView htlmView, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
         
-        daoUtil.setInt( 1, lonLat.getId( ) );
-        daoUtil.setString( 2, lonLat.getLongitude( ) );
-        daoUtil.setInt( 3, lonLat.getId( ) );
+        daoUtil.setInt( 1, htlmView.getId( ) );
+        daoUtil.setString( 2, htlmView.getServerName( ) );
+        daoUtil.setInt( 3, htlmView.getId( ) );
 
         daoUtil.executeUpdate( );
         daoUtil.free( );
@@ -150,42 +150,42 @@ public final class LonLatDAO implements ILonLatDAO
      * {@inheritDoc }
      */
     @Override
-    public Collection<LonLat> selectLonLatsList( Plugin plugin )
+    public Collection<HtlmView> selectHtlmViewsList( Plugin plugin )
     {
-        Collection<LonLat> lonLatList = new ArrayList<LonLat>(  );
+        Collection<HtlmView> htlmViewList = new ArrayList<HtlmView>(  );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
         daoUtil.executeQuery(  );
 
         while ( daoUtil.next(  ) )
         {
-            LonLat lonLat = new LonLat(  );
+            HtlmView htlmView = new HtlmView(  );
             
-            lonLat.setId( daoUtil.getInt( 1 ) );
-                lonLat.setLongitude( daoUtil.getString( 2 ) );
+            htlmView.setId( daoUtil.getInt( 1 ) );
+                htlmView.setServerName( daoUtil.getString( 2 ) );
 
-            lonLatList.add( lonLat );
+            htlmViewList.add( htlmView );
         }
 
         daoUtil.free( );
-        return lonLatList;
+        return htlmViewList;
     }
     
     /**
      * {@inheritDoc }
      */
     @Override
-    public Collection<Integer> selectIdLonLatsList( Plugin plugin )
+    public Collection<Integer> selectIdHtlmViewsList( Plugin plugin )
     {
-            Collection<Integer> lonLatList = new ArrayList<Integer>( );
+            Collection<Integer> htlmViewList = new ArrayList<Integer>( );
             DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ID, plugin );
             daoUtil.executeQuery(  );
 
             while ( daoUtil.next(  ) )
             {
-                lonLatList.add( daoUtil.getInt( 1 ) );
+                htlmViewList.add( daoUtil.getInt( 1 ) );
             }
 
             daoUtil.free( );
-            return lonLatList;
+            return htlmViewList;
     }
 }
