@@ -37,7 +37,6 @@ package fr.paris.lutece.plugins.gismap.web.rs;
 public final class Constants 
 {
     public static final String HTLMVIEW_PATH = "htlmview/";
-    public static final String LONLAT_PATH = "lonlat/";
     public static final String PLUGIN_PATH = "gismap/";
     public static final String ID_PATH = "id";
     public static final String ALL_PATH = "s";

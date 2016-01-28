@@ -21,13 +21,21 @@
 
     <!-- Admin features parameters -->
     <admin-features>
+        <admin-feature>
+            <feature-id>GISMAP_MANAGEMENT</feature-id>
+            <feature-title>gismap.adminFeature.ManageGismap.name</feature-title>
+            <feature-description>gismap.adminFeature.ManageGismap.description</feature-description>
+            <feature-level>0</feature-level>
+            <feature-url>jsp/admin/plugins/gismap/ManageHtlmViews.jsp</feature-url>
+            <feature-icon-url></feature-icon-url>
+      </admin-feature>
     </admin-features>    
 
     <!-- XPages parameters -->
     <applications>
         <application>
-            <application-id>gismap</application-id>
-            <application-class>fr.paris.lutece.plugins.gismap.web.GismapApp</application-class>
+            <application-id>htlmview</application-id>
+            <application-class>fr.paris.lutece.plugins.gismap.web.HtlmViewXPage</application-class>
         </application>
     </applications>
 
