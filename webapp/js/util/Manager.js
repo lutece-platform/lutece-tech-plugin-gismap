@@ -51,8 +51,13 @@ var Manager = function(){
         if(parameters['Zoom'] != ''){
             setZoom(parameters['Zoom'][0], parameters['Zoom'][1]);
         }
-        if(parameters['WKT'] != ''){
-            addFeature(parameters['WKT'], 'WKT');
+        if(parameters['BackGround'] != ''){
+            for(backGround of parameters['BackGround']){
+                addLayerRaster(backGround);
+            }
         }
+        /*if(parameters['WKT'] != ''){
+            addFeature(parameters['WKT'], 'WKT');
+        }*/
     };
 };

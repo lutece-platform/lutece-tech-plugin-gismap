@@ -8,20 +8,21 @@ var Feature = function(){
         var feature;
         if(dataFormat == 'WKT'){
             dataProj = data[0];
-            console.log(getProjection());
             for(i = 1; i < data.length; i++){
                 features.push(wktFormat.readFeature(data[i], {
                     dataProjection: dataProj,
                     featureProjection: getProjection()
                 }));
             }
-        }else{
-            feature = geoJSONFormat.readFeature(data, {
-                dataProjection: dataProj,
-                featureProjection: getProjection()
-            });
+        }else if(dataFormat == 'GeoJSON'){
+            dataProj = data[0];
+            for(i = 1; i < data.length; i++){
+                features.push(geoJSONFormat.readFeature(data[i], {
+                    dataProjection: dataProj,
+                    featureProjection: getProjection()
+                }));
+            }
         }
-        console.log(features);
     };
 
     getFeatures = function(){

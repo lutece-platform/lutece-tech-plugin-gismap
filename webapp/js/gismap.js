@@ -13,8 +13,10 @@ var GisMap = function() {
      */
     var manager = new Manager();
     var control = new Control();
+    var interacts = new Interaction();
     var feature = new Feature();
     var layers = new Layer();
+    var toc = new TOC();
     var view = new View();
     var map;
 
@@ -27,11 +29,12 @@ var GisMap = function() {
 			return false;
 	    }*/
 	    readAndInitParams(globalParameters, parameters);
-        defineCenterAndExtentByParameter(document.getElementById('id_Select').value);
+	    initInteractions();
+	    defineCenterAndExtentByParameter(document.getElementById('id_Select').value);
         addLayerVector();
-        addLayerRaster();
 		view = createView();
 		map = createMap();
+		onChangeData('Raster');
 		var geoPoint = new GeoPoint(map);
 		/*if(mapChoose == "Attributaire"){
 		    createMapAttribut();
@@ -43,10 +46,7 @@ var GisMap = function() {
 	function createMap(){
         map = new ol.Map({
             controls: ol.control.defaults().extend(getControls()),
-            interactions: ol.interaction.defaults().extend([
-                new ol.interaction.DragRotate(),
-                new ol.interaction.DragZoom()
-            ]),
+            interactions: ol.interaction.defaults().extend(getInteracts()),
             layers: getLayers(),
             target: 'map',
             view: view
@@ -57,9 +57,55 @@ var GisMap = function() {
         return map;
 	};
 
+	/**
+	 * Listeners
+	 */
+
+	mapSelector.onchange = function() {
+        onChangeData('Raster');
+    };
+
+    drawToolSelector.onchange = function() {
+        setDrawInteraction(map);
+    };
+
+    measureType.onchange = function() {
+        setMeasureInteraction(map);
+    };
+
+    specificToolSelector.onchange = function() {
+        setTypeInteraction(map);
+    };
+
     /**
      * PUBLIC METHODS
      */
+
+    zoomTo = function(){
+        selectFeatures = getSelectedFeatures().getArray();
+        if (selectFeatures.length == 1){
+            view.fit(selectFeatures[0].getGeometry(), map.getSize());
+        }else if (selectFeatures.length > 1){
+            arrayGeom = new Array();
+            for(selectFeature of selectFeatures){
+                arrayGeom.push(selectFeature.getGeometry());
+            }
+            geomColl = new ol.geom.GeometryCollection(arrayGeom);
+            view.fit(geomColl.getExtent(), map.getSize());
+        }
+    }
+
+    deleteFeatures = function(){
+        selectFeatures = getSelectedFeatures().getArray();
+        if (selectFeatures.length == 1){
+            getDrawLayer().getSource().removeFeature(selectFeatures[0]);
+        }else if (selectFeatures.length > 1){
+            for(selectFeature of selectFeatures){
+                getDrawLayer().getSource().removeFeature(selectFeature);
+            }
+        }
+        getSelectedFeatures().clear();
+    }
 
     /**
     * InitGis est le point d'entrée dans le code JavaScript pour

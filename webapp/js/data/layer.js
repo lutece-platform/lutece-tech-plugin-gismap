@@ -1,6 +1,7 @@
 var Layer = function(){
-
-    var layerRaster = new Array();
+    var currentRaster;
+    new LayerRaster();
+    var rasterLayers = new Array();
     var layerVector = new Array();
     var layers = new Array();
 
@@ -14,25 +15,33 @@ var Layer = function(){
         layerVector.push(layer);
     }
 
-
-    addLayerRaster = function(){
-        layerRaster.push(new ol.layer.Tile({
-            source: new ol.source.OSM()
-        }));
+    addLayerRaster = function(backGround){
+        name = createRasterLayer(backGround);
+        rasterLayers.push(name);
     }
 
+    getCurrentRaster = function(){
+        return currentRaster;
+    }
+
+    setCurrentRaster = function(newCurrentRaster){
+        currentRaster = newCurrentRaster;
+    }
+
+    getRasterLayers = function(){
+        return rasterLayers;
+    }
 
     getLayers = function(){
-        for(layer of layerRaster){
-            layers.push(layer);
+        for(layer of rasterLayers){
+            layers.push(getRasterByName(layer));
         }
         for(layer of layerVector){
             layers.push(layer);
         }
+        layers.push(getDrawLayer());
+        layers.push(getMeasureLayer());
         return layers;
     }
-
-
-
 
 }

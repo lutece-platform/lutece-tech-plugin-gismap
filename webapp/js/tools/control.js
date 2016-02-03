@@ -44,10 +44,4 @@ var Control = function() {
     getControls = function(){
         return controls;
     }
-
-    zoomOnSelect = function(){
-        if(select)
-        view.getCenter();
-        return controls;
-    };
 };
