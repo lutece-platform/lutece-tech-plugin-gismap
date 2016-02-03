@@ -1,0 +1,80 @@
+/**
+ * LayerSearchPanel
+ */
+.olControlLayerSearchPanel {
+    position: absolute;
+    top: 65%;
+    left: 0px;
+    width: 30em;
+    font-family: sans-serif;
+    font-weight: bold;
+    margin-top: 3px;
+    /*margin-left: 3px;*/
+    margin-bottom: 3px;
+    font-size: smaller;
+    color: white;
+    background-color: transparent;
+}
+
+.olControlLayerSearchPanel .layersDiv {
+    padding-top: 5px;
+    /*padding-left: 10px;*/
+    padding-bottom: 5px;
+    /*padding-right: 75px;*/
+    background-color: darkblue;
+    width: 100%;
+    height: 100%;
+}
+
+.olControlLayerSearchPanel .layersDiv .baseLbl,
+.olControlLayerSearchPanel .layersDiv .dataLbl {
+    margin-top: 3px;
+    margin-left: 3px;
+    margin-bottom: 3px;
+}
+
+.olControlLayerSearchPanel .layersDiv .baseLayersDiv,
+.olControlLayerSearchPanel .layersDiv .dataLayersDiv {
+    padding-left: 10px;
+}
+
+.olControlLayerSearchPanel .olControlLayerSearchPanelTitle {
+    color: white;
+    margin-left:10px;
+    width: auto;
+}
+
+.olControlLayerSearchPanel .olControlLayerSearchPanelForm {
+	margin-left:10px;
+}
+
+.olControlLayerSearchPanel .olControlLayerSearchPanelButton {
+	margin-left:10px;
+}
+
+.olControlLayerSearchPanel .olControlLayerSearchPanelDrop{
+	color:white;
+}
+
+.olControlLayerSearchPanel .olControlLayerSearchPanelDeleteButton{
+	width: 16px;
+    height: 16px;
+	border-color: transparent;
+	vertical-align: middle;
+	visibility: hidden;
+	margin-left:10px;
+}
+
+.olControlLayerSearchPanel .olControlLayerSearchPanelSpanResult, 
+.olControlLayerSearchPanel .olControlLayerSearchPanelSpanResult a{
+	color:#FFFFFF;
+}
+
+.olControlLayerSearchPanel .maximizeDiv {
+	top:5px;
+	left:0px;
+}
+.olControlLayerSearchPanel .minimizeDiv {
+    top: 5px;
+    right: 0px;
+}

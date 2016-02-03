@@ -1,0 +1,28 @@
+<#include "include/display_map.html">
+<script src="js/plugins/gismap/LABjs-1.0.2rc1/LAB.js" type="text/javascript"></script>
+
+<!-- Fichier CSS utilisé pour l'auto complétion (déjà implémenté dans view1.html pour Plugin GIS) -->
+<!--<link rel="stylesheet" type="text/css" href="js/jquery/plugins/ui/css/jquery-ui.css"/>-->
+<div class="row-fluid" >
+	<div class="span12">
+		<h2>#i18n{gismap.manage_features.pageTitle}</h2>
+
+    <@displayMap gismap_code="CPL"/>
+    <script type="text/javascript">
+	//<![CDATA[
+    //paramètres Sig
+    $(document).ready(function(){
+        var optionalParameters = {};
+        $("#carte").data('optionalParameters', optionalParameters);
+        showMap('CPL','carte');
+    });
+    //]]>
+     	//Ajout de l'auto complétion
+        //La fonction creatreAutocomplete prend en parametre le selecteur du champ sur lequel s'applique l'auto complétion
+        //$.getScript('js/jquery/plugins/ui/jquery.ui.custom-autocomplete.min.js');
+        //$.getScript('jsp/plugins/address/modules/autocomplete/autocomplete-js.jsp',function(data, textStatus, jqxhr) {
+		//	createAutocomplete("#autocomplete"); 
+		//});
+    </script>
+    </div>
+</div>

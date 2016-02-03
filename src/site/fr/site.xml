@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="Lutece">
+	<version />
+	<body>
+		<links>
+			<item name="FR" href="/fr/index.html" />
+		</links>
+		
+		<menu name="Downloads" inherit="bottom">
+			     <item name="Released versions" href="../../stable_builds/plugins/plugin-gis/"/>
+			     <item name="Nightly builds" href="../../nightly_builds/plugins/plugin-gis/" />
+		</menu>
+
+		<menu ref="reports"/>
+	</body>
+</project>

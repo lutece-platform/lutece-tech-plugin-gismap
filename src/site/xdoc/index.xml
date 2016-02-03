@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Plugin gis</title>
+    </properties>
+    <body>
+        <section name="Plugin Gis">
+            <subsection name="Introduction">
+                <p>
+                    Integrate maps from geoserver in your page (google map kind of maps)
+                </p>
+            </subsection>
+        </section>
+    </body>
+</document>  

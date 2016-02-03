@@ -1,0 +1,80 @@
+/**
+ * GeolocalizationPanel
+ */
+.olControlGeolocalizationPanel {
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    width: 30em;
+    font-family: sans-serif;
+    font-weight: bold;
+    margin-top: 3px;
+    /*margin-left: 3px;*/
+    margin-bottom: 3px;
+    font-size: smaller;
+    color: white;
+    background-color: transparent;
+}
+
+.olControlGeolocalizationPanel .layersDiv {
+    padding-top: 5px;
+    /*padding-left: 10px;*/
+    padding-bottom: 5px;
+    /*padding-right: 75px;*/
+    background-color: darkblue;
+    width: 100%;
+    height: 100%;
+}
+
+.olControlGeolocalizationPanelPopup {
+	border:1px solid black;
+	background-color:#FFFFFF;
+	opacity: 0.8
+	color:#000000;
+
+}
+
+.olControlGeolocalizationPanel .layersDiv .baseLbl,
+.olControlGeolocalizationPanel .layersDiv .dataLbl {
+    margin-top: 3px;
+    margin-left: 3px;
+    margin-bottom: 3px;
+}
+
+.olControlGeolocalizationPanel .layersDiv .baseLayersDiv,
+.olControlGeolocalizationPanel .layersDiv .dataLayersDiv {
+    padding-left: 10px;
+}
+
+.olControlGeolocalizationPanel .olControlGeolocalizationPanelForm {
+	margin-left:10px;
+}
+
+.olControlGeolocalizationPanel .olControlGeolocalizationPanelButton {
+	margin-left:10px;
+}
+.olControlGeolocalizationPanel .olControlLayerSearchPanelSpanResult, 
+.olControlGeolocalizationPanel .olControlLayerSearchPanelSpanResult a{
+	color:#FFFFFF;
+}
+
+.olControlGeolocalizationPanel .olControlGeolocalizationPanelTitle {
+    color: white;
+    margin-left:10px;
+    width: auto;
+}
+
+.olControlGeolocalizationPanel .olControlGeolocalizationPanelLabel {
+	display: none;
+	color: red;
+	width: 100%;
+}
+
+.olControlGeolocalizationPanel .maximizeDiv {
+	top:5px;
+	left:0px;
+}
+.olControlGeolocalizationPanel .minimizeDiv {
+    top: 5px;
+    right: 0px;
+}

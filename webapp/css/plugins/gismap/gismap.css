@@ -1,0 +1,224 @@
+/* The map and the location bar */
+div.map {
+	clear: both;
+	position: relative;
+	width: 100%;
+	height: 330px;
+	border: 1px solid black;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.olControlScaleLineBottom {
+   display: none;
+}
+
+ .olControlPanel div {
+	display:block;
+	width: 24px;
+	height: 24px;
+ 	margin: 5px;
+	background-color:white;
+	float:right;
+	width: 24px;
+ }
+ .olControlPanel{
+ 	right: 0;
+    top: 0;
+ }
+
+ .olControlPanel .olControlWMSGetFeatureInfoItemActive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/WMSGetFeatureInfo_on.png");
+ }
+ .olControlPanel .olControlWMSGetFeatureInfoItemInactive {
+ 	width: 22px;
+ 	height: 22px;
+ 	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/WMSGetFeatureInfo_off.png");
+}
+.olControlScaleLineBottom {
+   	display: none;
+}
+
+ .olControlPanel div {
+	display:block;
+	width: 24px;
+	height: 24px;
+	margin: 5px;
+	background-color:white;
+	float:right;
+	width: 24px;
+ }
+ .olControlPanel{
+ 	right: 0;
+	top: 0;
+ }
+
+/* -- DEPRECATED */
+/*  .olControlPanel .olControlMouseDefaultsItemActive { */
+/*  	width: 22px; */
+/* 	height: 22px; */
+/* 	background-color: blue; */
+/* 	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/pan_on.png"); */
+/*  } */
+/*  .olControlPanel .olControlMouseDefaultsItemInactive { */
+/*  	width: 22px; */
+/* 	height: 22px; */
+/* 	background-color: orange; */
+/* 	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/pan_off.png"); */
+/* } */
+
+ .olControlPanel .olControlNavigationItemActive {
+ 	width: 22px;
+	height: 22px;
+	background-color: blue;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/pan_on.png");
+ }
+ .olControlPanel .olControlNavigationItemInactive {
+ 	width: 22px;
+	height: 22px;
+	background-color: orange;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/pan_off.png");
+}
+
+ .olControlPanel .olControlDrawFeaturePointItemInactive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/ajouter_off.png");
+ }
+ .olControlPanel .olControlDrawFeaturePointItemActive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/ajouter_on.png");
+ }
+.olControlPanel .olControlDrawFeatureLineItemInactive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../js/plugins/gis/openlayers/theme/default/img/draw_line_off.png");
+ }
+ .olControlPanel .olControlDrawFeatureLineItemActive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../js/plugins/gis/openlayers/theme/default/img/draw_line_on.png");
+ }
+.olControlPanel .olControlDrawFeaturePolygonItemInactive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../js/plugins/gis/openlayers/theme/default/img/draw_polygon_off.png");
+ }
+ .olControlPanel .olControlDrawFeaturePolygonItemActive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../js/plugins/gis/openlayers/theme/default/img/draw_polygon_on.png");
+ }
+.olControlPanel .olControlModifyItemInactive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/move_off.png");
+ }
+ .olControlPanel .olControlModifyItemActive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/move_on.png");
+ }
+.olControlPanel .olControlDeleteItemInactive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/delete_off.png");
+ }
+ .olControlPanel .olControlDeleteItemActive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/delete_on.png");
+ }
+ .olControlPanel .olControlSelectFeatureItemActive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/select_off.png");
+ }
+ .olControlPanel .olControlSelectFeatureItemInactive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/select_on.png");
+ }
+ .olControlPanel .olControlFullscreenItemActive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/fullscreen_off.png");
+ }
+ .olControlPanel .olControlFullscreenItemInactive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/fullscreen_on.png");
+ }
+ .olControlPanel .olControlPrintItemActive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/print_off.png");
+ }
+ .olControlPanel .olControlPrintItemInactive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/print_on.png");
+ }
+  .olControlPanel .olControlReverseGeocodingItemActive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/reverseGeocoding_on.png");
+ }
+  .olControlPanel .olControlReverseGeocodingItemInactive {
+	width: 22px;
+	height: 22px;
+	background-image: url("../../../images/admin/skin/plugins/gis/openlayers/reverseGeocoding_off.png");
+ }
+ .olControlScaleLineBottom{
+ 	display:none;
+ }
+ 
+/* The polygon feature is not displayed in OpenLayers EditingToolbar */
+/*
+div.olControlDrawFeaturePolygonItemInactive, div.olControlDrawFeaturePolygonItemActive{
+	display: none	
+}
+*/
+
+/*
+.olControlSLDSelectBoxActive {
+    cursor: crosshair;
+}
+.olControlSLDSelectPolygonActive {
+    cursor: crosshair;
+}
+.olControlSLDSelectLineActive {
+    cursor: crosshair;
+}
+.olControlSLDSelectPointActive {
+    cursor: pointer;
+}
+*/
+
+/*
+Disable GPU because of jira GIS-64
+see https://github.com/openlayers/openlayers/blob/master/notes/2.13.md#map-animated-zooming-and-gpu-support
+*/
+img.olTileImage {
+    -webkit-transform: inherit !important ;
+    -moz-transform: inherit !important ;
+    -o-transform: inherit !important ;
+    -ms-transform: inherit !important ;
+    transform: inherit !important ;
+    -webkit-backface-visibility: inherit !important ;
+    -moz-backface-visibility: inherit !important ;
+    -ms-backface-visibility: inherit !important ;
+    backface-visibility: inherit !important ;
+    -webkit-perspective: inherit !important ;
+    -moz-perspective: inherit !important ;
+    -ms-perspective: inherit !important ;
+    perspective: inherit !important ;
+}
+
+/* Fix map display with AdminLTE.css (bootstrap theme): jira GIS-63 */
+.olMap img {
+  max-width: none !important;
+}
