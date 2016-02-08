@@ -41,7 +41,7 @@ import java.util.List;
  */
 public interface IViewDAO
 {
-    public View findById( Integer key );
+    public View findById( int nKey );
 
     public View findByCode( String strGismapCode );
 

@@ -33,138 +33,46 @@
  */
 package fr.paris.lutece.plugins.gismap.business;
 
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class View
 {
     private int _nId;
-    private String _strServerName;
-    private String _strFeatureNS;
     private String _strTemplateFile;
-    private String _strAvailableParameters;
-    private String _strAvailableParametersLayers;
-    private String _strAvailableParametersStyles;
-    private String _strAvailableParametersStyleRules;
-    private String _strJsFile;
-    private Map<String, String> _mapParameters = new HashMap<String, String>(  );
-
-    /**
-     * Returns the Id
-     * @return The Id
-     */
-    public int getId(  )
-    {
-        return _nId;
-    }
-
-    /**
-     * Sets the Id
-     * @param nId The Id
-     */
-    public void setId( int nId )
-    {
-        _nId = nId;
-    }
-
-    public String getTemplateFile(  )
-    {
-        return _strTemplateFile;
-    }
-
-    public void setTemplateFile( String templateFile )
-    {
-        this._strTemplateFile = templateFile;
-    }
-
-    public void setJsFile( String _strJsFile )
-    {
-        this._strJsFile = _strJsFile;
-    }
-
-    public String getJsFile(  )
-    {
-        return _strJsFile;
-    }
-
-    public void setServerName( String _strServerName )
-    {
-        this._strServerName = _strServerName;
-    }
-
-    public String getServerName(  )
-    {
-        return _strServerName;
-    }
-
-    public Map<String, String> getParameters(  )
-    {
-        return _mapParameters;
-    }
-
-    public void setParameters( Map<String, String> mapParameters )
-    {
-        this._mapParameters = mapParameters;
-    }
-
-    public void putParameter( String strKey, String strValue )
-    {
-        _mapParameters.put( strKey, strValue );
-    }
-
-    public String getParameter( String strKey )
-    {
-        return _mapParameters.get( strKey );
-    }
-
-    public void setFeatureNS( String _strFeatureNS )
-    {
-        this._strFeatureNS = _strFeatureNS;
-    }
-
-    public String getFeatureNS(  )
-    {
-        return _strFeatureNS;
-    }
-
-    public void setAvailableParameters( String _strAvailableParameters )
-    {
-        this._strAvailableParameters = _strAvailableParameters;
-    }
-
-    public String getAvailableParameters(  )
-    {
-        return _strAvailableParameters;
-    }
-
-    public void setAvailableParametersLayers( String _strAvailableParametersLayers )
-    {
-        this._strAvailableParametersLayers = _strAvailableParametersLayers;
-    }
-
-    public String getAvailableParametersLayers(  )
-    {
-        return _strAvailableParametersLayers;
-    }
-
-    public void setAvailableParametersStyles( String _strAvailableParametersStyles )
-    {
-        this._strAvailableParametersStyles = _strAvailableParametersStyles;
-    }
-
-    public String getAvailableParametersStyles(  )
-    {
-        return _strAvailableParametersStyles;
-    }
-
-    public void setAvailableParametersStyleRules( String _strAvailableParametersStyleRules )
-    {
-        this._strAvailableParametersStyleRules = _strAvailableParametersStyleRules;
-    }
-
-    public String getAvailableParametersStyleRules(  )
-    {
-        return _strAvailableParametersStyleRules;
-    }
+    private MapParameter _mapParameter;
+	/**
+	 * @return the _nId
+	 */
+	public int getId() {
+		return _nId;
+	}
+	/**
+	 * @param _nId the _nId to set
+	 */
+	public void setId(int nId) {
+		this._nId = nId;
+	}
+	/**
+	 * @return the _strTemplateFile
+	 */
+	public String getTemplateFile() {
+		return _strTemplateFile;
+	}
+	/**
+	 * @param _strTemplateFile the _strTemplateFile to set
+	 */
+	public void setTemplateFile(String strTemplateFile) {
+		this._strTemplateFile = strTemplateFile;
+	}
+	/**
+	 * @return the _mapParameter
+	 */
+	public MapParameter getMapParameter() {
+		return _mapParameter;
+	}
+	/**
+	 * @param _mapParameter the _mapParameter to set
+	 */
+	public void setMapParameter(MapParameter mapParameter) {
+		this._mapParameter = mapParameter;
+	}
 }

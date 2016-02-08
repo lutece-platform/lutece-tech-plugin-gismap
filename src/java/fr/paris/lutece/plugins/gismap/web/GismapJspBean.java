@@ -35,6 +35,8 @@ package fr.paris.lutece.plugins.gismap.web;
 
 import fr.paris.lutece.plugins.gismap.business.MapParameter;
 import fr.paris.lutece.plugins.gismap.business.MapParameterHome;
+import fr.paris.lutece.plugins.gismap.business.View;
+import fr.paris.lutece.plugins.gismap.business.ViewHome;
 import fr.paris.lutece.plugins.gismap.service.GismapService;
 import fr.paris.lutece.portal.service.message.SiteMessageException;
 import fr.paris.lutece.portal.service.security.UserNotSignedException;
@@ -97,10 +99,10 @@ public class GismapJspBean extends PluginAdminPageJspBean
         setPageTitleProperty( PROPERTY_PAGE_TITLE_FEATURES );
 
         Map<String, Object> rootModel = new HashMap<String, Object>(  );
-        MapParameter mapParameter = MapParameterHome.findByPrimaryKey(1);
+        View view = ViewHome.findByPrimaryKey(1);
         
-        rootModel.put(PARAMETER_MAP_PARAMETER, mapParameter);
-        HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_HOME, getLocale(  ), rootModel );
+        rootModel.put(PARAMETER_MAP_PARAMETER, view.getMapParameter());
+        HtmlTemplate templateList = AppTemplateService.getTemplate( view.getTemplateFile(), getLocale(  ), rootModel );
         
         
 
