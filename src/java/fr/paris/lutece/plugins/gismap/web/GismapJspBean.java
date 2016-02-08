@@ -33,6 +33,8 @@
  */
 package fr.paris.lutece.plugins.gismap.web;
 
+import fr.paris.lutece.plugins.gismap.business.MapParameter;
+import fr.paris.lutece.plugins.gismap.business.MapParameterHome;
 import fr.paris.lutece.plugins.gismap.service.GismapService;
 import fr.paris.lutece.portal.service.message.SiteMessageException;
 import fr.paris.lutece.portal.service.security.UserNotSignedException;
@@ -41,6 +43,7 @@ import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -56,6 +59,7 @@ public class GismapJspBean extends PluginAdminPageJspBean
 
     // Parameters
     private static final String PARAMETER_GISMAP_CODE = "gismap_code";
+    private static final String PARAMETER_MAP_PARAMETER = "map_parameter";
 
     // I18n
     private static final String PROPERTY_PAGE_TITLE_FEATURES = "gismap.manage_features.pageTitle";
@@ -92,8 +96,13 @@ public class GismapJspBean extends PluginAdminPageJspBean
     {
         setPageTitleProperty( PROPERTY_PAGE_TITLE_FEATURES );
 
-        HashMap rootModel = new HashMap(  );
+        Map<String, Object> rootModel = new HashMap<String, Object>(  );
+        MapParameter mapParameter = MapParameterHome.findByPrimaryKey(1);
+        
+        rootModel.put(PARAMETER_MAP_PARAMETER, mapParameter);
         HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_HOME, getLocale(  ), rootModel );
+        
+        
 
         return getAdminPage( templateList.getHtml(  ) );
     }

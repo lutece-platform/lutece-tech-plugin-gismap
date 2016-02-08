@@ -29,6 +29,7 @@
             <version>[5.0.0,)</version>
             <type>lutece-core</type>
         </dependency>
+
     </dependencies>
 
     <properties>
