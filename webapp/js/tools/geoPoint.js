@@ -1,10 +1,28 @@
-var GeoPoint = function(map) {
-    var geolocation = new ol.Geolocation({
+/*globals ol, view*/
+
+/**
+ *  GeoPoint Class manage the Geolocation system
+ */
+
+function GeoPoint(currentMap) {
+    'use strict';
+    /**
+     * geoloc is the definition of the geolocalization on the current view
+     * @type {ol.Geolocation}
+     */
+    this.geoloc = new ol.Geolocation({
         projection: view.getProjection()
     });
 
-    var positionFeature = new ol.Feature()
-    positionFeature.setStyle(
+    /**
+     * geolocFeature contains all geoloc features
+     * @type {Kw.http://www.opengis.net/wfs.Feature}
+     */
+    this.geolocFeature = new ol.Feature();
+    /**
+     * geolocFeature style definition
+     */
+    this.geolocFeature.setStyle(
         new ol.style.Style({
             image: new ol.style.Circle({
                 radius: 6,
@@ -18,40 +36,56 @@ var GeoPoint = function(map) {
             })
         })
     );
-    geolocation.on('change:position', function() {
-        var coordinates = geolocation.getPosition();
-        positionFeature.setGeometry(coordinates ? new ol.geom.Point(coordinates) : null);
-        map.render();
+    /**
+     * Handler to set the geometry of the geolocation
+     */
+    this.geoloc.on('change:position', function() {
+        var coordinates = this.geoloc.getPosition();
+        this.geolocFeature.setGeometry(coordinates ? new ol.geom.Point(coordinates) : null);
+        currentMap.render();
     });
 
-    var accuracyFeature = new ol.Feature();
-    geolocation.on('change:accuracyGeometry', function() {
-        accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
-        map.render();
+    /**
+     * accuracyFeature contains all geoloc features about accuracy
+     * @type {Kw.http://www.opengis.net/wfs.Feature}
+     */
+    this.accuracyFeature = new ol.Feature();
+    /**
+     * Handler to set the geometry of the accuracy geolocation
+     */
+    this.geoloc.on('change:accuracyGeometry', function() {
+        this.accuracyFeature.setGeometry(this.geoloc.getAccuracyGeometry());
+        currentMap.render();
     });
 
-    var geolocLayer =  new ol.layer.Vector({
-        map: map,
+    /**
+     * geolocLayer is the
+     * @type {ol.layer.Vector}
+     */
+    this.geolocLayer =  new ol.layer.Vector({
+        map: currentMap,
         visible : false,
         source: new ol.source.Vector({
-            features: [accuracyFeature, positionFeature]
+            features: [this.accuracyFeature, this.geolocFeature]
         })
     });
 
     /**
-     * PUBLIC METHODS
+     * GeoPoint METHOD
+     * enableGPS active the tracking GPS and the draw the layer on the map
      */
-
-    activeGPS = function(){
-        geolocation.setTracking(true);
-        geolocLayer.setVisible(true);
-        return;
+    this.enableGPS = function(){
+        this.geolocation.setTracking(true);
+        this.geolocLayer.setVisible(true);
     };
 
-    disactiveGPS = function(){
-        geolocation.setTracking(false);
-        geolocLayer.setVisible(false);
-        map.render();
-        return;
+    /**
+     * GeoPoint METHOD
+     * disableGPS inactive the tracking GPS and the delete the layer on the map
+     */
+    this.disableGPS = function(){
+        this.geolocation.setTracking(false);
+        this.geolocLayer.setVisible(false);
+        currentMap.render();
     };
-};
+}

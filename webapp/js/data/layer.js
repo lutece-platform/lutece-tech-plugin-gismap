@@ -1,47 +1,95 @@
-var Layer = function(){
-    var currentRaster;
-    new LayerRaster();
-    var rasterLayers = new Array();
-    var layerVector = new Array();
-    var layers = new Array();
+/*global ol, layer, rasterLayer, featureLayer, drawTools, measureTools*/
 
+/**
+ * Layer Class manage all layers in the map
+ */
 
-    addLayerVector = function(){
-        var layer = new ol.layer.Vector({
+function Layer() {
+    'use strict';
+    /**
+     * ListLayers contains all Layers of the map
+     * @type {Array}
+     */
+    this.ListLayers = [];
+
+    /**
+     * Layer Method
+     * addLayerRaster add a background map at the ListLayer
+     * @param backGround
+     */
+    this.addLayerRaster = function(backGround){
+        var name = rasterLayer.createRasterLayer(backGround);
+        this.ListLayers.push(name);
+    };
+
+    /**
+     * Layer Method
+     * addWMSLayerRaster add a background map at the ListLayer to a WMS
+     * @param wms
+     */
+    this.addWMSLayerRaster = function(wms){
+        var wmsServer = wms[0];
+        var wmsUrl = wms[1];
+        var wmsLayers = wms[2];
+        for(var wmsLayer = 0;  wmsLayer < wmsLayers.length; wmsLayer++){
+            rasterLayer.createWMSLayer(wmsServer, wmsUrl, wmsLayers[wmsLayer]);
+            this.ListLayers.push(wmsLayers[wmsLayer]);
+        }
+    };
+
+    /**
+     * Layer Method
+     * addWMTSLayerRaster add a background map at the ListLayer to a WMTS
+     * @param wmts
+     */
+    this.addWMTSLayerRaster = function(wmts){
+        var name = rasterLayer.createWMTSLayer(wmts);
+        this.ListLayers.push(name);
+    };
+
+    /**
+     * Layer Method
+     * addWFSLayer add a layer map at the ListLayer to a WFS
+     * @param wfs
+     */
+    this.addWFSLayer = function(wfs){
+        var wfsServer = wfs[0];
+        var wfsUrl = wfs[1];
+        var wfsLayers = wfs[2];
+        for(var wfsLayer = 0;  wfsLayer < wfsLayers.length; wfsLayer++){
+            featureLayer.createWFSLayer(wfsServer, wfsUrl, wfsLayers[wfsLayer]);
+            this.ListLayers.push(wfsLayers[wfsLayer]);
+        }
+    };
+
+    /**
+     * Layer Method
+     * addLayerVector add a layer map at the ListLayer
+     */
+    this.addLayerVector = function(){
+        var layerTemp = new ol.layer.Vector({
             source: new ol.source.Vector({
-                features: getFeatures()
+                features: this.layerVectors.getFeatures()
             })
-        })
-        layerVector.push(layer);
-    }
+        });
+        this.ListLayers.push(layerTemp);
+    };
 
-    addLayerRaster = function(backGround){
-        name = createRasterLayer(backGround);
-        rasterLayers.push(name);
-    }
+    this.getLayers = function(){
+        return this.ListLayers;
+    };
 
-    getCurrentRaster = function(){
-        return currentRaster;
-    }
-
-    setCurrentRaster = function(newCurrentRaster){
-        currentRaster = newCurrentRaster;
-    }
-
-    getRasterLayers = function(){
-        return rasterLayers;
-    }
-
-    getLayers = function(){
-        for(layer of rasterLayers){
-            layers.push(getRasterByName(layer));
+    this.getLayersMap = function(){
+        var ListLayersMap = [];
+        for (var layerMap = 0; layerMap < this.ListLayers.length; layerMap++){
+            if(rasterLayer.getRasterByName(this.ListLayers[layerMap])!== null) {
+                ListLayersMap.push(rasterLayer.getRasterByName(this.ListLayers[layerMap]));
+            }else if(featureLayer.getFeatureByName(this.ListLayers[layerMap])!== null) {
+                ListLayersMap.push(featureLayer.getFeatureByName(this.ListLayers[layerMap]));
+            }
         }
-        for(layer of layerVector){
-            layers.push(layer);
-        }
-        layers.push(getDrawLayer());
-        layers.push(getMeasureLayer());
-        return layers;
-    }
-
+        ListLayersMap.push(drawTools.getDrawLayer());
+        ListLayersMap.push(measureTools.getMeasureLayer());
+        return ListLayersMap;
+    };
 }
