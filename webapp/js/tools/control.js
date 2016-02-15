@@ -1,47 +1,58 @@
-var Control = function() {
-    // Tableau des contrôleurs de la map
-    var controls = new Array();
+/*global ol*/
+/**
+ * Control Class manage the control of the map
+ */
+function Control() {
+    'use strict';
 
     /**
-     * PRIVATE METHODS
+     * ListControl is a table of controls enable on the map
+     * @type {Array}
      */
-
-     function addControl(control){
-        controls.push(control);
-    };
+    this.ListControl = [];
 
     /**
-     * PUBLIC METHODS
+     * Control METHOD
+     * initControls initialize all control of the map and add it in ListControl
+     *
+     * @param activeControls
+     * @param extentDefine
+     * @param projectionChanged
+     * @param specificExtent
      */
-
-    initControls = function(activeControls, extentDefine, projectionChanged, specificExtent){
-        for(ctrl of activeControls){
-            if(ctrl == "Overview" && projectionChanged == false){
-                addControl(new ol.control.OverviewMap());
-            } if(ctrl == "FullScreen" ){
-                addControl(new ol.control.FullScreen());
+    this.initControls = function(activeControls, extentDefine, projectionChanged, specificExtent){
+        for(var ctrl = 0; ctrl < activeControls.length; ctrl++){
+            if(activeControls[ctrl] === "Overview" && projectionChanged === false){
+                this.ListControl.push(new ol.control.OverviewMap());
+            } if(activeControls[ctrl] === "FullScreen" ){
+                this.ListControl.push(new ol.control.FullScreen());
             }
-            if(ctrl == "ZoomExtent" ){
-                controls.push(new ol.control.ZoomToExtent());
+            if(activeControls[ctrl] === "ZoomExtent" ){
+                this.ListControl.push(new ol.control.ZoomToExtent());
                 if(specificExtent){
-                    controls.push(new ol.control.ZoomToExtent({
+                    this.ListControl.push(new ol.control.ZoomToExtent({
                         extent: extentDefine
                     }));
                 }
             }
-            if(ctrl == "ZoomSlider" ){
-                addControl(new ol.control.ZoomSlider());
+            if(activeControls[ctrl] === "ZoomSlider" ){
+                this.ListControl.push(new ol.control.ZoomSlider());
             }
-            if(ctrl == "ScaleBar" ){
-                addControl(new ol.control.ScaleLine());
+            if(activeControls[ctrl] === "ScaleBar" ){
+                this.ListControl.push(new ol.control.ScaleLine());
             }
-            if(ctrl == "MousePosition" ){
-                controls.push(new ol.control.MousePosition());
+            if(activeControls[ctrl] === "MousePosition" ){
+                this.ListControl.push(new ol.control.MousePosition());
             }
         }
     };
 
-    getControls = function(){
-        return controls;
-    }
-};
+    /**
+     * Control METHOD
+     * getControls is a getter to access at ListControl
+     * @returns {Array}
+     */
+    this.getControls = function(){
+        return this.ListControl;
+    };
+}

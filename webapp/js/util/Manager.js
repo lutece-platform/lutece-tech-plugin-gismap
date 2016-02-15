@@ -1,63 +1,89 @@
+/*global view, control, layer */
 /**
- * Class Manager to read and manage all parameters of the Gis Component
+ * Manager Class read and manage all parameters of the Gis Component
  */
-var Manager = function(){
-
+var Manager = function() {
+    'use strict';
     /**
+     * Manager Method
      * Function to calculate the initial extent or center
+     * @param data
      */
-    defineCenterAndExtentByParameter = function (data){
-        if (data != ''){
+    var defineCenterAndExtentByParameter = function (data){
+        if (data !== ''){
             data = data.split(',');
             if(data.length <= 2 ){
-                for(i = 0; i < data.length; i++){
+                for(var i = 0; i < data.length; i++){
                     data[i] = parseFloat(data[i]);
                 }
-                setCenter(data);
+                view.setCenter(data);
             }else{
-                for(i = 0; i < data.length; i++){
-                    data[i] = parseFloat(data[i]);
+                for(var j = 0; j < data.length; j++){
+                    data[j] = parseFloat(data[j]);
                 }
-                setExtent(data);
+                view.setExtent(data);
             }
         }
     };
 
     /**
+     * Manager Method
      * Function to read the properties map and initiate parameters
+     * @param globalParameters
+     * @param parameters
      */
-    readAndInitParams = function (globalParameters, parameters){
+    var readAndInitParams = function (globalParameters, parameters){
         var projectionChanged = false;
         var specificExtent = false;
         var extentDefine = false;
 
-        if(parameters['TypeCarte'] != ''){
-            mapChoose = parameters['TypeCarte'];
-        }
-        if(parameters['Projection'] != ''){
-            setProjection(parameters['Projection']);
+        /*if(parameters['TypeCarte'] !== ''){
+            $.mapChoose = parameters['TypeCarte'];
+        }*/
+        if(parameters['Projection'] !== ''){
+            view.setProjection(parameters['Projection']);
             projectionChanged = true;
         }
-        if(parameters['Extent'] != ''){
+        if(parameters['Extent'] !== ''){
             extentDefine = parameters['Extent'];
             specificExtent = true;
         }
-        if(parameters['Controles'] != ''){
-            initControls(parameters['Controles'], extentDefine, projectionChanged, specificExtent);
+        if(parameters['Controles'] !== ''){
+            control.initControls(parameters['Controles'], extentDefine, projectionChanged, specificExtent);
         }
-        if(parameters['ZoomStart'] != ''){
-            setZoomInit(parameters['ZoomStart']);
+        if(parameters['ZoomStart'] !== ''){
+            view.setZoomInit(parameters['ZoomStart']);
         }
-        if(parameters['Zoom'] != ''){
-            setZoom(parameters['Zoom'][0], parameters['Zoom'][1]);
+        if(parameters['Zoom'] !== ''){
+            view.setZoom(parameters['Zoom'][0], parameters['Zoom'][1]);
         }
-        if(parameters['BackGround'] != ''){
-            for(backGround of parameters['BackGround']){
-                addLayerRaster(backGround);
+        if(parameters['BackGround'] !== ''){
+            for(var background = 0; background < parameters['BackGround'].length; background++){
+                layer.addLayerRaster(parameters['BackGround'][background]);
             }
         }
-        /*if(parameters['WKT'] != ''){
-            addFeature(parameters['WKT'], 'WKT');
+        if(parameters['WMS'] !== ''){
+            for(var wms  = 0; wms < parameters['WMS'].length; wms++){
+                layer.addWMSLayerRaster(parameters['WMS'][wms]);
+            }
+        }
+        if(parameters['WFS'] !== ''){
+            for(var wfs  = 0; wfs < parameters['WFS'].length; wfs++){
+                layer.addWFSLayer(parameters['WFS'][wfs]);
+            }
+        }
+        if(parameters['WMTS'] !== ''){
+            for(var wmts = 0; wmts < parameters['WMTS'].length; wmts++){
+                layer.addWMTSLayerRaster(parameters['WMTS'][wmts]);
+            }
+        }
+        /*if(parameters['WKT'] !== ''){
+            layer.addFeature(parameters['WKT'], 'WKT');
         }*/
+    };
+
+    return{
+        defineCenterAndExtentByParameter: defineCenterAndExtentByParameter,
+        readAndInitParams: readAndInitParams
     };
 };

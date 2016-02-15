@@ -1,39 +1,148 @@
-var LayerRaster = function(){
-    var layers = new Array();
+/*global ol, view*/
+/**
+ * LayerRaster Class manage all rasters layers in the map
+ */
+function LayerRaster() {
+    'use strict';
+    /**
+     * ListRasters contains all Rasters of the map
+     * @type {Array}
+     */
+    this.ListRasters = [];
+    /**
+     * currentRaster define the current raster
+     * @type {null}
+     */
+    this.currentRaster = null;
+    /**
+     * readerWMTS define the format WMTS Capabilities
+     * @type {ol.format.WMTSCapabilities}
+     */
+    var readerWMTS = new ol.format.WMTSCapabilities();
 
-    createRasterLayer = function(backGround){
-        var name = backGround[0];
-        var data = backGround[1];
-
+    /**
+     * LayerRaster Method
+     * createRasterLayer initialize the background of the map
+     * @param data
+     * @returns {*}
+     */
+    this.createRasterLayer = function(data){
+        var name = data[0];
+        var layer = data[1];
         if (name === 'OSM'){
-            layers.push(layers[name] = new ol.layer.Tile({
+            this.ListRasters[name] = new ol.layer.Tile({
                 source: new ol.source.OSM(),
-                visible:false
-            }));
+                visible:true
+            });
         }else if (name === 'MapQuest'){
-            layers.push(layers[name] = new ol.layer.Tile({
-                source: new ol.source.MapQuest({layer: data}),
+            this.ListRasters[name] = new ol.layer.Tile({
+                source: new ol.source.MapQuest({layer: layer}),
                 visible:false
-            }));
-        }else{
-            layers.push(layers[name] = new ol.layer.Tile({
-                source: new ol.source.TileWMS({
-                    url: 'http://demo.boundlessgeo.com/geoserver/wms',
-                    params: {'LAYERS': 'topp:states', 'TILED': true},
-                    serverType: 'geoserver'
-                }),
-                visible:false
-            }));
+            });
         }
         return name;
-    }
+    };
 
-    getRasterByName = function(name){
-        return layers[name];
-    }
+    /**
+     * LayerRaster Method
+     * createWMSLayer initialize the background of the map to specific WMS data
+     * @param server
+     * @param url
+     * @param layerName
+     */
+    this.createWMSLayer = function(server, url, layerName){
+        if(server === 'AGS-IMS'){
+            this.ListRaster[layerName] = new ol.layer.Tile({
+                source: new ol.source.TileArcGISRest({
+                    url: url+layerName+'/ImageServer'
+                }),
+                visible:false
+            });
+        }else if(server === 'AGS-MPS'){
+            this.ListRaster[layerName] = new ol.layer.Tile({
+                source: new ol.source.TileArcGISRest({
+                    url: url+layerName+'/MapServer'
+                }),
+                visible:false
+            });
+        }else if (server === 'GeoServer'){
+            this.ListRaster[layerName] = new ol.layer.Tile({
+                source: new ol.source.TileWMS({
+                    url: url,
+                    params: {'LAYERS': layerName},
+                    serverType:'geoserver'
+                }),
+                visible:false
+            });
+        }
+    };
 
-    setRasterVisibility = function(raster, act){
-        getRasterByName(raster).setVisible(act);
-    }
+    /**
+     * LayerRaster Method
+     * createWMTSLayer initialize the background of the map to specific WMTS data
+     * @param wmts
+     */
+    this.createWMTSLayer = function(wmts){
+        var layerName = wmts[0];
+        var proj = wmts[1];
+        fetch(wmts[2]).then(function(response) {
+            return response.text();
+        }).then(function(text) {
+            var dataWMTS = readerWMTS.read(text);
+            this.ListRasters[layerName] = new ol.layer.Tile({
+                source: new ol.source.WMTS.optionsFromCapabilities(dataWMTS,
+                {layer: layerName, matrixSet: proj}),
+                visible:false
+            });
 
+        });
+        return layerName;
+    };
+
+    /**
+     * LayerRaster Method
+     * setRasterVisibility enable or disable the display of the raster on the map
+     * @param raster
+     * @param act
+     */
+    this.setRasterVisibility = function(raster, act){
+        this.getRasterByName(raster).setVisible(act);
+    };
+
+    /**
+     * LayerRaster Method
+     * getCurrentRaster is the getter to access at the current raster
+     * @returns {null}
+     */
+    this.getCurrentRaster = function(){
+        return this.currentRaster;
+    };
+
+    /**
+     * LayerRaster Method
+     * setCurrentRaster is the setter to define the current raster
+     * @param newCurrentRaster
+     */
+    this.setCurrentRaster = function(newCurrentRaster){
+        this.currentRaster = newCurrentRaster;
+    };
+
+    /**
+     * LayerRaster Method
+     * getRasterLayers is the getter to access at the list of rasters
+     * @returns {Array}
+     */
+    this.getRasterLayers = function(){
+        return this.ListRasters;
+    };
+
+    /**
+     * LayerRaster Method
+     * getRasterByName is the getter to access at specific raster with this name
+     * @param name
+     * @returns {*}
+     */
+    this.getRasterByName = function(name){
+        return this.ListRasters[name];
+    };
 }
