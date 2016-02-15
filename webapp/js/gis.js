@@ -20,13 +20,18 @@ init_carto = function(idMap, globalParameters, parameters) {
 var globalParameters = new Array();
 var parameters = new Array();
 var GisMap = new GisMap();
-parameters.push(parameters['TypeCarte'] = '');
-parameters.push(parameters['Controles'] = ['Overview', 'ZoomExtent', 'ScaleBar', 'MousePosition']);
-parameters.push(parameters['Interacts'] = ['Rotate', 'ZoomZone', 'Draw', 'Measure', 'Select']);
-parameters.push(parameters['Projection'] = '');//EPSG:4326');
-parameters.push(parameters['Extent'] = '');//[225000,6237500,292000,6249500]);
-parameters.push(parameters['ZoomStart'] = '12');
-parameters.push(parameters['Zoom'] = ['0' , '18']);
-parameters.push(parameters['BackGround'] = [['OSM',null],['MapQuest','sat'],['CAPGEO',null]]);
+
+<#list map_parameter.mapParameters?keys as key>
+	parameters.push(parameters[key] = map_parameter.getParameters(key));
+</#list>
+
+//parameters.push(parameters['TypeCarte'] = '');
+//parameters.push(parameters['Controles'] = ['Overview', 'ZoomExtent', 'ScaleBar', 'MousePosition']);
+//parameters.push(parameters['Interacts'] = ['Rotate', 'ZoomZone', 'Draw', 'Measure', 'Select']);
+//parameters.push(parameters['Projection'] = '');//EPSG:4326');
+//parameters.push(parameters['Extent'] = '');//[225000,6237500,292000,6249500]);
+//parameters.push(parameters['ZoomStart'] = '12');
+//parameters.push(parameters['Zoom'] = ['0' , '18']);
+//parameters.push(parameters['BackGround'] = [['OSM',null],['MapQuest','sat'],['CAPGEO',null]]);
 
 initGisMap(globalParameters, parameters);

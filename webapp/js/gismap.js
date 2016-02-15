@@ -94,6 +94,10 @@ var GisMap = function() {
             view.fit(geomColl.getExtent(), map.getSize());
         }
     }
+    
+    zoomToPoint = function(x,y){
+    	view.fit(new ol.geom.Point([x,y]), map.getSize());
+    }
 
     deleteFeatures = function(){
         selectFeatures = getSelectedFeatures().getArray();
