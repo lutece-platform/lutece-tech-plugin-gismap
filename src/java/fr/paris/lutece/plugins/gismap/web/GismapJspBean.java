@@ -110,7 +110,7 @@ public class GismapJspBean extends PluginAdminPageJspBean
         Map<String, Object> rootModel = new HashMap<String, Object>(  );
         View view = ViewHome.findByPrimaryKey(1);
         
-        List<Geometry> listGeometry = GeometryHome.getList();
+        //List<Geometry> listGeometry = GeometryHome.getList();
         
         rootModel.put(PARAMETER_MAP_PARAMETER, view.getMapParameter());
         HtmlTemplate templateList = AppTemplateService.getTemplate( view.getTemplateFile(), getLocale(  ), rootModel );

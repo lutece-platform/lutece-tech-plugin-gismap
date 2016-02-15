@@ -1,7 +1,5 @@
-<script type="text/javascript">
-<!--
-
-//-->
+<script>
+/*global */
 /**
  * File to call the Gis Component with all parameters
  */
@@ -21,15 +19,16 @@ init_carto = function(idMap, globalParameters, parameters) {
 //Extent = 225000,6237500,292000,6249500
 //Point = 225000,6237500 ou  2.35,48.85
 
-var globalParameters = new Array();
-var parameters = new Array();
-var GisMap = new GisMap();
 
+	var globalParameters = [];
+	var parameters = [];
+	var GisMap = new GisMap();
+	
 <#list map_parameter.getParameters()?keys as key>
 	<#assign strKey = "'" + key + "'" >
 	<#assign strVal = map_parameter.getParameters(key) >
 	parameters.push(parameters[${strKey}] = ${strVal});
 </#list>
-initGisMap(globalParameters, parameters);
+GisMap.initGisMap(globalParameters, parameters);
 
 </script>

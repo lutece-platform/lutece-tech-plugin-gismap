@@ -15,7 +15,7 @@ public class MapParameterDAO implements IMapParameterDAO
 	public static final String PARAMETER = ".parameter.";
     public static final String MAP_TYPE = "TypeCarte";
     public static final String CONTROLS = "Controles";
-    public static final String INTERACTS = "Interacts";
+    //public static final String INTERACTS = "Interacts";
     public static final String PROJECTION = "Projection";
     public static final String EXTENT = "Extent";
     public static final String ZOOMSTART = "ZoomStart";
@@ -40,9 +40,9 @@ public class MapParameterDAO implements IMapParameterDAO
 		String[] strControlPropertyArray = strControlProperty.split(",");
 		mapParameter.setParameters(CONTROLS, getCutString(strControlPropertyArray));
 		
-		String strInteractsProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + INTERACTS );
+		/*String strInteractsProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + INTERACTS );
 		String[] strInteractsPropertyArray = strInteractsProperty.split(",");
-		mapParameter.setParameters(INTERACTS, getCutString(strInteractsPropertyArray));
+		mapParameter.setParameters(INTERACTS, getCutString(strInteractsPropertyArray));*/
 		
 		String strProjectionProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + PROJECTION );
 		String[] strProjectionPropertyArray = strProjectionProperty.split(",");
