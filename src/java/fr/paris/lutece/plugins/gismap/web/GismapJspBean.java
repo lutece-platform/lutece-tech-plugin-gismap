@@ -33,8 +33,8 @@
  */
 package fr.paris.lutece.plugins.gismap.web;
 
-import fr.paris.lutece.plugins.gismap.business.MapParameter;
-import fr.paris.lutece.plugins.gismap.business.MapParameterHome;
+import fr.paris.lutece.plugins.gismap.business.Geometry;
+import fr.paris.lutece.plugins.gismap.business.GeometryHome;
 import fr.paris.lutece.plugins.gismap.business.View;
 import fr.paris.lutece.plugins.gismap.business.ViewHome;
 import fr.paris.lutece.plugins.gismap.service.GismapService;
@@ -43,8 +43,17 @@ import fr.paris.lutece.portal.service.security.UserNotSignedException;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
 import fr.paris.lutece.util.html.HtmlTemplate;
+import fr.paris.lutece.util.json.AbstractJsonResponse;
+import fr.paris.lutece.util.json.JsonResponse;
+import fr.paris.lutece.util.json.JsonUtil;
 
+
+
+
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -101,6 +110,8 @@ public class GismapJspBean extends PluginAdminPageJspBean
         Map<String, Object> rootModel = new HashMap<String, Object>(  );
         View view = ViewHome.findByPrimaryKey(1);
         
+        List<Geometry> listGeometry = GeometryHome.getList();
+        
         rootModel.put(PARAMETER_MAP_PARAMETER, view.getMapParameter());
         HtmlTemplate templateList = AppTemplateService.getTemplate( view.getTemplateFile(), getLocale(  ), rootModel );
         
@@ -108,4 +119,25 @@ public class GismapJspBean extends PluginAdminPageJspBean
 
         return getAdminPage( templateList.getHtml(  ) );
     }
+    
+    public String getAddressList(HttpServletRequest request)   {
+		AbstractJsonResponse jsonResponse = null;
+		String strTerm = request.getParameter("term");
+		ArrayList<String> contries = new ArrayList<String>();
+		ArrayList<String> contriesReturn = new ArrayList<String>();
+		contries.add("Senegal");contries.add("France");contries.add("USA");contries.add("Australie");contries.add("Arabie");
+		for(String contry : contries)
+		{
+			if(strTerm.charAt(0) == contry.charAt(0))
+			{
+				contriesReturn.add(contry);
+			}
+		}
+		
+		jsonResponse = new JsonResponse(contriesReturn);
+		
+		return JsonUtil.buildJsonResponse(jsonResponse);
+	}
+    
+   
 }

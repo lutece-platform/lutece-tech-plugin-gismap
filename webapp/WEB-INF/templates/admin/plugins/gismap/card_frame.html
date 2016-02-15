@@ -1,0 +1,45 @@
+<div>
+	    <input type="hidden" id="id_Select" value="225000,6237500,292000,6249500" />
+	    <div id="map" class="map"></div>
+	    <button id="on" onClick="activeGPS()">GPS On</button>
+	    <button id="off" onClick="disactiveGPS()">GPS Off</button>
+	    <button id="zoom" onClick="zoomTo()">Zoom To</button>
+	    <button id="ruler" onClick="deleteFeatures()">Ruler</button>
+	    <select id="mapSelector">
+	      <option selected value="OSM">OSM</option>
+	      <option value="MapQuest">MapQuest</option>
+	      <option value="CAPGEO">CAPGEO</option>
+	    </select>
+	    <form class="form-inline">
+	      <label>Tool Selector : &nbsp;</label>
+	      <select id="specificToolSelector">
+	        <option value="Select">Select</option>
+	        <option value="Measure">Measure</option>
+	        <option value="Draw">Draw</option>
+	      </select>
+	    </form>
+	    <form class="form-inline">
+	      <label>Draw Geometry type : &nbsp;</label>
+	      <select id="drawToolSelector" disabled>
+	        <option value="None">None</option>
+	        <option value="Point">Point</option>
+	        <option value="LineString">LineString</option>
+	        <option value="Polygon">Polygon</option>
+	        <option value="Circle">Circle</option>
+	        <option value="Square">Square</option>
+	        <option value="Box">Box</option>
+	      </select>
+	    </form>
+	    <form class="form-inline">
+	      <label>Measure Geometry type : &nbsp;</label>
+	        <select id="measureType" disabled>
+	            <option value="None">None</option>
+	            <option value="Length">Length</option>
+	            <option value="Area">Area</option>
+	        </select>
+	        <label class="checkbox" disabled>
+	          <input type="checkbox" id="measureAdv">
+	          Mesures Geodesique
+	        </label>
+	    </form>
+</div>
