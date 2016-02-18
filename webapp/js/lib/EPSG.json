@@ -1,0 +1,117 @@
+{"2154":{
+  "status": "ok",
+  "number_result": 1,
+  "results": [
+    {
+      "code": "2154",
+      "kind": "CRS-PROJCRS",
+      "bbox": [
+        51.56,
+        -9.86,
+        41.15,
+        10.38
+      ],
+      "wkt": "PROJCS[\"RGF93 / Lambert-93\",GEOGCS[\"RGF93\",DATUM[\"Reseau_Geodesique_Francais_1993\",SPHEROID[\"GRS 1980\",6378137,298.257222101,AUTHORITY[\"EPSG\",\"7019\"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY[\"EPSG\",\"6171\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4171\"]],PROJECTION[\"Lambert_Conformal_Conic_2SP\"],PARAMETER[\"standard_parallel_1\",49],PARAMETER[\"standard_parallel_2\",44],PARAMETER[\"latitude_of_origin\",46.5],PARAMETER[\"central_meridian\",3],PARAMETER[\"false_easting\",700000],PARAMETER[\"false_northing\",6600000],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"X\",EAST],AXIS[\"Y\",NORTH],AUTHORITY[\"EPSG\",\"2154\"]]",
+      "unit": "metre",
+      "proj4": "+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+      "name": "RGF93 / Lambert-93",
+      "area": "France - onshore and offshore, mainland and Corsica.",
+      "default_trans": 1671,
+      "trans": [
+        1671,
+        8573
+      ],
+      "accuracy": 1.0
+    }
+  ]
+},"3857":{
+  "status": "ok",
+  "number_result": 1,
+  "results": [
+    {
+      "code": "3857",
+      "kind": "CRS-PROJCRS",
+      "bbox": [
+        85.06,
+        -180.0,
+        -85.06,
+        180.0
+      ],
+      "wkt": "PROJCS[\"WGS 84 / Pseudo-Mercator\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]],PROJECTION[\"Mercator_1SP\"],PARAMETER[\"central_meridian\",0],PARAMETER[\"scale_factor\",1],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"X\",EAST],AXIS[\"Y\",NORTH],EXTENSION[\"PROJ4\",\"+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs\"],AUTHORITY[\"EPSG\",\"3857\"]]",
+      "unit": "metre",
+      "proj4": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs",
+      "name": "WGS 84 / Pseudo-Mercator",
+      "area": "World between 85.06\u00b0S and 85.06\u00b0N.",
+      "default_trans": 0,
+      "trans": [],
+      "accuracy": ""
+    }
+  ]
+},"3949":{
+  "status": "ok",
+  "number_result": 1,
+  "results": [
+    {
+      "code": "3949",
+      "kind": "CRS-PROJCRS",
+      "bbox": [
+        50.0,
+        -4.87,
+        48.0,
+        8.23
+      ],
+      "wkt": "PROJCS[\"RGF93 / CC49\",GEOGCS[\"RGF93\",DATUM[\"Reseau_Geodesique_Francais_1993\",SPHEROID[\"GRS 1980\",6378137,298.257222101,AUTHORITY[\"EPSG\",\"7019\"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY[\"EPSG\",\"6171\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4171\"]],PROJECTION[\"Lambert_Conformal_Conic_2SP\"],PARAMETER[\"standard_parallel_1\",48.25],PARAMETER[\"standard_parallel_2\",49.75],PARAMETER[\"latitude_of_origin\",49],PARAMETER[\"central_meridian\",3],PARAMETER[\"false_easting\",1700000],PARAMETER[\"false_northing\",8200000],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"X\",EAST],AXIS[\"Y\",NORTH],AUTHORITY[\"EPSG\",\"3949\"]]",
+      "unit": "metre",
+      "proj4": "+proj=lcc +lat_1=48.25 +lat_2=49.75 +lat_0=49 +lon_0=3 +x_0=1700000 +y_0=8200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+      "name": "RGF93 / CC49",
+      "area": "France - mainland onshore between 48\u00b0N and 50\u00b0N.",
+      "default_trans": 1671,
+      "trans": [
+        1671,
+        8573
+      ],
+      "accuracy": 1.0
+    }
+  ]
+},"4326":{
+  "status": "ok",
+  "number_result": 1,
+  "results": [
+    {
+      "code": "4326",
+      "kind": "CRS-GEOGCRS",
+      "bbox": [
+        90.0,
+        -180.0,
+        -90.0,
+        180.0
+      ],
+      "wkt": "GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]]",
+      "unit": "degree (supplier to define representation)",
+      "proj4": "+proj=longlat +datum=WGS84 +no_defs",
+      "name": "WGS 84",
+      "area": "World.",
+      "default_trans": 0,
+      "trans": [],
+      "accuracy": ""
+    }
+  ]
+},"102110":{
+  "status": "ok",
+  "number_result": 1,
+  "results": [
+    {
+      "code": "102110",
+      "kind": "CRS-PROJCRS",
+      "bbox": "",
+      "wkt": "PROJCS[\"RGF_1993_Lambert_93\",GEOGCS[\"GCS_RGF_1993\",DATUM[\"RGF_1993\",SPHEROID[\"GRS_1980\",6378137,298.257222101]],PRIMEM[\"Greenwich\",0],UNIT[\"Degree\",0.017453292519943295]],PROJECTION[\"Lambert_Conformal_Conic_2SP\"],PARAMETER[\"False_Easting\",700000],PARAMETER[\"False_Northing\",6600000],PARAMETER[\"Central_Meridian\",3],PARAMETER[\"Standard_Parallel_1\",44],PARAMETER[\"Standard_Parallel_2\",49],PARAMETER[\"Latitude_Of_Origin\",46.5],UNIT[\"Meter\",1],AUTHORITY[\"EPSG\",\"102110\"]]",
+      "unit": "",
+      "proj4": "+proj=lcc +lat_1=44 +lat_2=49 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +units=m +no_defs",
+      "name": "RGF 1993 Lambert 93",
+      "area": "",
+      "default_trans": 0,
+      "trans": [],
+      "accuracy": ""
+    }
+  ]
+}}

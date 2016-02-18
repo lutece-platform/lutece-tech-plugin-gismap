@@ -24,7 +24,7 @@ function TOC (){
                 rasterLayer.setCurrentRaster(dataName);
             }
         } else if(select === 'Vector'){
-            var featureLayers = layer.getRasterLayers();
+            var featureLayers = layer.getFeaturesLayers();
             for (var j = 0; j < featureLayers.length; j++) {
                 if(featureLayers[j] === dataName){
                     if(layer.getCurrentRaster() !== null){

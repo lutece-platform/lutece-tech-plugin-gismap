@@ -55,41 +55,77 @@ function Layer() {
     this.addWFSLayer = function(wfs){
         var wfsServer = wfs[0];
         var wfsUrl = wfs[1];
-        var wfsLayers = wfs[2];
-        for(var wfsLayer = 0;  wfsLayer < wfsLayers.length; wfsLayer++){
-            featureLayer.createWFSLayer(wfsServer, wfsUrl, wfsLayers[wfsLayer]);
-            this.ListLayers.push(wfsLayers[wfsLayer]);
-        }
+        var wfsLayer = wfs[2];
+        var wfsQuery = wfs[3];
+        featureLayer.createWFSLayer(wfsServer, wfsUrl, wfsLayer, wfsQuery);
+        this.ListLayers.push(wfsLayer);
     };
 
     /**
      * Layer Method
      * addLayerVector add a layer map at the ListLayer
      */
-    this.addLayerVector = function(){
-        var layerTemp = new ol.layer.Vector({
-            source: new ol.source.Vector({
-                features: this.layerVectors.getFeatures()
-            })
-        });
-        this.ListLayers.push(layerTemp);
+    this.addLayerVector = function(wkt, format){
+        var name = featureLayer.addLayerFeature(wkt, format);
+        this.ListLayers.push(name);
     };
 
+    /**
+     * Layer Method
+     * getLayers is a getter to all Layers
+     * @returns {Array}
+     */
     this.getLayers = function(){
         return this.ListLayers;
     };
 
-    this.getLayersMap = function(){
-        var ListLayersMap = [];
+    /**
+     * Layer Method
+     * getLayersRasterMap is a getter to all Rasters Layers
+     * @returns {Array}
+     */
+    this.getLayersRasterMap = function(){
+        var ListLayersRasterMap = [];
         for (var layerMap = 0; layerMap < this.ListLayers.length; layerMap++){
-            if(rasterLayer.getRasterByName(this.ListLayers[layerMap])!== null) {
-                ListLayersMap.push(rasterLayer.getRasterByName(this.ListLayers[layerMap]));
-            }else if(featureLayer.getFeatureByName(this.ListLayers[layerMap])!== null) {
-                ListLayersMap.push(featureLayer.getFeatureByName(this.ListLayers[layerMap]));
+            if(rasterLayer.getRasterByName(this.ListLayers[layerMap])!== undefined) {
+                ListLayersRasterMap.push(rasterLayer.getRasterByName(this.ListLayers[layerMap]));
             }
         }
-        ListLayersMap.push(drawTools.getDrawLayer());
-        ListLayersMap.push(measureTools.getMeasureLayer());
-        return ListLayersMap;
+        return ListLayersRasterMap;
+    };
+
+    /**
+     * Layer Method
+     * getLayersFeatureMap is a getter to all Features Layers
+     * @returns {Array}
+     */
+    this.getLayersFeatureMap = function(){
+        var ListLayersFeatureMap = [];
+        for (var layerMap = 0; layerMap < this.ListLayers.length; layerMap++){
+            if(featureLayer.getFeatureByName(this.ListLayers[layerMap])!== undefined) {
+                ListLayersFeatureMap.push(featureLayer.getFeatureByName(this.ListLayers[layerMap]));
+            }
+        }
+        return ListLayersFeatureMap;
+    };
+
+    /**
+     * Layer Method
+     * getLayersMap is a getter to all Layers in groups
+     * @returns {Array}
+     */
+     this.getLayersMap = function(){
+         var ListLayersMap = [];
+         ListLayersMap.push(new ol.layer.Group({
+             title:'Base maps',
+             layers: this.getLayersRasterMap()
+         }));
+         ListLayersMap.push(new ol.layer.Group({
+             title:'Layers',
+             layers: this.getLayersFeatureMap()
+         }));
+         ListLayersMap.push(drawTools.getDrawLayer());
+         ListLayersMap.push(measureTools.getMeasureLayer());
+         return ListLayersMap;
     };
 }
