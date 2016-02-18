@@ -1,4 +1,4 @@
-/*global ol, view*/
+/*global ol, view, rasterLayer*/
 /**
  * LayerRaster Class manage all rasters layers in the map
  */
@@ -31,11 +31,15 @@ function LayerRaster() {
         var layer = data[1];
         if (name === 'OSM'){
             this.ListRasters[name] = new ol.layer.Tile({
+                title: name,
+                type: 'base',
                 source: new ol.source.OSM(),
                 visible:true
             });
         }else if (name === 'MapQuest'){
             this.ListRasters[name] = new ol.layer.Tile({
+                title: name,
+                type: 'base',
                 source: new ol.source.MapQuest({layer: layer}),
                 visible:false
             });
@@ -52,21 +56,27 @@ function LayerRaster() {
      */
     this.createWMSLayer = function(server, url, layerName){
         if(server === 'AGS-IMS'){
-            this.ListRaster[layerName] = new ol.layer.Tile({
+            this.ListRasters[layerName] = new ol.layer.Tile({
+                title: layerName,
+                type: 'base',
                 source: new ol.source.TileArcGISRest({
                     url: url+layerName+'/ImageServer'
                 }),
                 visible:false
             });
         }else if(server === 'AGS-MPS'){
-            this.ListRaster[layerName] = new ol.layer.Tile({
+            this.ListRasters[layerName] = new ol.layer.Tile({
+                title: layerName,
+                type: 'base',
                 source: new ol.source.TileArcGISRest({
                     url: url+layerName+'/MapServer'
                 }),
                 visible:false
             });
         }else if (server === 'GeoServer'){
-            this.ListRaster[layerName] = new ol.layer.Tile({
+            this.ListRasters[layerName] = new ol.layer.Tile({
+                title: layerName,
+                type: 'base',
                 source: new ol.source.TileWMS({
                     url: url,
                     params: {'LAYERS': layerName},
@@ -84,14 +94,18 @@ function LayerRaster() {
      */
     this.createWMTSLayer = function(wmts){
         var layerName = wmts[0];
-        var proj = wmts[1];
+        var currentProj = new ol.proj.get(wmts[1]);
+        console.log(currentProj.getCode())
         fetch(wmts[2]).then(function(response) {
             return response.text();
         }).then(function(text) {
             var dataWMTS = readerWMTS.read(text);
-            this.ListRasters[layerName] = new ol.layer.Tile({
+            console.log(dataWMTS);
+            rasterLayer.ListRasters[layerName] = new ol.layer.Tile({
+                title: layerName,
+                type: 'base',
                 source: new ol.source.WMTS.optionsFromCapabilities(dataWMTS,
-                {layer: layerName, matrixSet: proj}),
+                {layer: layerName, matrixSet: currentProj.getCode()}),
                 visible:false
             });
 

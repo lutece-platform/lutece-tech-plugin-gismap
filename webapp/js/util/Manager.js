@@ -1,4 +1,4 @@
-/*global view, control, layer */
+/*global view, control, layer, projection */
 /**
  * Manager Class read and manage all parameters of the Gis Component
  */
@@ -40,22 +40,24 @@ var Manager = function() {
         /*if(parameters['TypeCarte'] !== ''){
             $.mapChoose = parameters['TypeCarte'];
         }*/
-        if(parameters['Projection'] !== ''){
-            view.setProjection(parameters['Projection']);
-            projectionChanged = true;
+        if(parameters['Projection'] !== '') {
+            projection.getEpsgData(parameters['Projection']);
+            if (parameters['Projection'] !== '3857'){
+                projectionChanged = true;
+            }
         }
-        if(parameters['Extent'] !== ''){
+        if(parameters['Extent'] !== '') {
             extentDefine = parameters['Extent'];
             specificExtent = true;
-        }
-        if(parameters['Controles'] !== ''){
-            control.initControls(parameters['Controles'], extentDefine, projectionChanged, specificExtent);
         }
         if(parameters['ZoomStart'] !== ''){
             view.setZoomInit(parameters['ZoomStart']);
         }
         if(parameters['Zoom'] !== ''){
             view.setZoom(parameters['Zoom'][0], parameters['Zoom'][1]);
+        }
+        if(parameters['Controles'] !== ''){
+            control.initControls(parameters['Controles'], extentDefine, projectionChanged, specificExtent);
         }
         if(parameters['BackGround'] !== ''){
             for(var background = 0; background < parameters['BackGround'].length; background++){
@@ -77,9 +79,12 @@ var Manager = function() {
                 layer.addWMTSLayerRaster(parameters['WMTS'][wmts]);
             }
         }
-        /*if(parameters['WKT'] !== ''){
-            layer.addFeature(parameters['WKT'], 'WKT');
-        }*/
+        if(parameters['WKT'] !== ''){
+            layer.addLayerVector(parameters['WKT'], 'WKT');
+        }
+        if(parameters['GeoJSON'] !== ''){
+            layer.addLayerVector(parameters['GeoJSON'], 'GeoJSON');
+        }
     };
 
     return{

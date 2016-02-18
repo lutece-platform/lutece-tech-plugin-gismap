@@ -1,4 +1,4 @@
-/*globals ol*/
+/*globals ol, projection*/
 /**
  * View Class manage the view of the map
  */
@@ -6,20 +6,10 @@
 function View() {
     'use strict';
     /**
-     * projectionUser define the specific projection of the view
-     * @type {string}
-     */
-    this.projectionUser = 'EPSG:3857';
-    /**
      * centerUser define the center of the view
      * @type {number[]}
      */
     this.centerUser = [0,0];
-    /**
-     * extentUser define the extent of the view
-     * @type {Array}
-     */
-    this.extentUser = [];
     /**
      * zoomMin define the minimal zoom possible of the map
      * @type {number}
@@ -47,7 +37,11 @@ function View() {
      * @param newCenter
      */
     this.setCenter = function (newCenter){
-        this.centerUser = newCenter;
+        if(newCenter === null){
+            this.centerUser = ol.proj.fromLonLat(this.centerUser, projection.getProjection());
+        }else{
+            this.centerUser = newCenter;
+        }
     };
 
     /**
@@ -57,42 +51,6 @@ function View() {
      */
     this.getCenter = function (){
         return this.centerUser;
-    };
-
-    /**
-     * View Method
-     * setExtent is a setter to define the extent of the view
-     * @param newExtent
-     */
-    this.setExtent = function (newExtent){
-        this.extentUser = newExtent;
-    };
-
-    /**
-     * View Method
-     * getExtent is a setter to access at the extent of the view
-     * @returns {Array|*}
-     */
-    this.getExtent = function (){
-        return this.extentUser;
-    };
-
-    /**
-     * View Method
-     * setProjection is a setter to define the projection of the view
-     * @param newProjection
-     */
-    this.setProjection = function (newProjection){
-        this.projectionUser = newProjection;
-    };
-
-    /**
-     * View Method
-     * getProjection is a getter to access at the projection of the view
-     * @returns {string|*}
-     */
-    this.getProjection = function (){
-        return this.projectionUser;
     };
 
     /**
@@ -130,11 +88,12 @@ function View() {
      */
     this.createView = function(){
          this.view = new ol.View({
-            projection: this.projectionUser,
-            center: this.centerUser,
-            zoom: this.zoomInit,
-            minZoom: this.zoomMin,
-            maxZoom: this.zoomMax
+             projection: projection.getProjection().getCode(),
+             extent: projection.getExtent(),
+             center: this.centerUser,
+             zoom: this.zoomInit,
+             minZoom: this.zoomMin,
+             maxZoom: this.zoomMax
 
         });
     };

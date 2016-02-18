@@ -1,4 +1,4 @@
-/*global ol*/
+/*global ol, layerswitcher*/
 /**
  * Control Class manage the control of the map
  */
@@ -20,16 +20,17 @@ function Control() {
      * @param projectionChanged
      * @param specificExtent
      */
-    this.initControls = function(activeControls, extentDefine, projectionChanged, specificExtent){
+    this.initControls = function(activeControls, projectionChanged, specificExtent, extentDefine){
         for(var ctrl = 0; ctrl < activeControls.length; ctrl++){
-            if(activeControls[ctrl] === "Overview" && projectionChanged === false){
+            if(activeControls[ctrl] === "Overview" && projectionChanged === false) {
                 this.ListControl.push(new ol.control.OverviewMap());
-            } if(activeControls[ctrl] === "FullScreen" ){
+            }
+            if(activeControls[ctrl] === "FullScreen" ){
                 this.ListControl.push(new ol.control.FullScreen());
             }
             if(activeControls[ctrl] === "ZoomExtent" ){
                 this.ListControl.push(new ol.control.ZoomToExtent());
-                if(specificExtent){
+                if(specificExtent) {
                     this.ListControl.push(new ol.control.ZoomToExtent({
                         extent: extentDefine
                     }));
@@ -45,6 +46,10 @@ function Control() {
                 this.ListControl.push(new ol.control.MousePosition());
             }
         }
+    };
+
+    this.getLayerSwitcher = function(){
+        return new ol.control.LayerSwitcher();
     };
 
     /**

@@ -1,4 +1,4 @@
-/*global Manager, ol, Control, Interaction, Layer, LayerRaster, Feature, View, TOC, Measure, DrawTools, SpecificInteracts, GeoPoint, Print*/
+/*global ol, Manager, Control, Projection, Interaction, Layer, LayerRaster, Feature, View, Measure, DrawTools, SpecificInteracts, GeoPoint, Print*/
 
 /**
  * File to manage the Gis Component with all parameters
@@ -7,7 +7,6 @@
 /**
  * Global Object declaration
  */
-var toc;
 var view;
 var rasterLayer;
 var featureLayer;
@@ -17,7 +16,9 @@ var interact;
 var drawTools;
 var measureTools;
 var specifInteracts;
+var projection;
 var GlobalMap;
+var geoPoint;
 
 //var mapChoose;
 
@@ -27,7 +28,7 @@ var GisMap = function () {
      *  Global Object instantiation
      */
     var manager = new Manager();
-    toc = new TOC();
+    projection = new Projection();
     view = new View();
     rasterLayer = new LayerRaster();
     featureLayer = new Feature();
@@ -51,9 +52,8 @@ var GisMap = function () {
          }*/
         manager.readAndInitParams(globalParameters, parameters);
         manager.defineCenterAndExtentByParameter(document.getElementById('id_Select').value);
-        interact.initInteractions();
         view.createView();
-        toc.onChangeData('Raster', $('#mapSelector').val());
+        interact.initInteractions();
         var map = new ol.Map({
             controls: ol.control.defaults().extend(control.getControls()),
             interactions: ol.interaction.defaults().extend(interact.getInteracts()),
@@ -61,9 +61,8 @@ var GisMap = function () {
             target: 'map',
             view: view.getView()
         });
-        if (view.getExtent().length !== 0) {
-            view.getView().fit(view.getExtent(), map.getSize());
-        }
+        map.addControl(control.getLayerSwitcher());
+        view.getView().fit(projection.getExtent(), map.getSize());
         /*if(mapChoose == "Attributaire"){
          createMapAttribut();
          }else{
@@ -71,14 +70,6 @@ var GisMap = function () {
          }*/
         return map;
     }
-
-    /**
-     * GisMap Listener
-     * Listener to follow mapSelector event
-     */
-    $('#mapSelector').change( function () {
-        toc.onChangeData('Raster', $('#mapSelector').val());
-    });
 
     /**
      * GisMap Listener
@@ -112,14 +103,14 @@ var GisMap = function () {
     var zoomTo = function () {
         var selectFeatures = SpecificInteracts.getSelectedFeatures().getArray();
         if (selectFeatures.length === 1) {
-            View.getView().fit(selectFeatures[0].getGeometry(), map.getSize());
+            View.getView().fit(selectFeatures[0].getGeometry(), GlobalMap.getSize());
         } else if (selectFeatures.length > 1) {
             var arrayGeom = [];
             for (var selectFeature = 0; selectFeature < selectFeatures.length; selectFeature++) {
                 arrayGeom.push(selectFeatures[selectFeature].getGeometry());
             }
             var geomColl = new ol.geom.GeometryCollection(arrayGeom);
-            View.getView().fit(geomColl.getExtent(), map.getSize());
+            View.getView().fit(geomColl.getExtent(), GlobalMap.getSize());
         }
     };
 
@@ -132,7 +123,7 @@ var GisMap = function () {
         if (selectFeatures.length !== 0) {
             var selectedLayer = SpecificInteracts.getSelectedLayer(selectFeatures[0]);
             if (selectedLayer === Measure.getMeasureLayer()) {
-                Measure.cleanMeasureLayer(map);
+                Measure.cleanMeasureLayer(GlobalMap);
             } else if (selectFeatures.length === 1) {
                 selectedLayer.getSource().removeFeature(selectFeatures[0]);
             } else if (selectFeatures.length > 1) {
@@ -154,6 +145,7 @@ var GisMap = function () {
      */
     var initGisMap = function(globalParameters, parameters) {
         GlobalMap = initGis('#map', globalParameters, parameters);
+        geoPoint = new GeoPoint(GlobalMap);
         return GlobalMap;
     };
 

@@ -1,4 +1,4 @@
-/*globals ol, view*/
+/*globals ol, projection*/
 
 /**
  *  GeoPoint Class manage the Geolocation system
@@ -11,8 +11,14 @@ function GeoPoint(currentMap) {
      * @type {ol.Geolocation}
      */
     this.geoloc = new ol.Geolocation({
-        projection: view.getProjection()
+        projection: projection.getProjection()
     });
+
+    /**
+     * enable is the current value to show the GPS activity
+     * @type {boolean}
+     */
+    this.enable = false;
 
     /**
      * geolocFeature contains all geoloc features
@@ -75,6 +81,7 @@ function GeoPoint(currentMap) {
      * enableGPS active the tracking GPS and the draw the layer on the map
      */
     this.enableGPS = function(){
+        this.enable = true;
         this.geolocation.setTracking(true);
         this.geolocLayer.setVisible(true);
     };
@@ -84,8 +91,21 @@ function GeoPoint(currentMap) {
      * disableGPS inactive the tracking GPS and the delete the layer on the map
      */
     this.disableGPS = function(){
+        this.enable = false;
         this.geolocation.setTracking(false);
         this.geolocLayer.setVisible(false);
         currentMap.render();
+    };
+
+    /**
+     * GeoPoint METHOD
+     * manageGPS is the method to manage the tracking GPS
+     */
+    this.manageGPS = function(){
+        if(this.enable){
+            this.disableGPS();
+        }else{
+            this.enableGPS();
+        }
     };
 }
