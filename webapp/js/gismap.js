@@ -112,6 +112,7 @@ var GisMap = function () {
             var geomColl = new ol.geom.GeometryCollection(arrayGeom);
             View.getView().fit(geomColl.getExtent(), GlobalMap.getSize());
         }
+
     };
 
     /**

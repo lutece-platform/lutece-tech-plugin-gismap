@@ -1,72 +1,56 @@
-<link rel="stylesheet" href="js/lib/ol.css" type="text/css">
-<script src="js/lib/ol.js"></script>
-<script src="js/lib/proj4js.js"></script>
-<script src="js/data/Feature.js"></script>
-<script src="js/data/LayerRaster.js"></script>
-<script src="js/data/layer.js"></script>
-<script src="js/util/Manager.js"></script>
-<script src="js/data/view.js"></script>
-<script src="js/tools/drawTools.js"></script>
-<script src="js/tools/SpecificInteracts.js"></script>
-<script src="js/tools/Measure.js"></script>
-<script src="js/tools/control.js"></script>
-<script src="js/tools/Interaction.js"></script>
-<script src="js/tools/geoPoint.js"></script>
-<script src="js/tools/TOC.js"></script>
-<script src="js/gismap.js"></script>
-
-<div class="row">
-	<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-		<span>Entrer une adresse : </span>
-		<input type="text" name="address">
-	</div>
-	<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-	    <input type="hidden" id="id_Select" value="225000,6237500,292000,6249500" />
-	    <div id="map" class="map"></div>
-	    <button id="on" onClick="activeGPS()">GPS On</button>
-	    <button id="off" onClick="disactiveGPS()">GPS Off</button>
-	    <button id="zoom" onClick="zoomTo()">Zoom To</button>
-	    <button id="ruler" onClick="deleteFeatures()">Ruler</button>
-	    <select id="mapSelector">
-	      <option selected value="OSM">OSM</option>
-	      <option value="MapQuest">MapQuest</option>
-	      <option value="CAPGEO">CAPGEO</option>
-	    </select>
-	    <form class="form-inline">
-	      <label>Tool Selector : &nbsp;</label>
-	      <select id="specificToolSelector">
-	        <option value="Select">Select</option>
-	        <option value="Measure">Measure</option>
-	        <option value="Draw">Draw</option>
-	      </select>
-	    </form>
-	    <form class="form-inline">
-	      <label>Draw Geometry type : &nbsp;</label>
-	      <select id="drawToolSelector" disabled>
-	        <option value="None">None</option>
-	        <option value="Point">Point</option>
-	        <option value="LineString">LineString</option>
-	        <option value="Polygon">Polygon</option>
-	        <option value="Circle">Circle</option>
-	        <option value="Square">Square</option>
-	        <option value="Box">Box</option>
-	      </select>
-	    </form>
-	    <form class="form-inline">
-	      <label>Measure Geometry type : &nbsp;</label>
-	        <select id="measureType" disabled>
-	            <option value="None">None</option>
-	            <option value="Length">Length</option>
-	            <option value="Area">Area</option>
-	        </select>
-	        <label class="checkbox" disabled>
-	          <input type="checkbox" id="measureAdv">
-	          Mesures Geodesique
-	        </label>
-	    </form>
-
-	</div>
+<div class="row" style="margin: 5px;">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom: 5px;">
+	<input id="address" name="address" class="form-control" value="Entrer votre adresse " onclick="this.value='';"/>
+	<input type="hidden" id="address_x" value="x" />
+	<input type="hidden" id="address_y" value="y" />
+	<script src="js/autocomplete/external/jquery/jquery.js"></script>
+	<script src="js/autocomplete/jquery-ui.js"></script>
+	<script>
+	$('#address').autocomplete({
+		source : function(request, reponse){ // les deux arguments représentent les données nécessaires au plugin
+		$.ajax({
+			url : "https://p89-ws.apps.paris.fr/SuggestPOI/rest/services/SuggestPOI.jsp",
+		    dataType: "jsonp",
+		    data: {
+		    	clientId : "gismap",
+				nbResults : 5, 
+				query : request.term
+		    },
+		    success : function(data){
+                reponse($.map(getResult(data.result), function(objet){
+                	return objet;
+                    
+                }));
+            }
+        	});
+    	},
+    	select : function(event, ui){
+    		$('#address_x').val(ui.item.x);
+    		$('#address_y').val(ui.item.y);
+        }
+	}).focus();
+	function getResult(result) {
+		var resultArray = [];
+		var index;
+		for	(index = 0; index < result.length; index++) {
+			var object = new Object();
+			object.value = result[index].libelleTypo;
+			object.label = result[index].libelleTypo;
+			object.x = result[index].x;
+			object.y = result[index].y;
+			resultArray.push(object);
+		}
+		return resultArray;	
+    };
+    	
+</script>
 </div>
-<!-- <script src="js/gis.js"></script> -->
-<#include "gis.html">
-    
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	<#include "script.html">
+
+	<#include "card_frame.html">
+	
+	<#include "gis.html">
+</div>
+</div>
+

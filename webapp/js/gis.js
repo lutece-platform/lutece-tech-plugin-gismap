@@ -18,6 +18,7 @@ init_carto = function(idMap, globalParameters, parameters) {
 //Extent = 225000,6237500,292000,6249500
 //Point = 225000,6237500 ou  2.35,48.85
 
+
 	var globalParameters = [];
 	var parameters = [];
 	var GisMap = new GisMap();

@@ -29,7 +29,13 @@
             <version>[5.0.0,)</version>
             <type>lutece-core</type>
         </dependency>
-
+        
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.0-801.jdbc4</version>
+		</dependency>
+		
     </dependencies>
 
     <properties>
