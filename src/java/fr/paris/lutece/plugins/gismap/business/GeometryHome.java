@@ -69,4 +69,8 @@ public final class GeometryHome
         return _dao.select( _plugin );
     }
 
+    public static Geometry findResponseValueByKey( String strKey )
+    {
+        return _dao.load( strKey, _plugin );
+    }
 }

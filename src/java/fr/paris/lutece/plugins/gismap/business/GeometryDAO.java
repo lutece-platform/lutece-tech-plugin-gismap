@@ -11,10 +11,13 @@ public class GeometryDAO implements IGeometryDAO
 	private static final String SQL_QUERY_NEW_PK = "SELECT max( id) FROM gismap_geometry";
     private static final String SQL_QUERY_FIND_BY_PRIMARY_KEY = "SELECT id,ST_AsText(geom),thematic FROM gismap_geometry WHERE id=?";
     private static final String SQL_QUERY_SELECT = "SELECT id,ST_AsText(geom),thematic FROM gismap_geometry ORDER BY thematic";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO gismap_geometry (id,geom,thematic )VALUES(?,?,?)";
-    private static final String SQL_QUERY_UPDATE = "UPDATE gismap_geometry SET id=?,geom=?,thematic=? WHERE id=?";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO gismap_geometry (id,geom,thematic )VALUES(?,ST_GeomFromText(?),?)";
+    private static final String SQL_QUERY_UPDATE = "UPDATE gismap_geometry SET id=?,geom=ST_GeomFromText(?),thematic=? WHERE id=?";
     private static final String SQL_QUERY_DELETE = "DELETE FROM gismap_geometry WHERE id = ? ";
-
+    private static final String SQL_QUERY_FIND_RESPONSE_VALUE_BY_KEY = "SELECT field.title,max(response.id_response),response.response_value "
+    		+ "FROM genatt_response response, genatt_field field "
+    		+ "WHERE response.id_field = field.id_field AND field.title = ? GROUP BY field.title, response.response_value";
+    
     /**
      * Generates a new primary key
      *
@@ -43,7 +46,7 @@ public class GeometryDAO implements IGeometryDAO
 	@Override
 	public void insert(Geometry geometry, Plugin plugin) {
 		// TODO Auto-generated method stub
-		geometry.setId( newPrimaryKey( plugin ) );
+		//geometry.setId( newPrimaryKey( plugin ) );
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
         daoUtil.setInt( 1, geometry.getId(  ) );
@@ -118,6 +121,28 @@ public class GeometryDAO implements IGeometryDAO
         daoUtil.free(  );
 
         return listGeometry;
+	}
+
+	@Override
+	public Geometry load(String strKey, Plugin plugin) {
+		// TODO Auto-generated method stub
+		DAOUtil daoUtil = new DAOUtil( SQL_QUERY_FIND_RESPONSE_VALUE_BY_KEY, plugin );
+        daoUtil.setString( 1, strKey );
+        daoUtil.executeQuery(  );
+
+        Geometry geometry = null;
+
+        if ( daoUtil.next(  ) )
+        {
+        	geometry = new Geometry(  );
+        	geometry.setId( daoUtil.getInt( 2 ) );
+        	geometry.setGeometry( daoUtil.getString( 3 ) );
+        	geometry.setThematic( "" );
+        }
+
+        daoUtil.free(  );
+
+        return geometry;
 	}
 
 }

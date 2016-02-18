@@ -9,11 +9,11 @@
 	$('#address').autocomplete({
 		source : function(request, reponse){ // les deux arguments représentent les données nécessaires au plugin
 		$.ajax({
-			url : "https://p89-ws.apps.paris.fr/SuggestPOI/rest/services/SuggestPOI.jsp",
+			url : "${add_url}",
 		    dataType: "jsonp",
 		    data: {
-		    	clientId : "gismap",
-				nbResults : 5, 
+		    	clientId : "${add_clientId}",
+				nbResults : ${add_nbResults}, 
 				query : request.term
 		    },
 		    success : function(data){
@@ -29,28 +29,32 @@
     		$('#address_y').val(ui.item.y);
         }
 	}).focus();
-	function getResult(result) {
+	function getResult(result) 
+	{
 		var resultArray = [];
 		var index;
-		for	(index = 0; index < result.length; index++) {
+		for	(index = 0; index < result.length; index++) 
+		{
 			var object = new Object();
 			object.value = result[index].libelleTypo;
 			object.label = result[index].libelleTypo;
+			object.id = result[index].id;
 			object.x = result[index].x;
 			object.y = result[index].y;
+			object.type = result[index].type;
 			resultArray.push(object);
 		}
 		return resultArray;	
-    };
+	};
     	
 </script>
 </div>
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-	<#include "script.html">
+	<#include "include/script.html">
 
-	<#include "card_frame.html">
+	<#include "include/card_frame.html">
 	
-	<#include "gis.html">
+	<#include "include/gis.html">
 </div>
 </div>
 
