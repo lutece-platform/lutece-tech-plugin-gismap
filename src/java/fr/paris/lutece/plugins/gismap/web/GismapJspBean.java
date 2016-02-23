@@ -65,40 +65,15 @@ public class GismapJspBean extends PluginAdminPageJspBean
     public static final String GISMAP_VIEW_INIT = "gismap.view.init";
 
     // Parameters
-    private static final String PARAMETER_GISMAP_CODE = "gismap_code";
-    private static final String PARAMETER_MAP_PARAMETER = "map_parameter";
-    private static final String PARAMETER_ADD_URL = "add_url";
-    private static final String PARAMETER_ADD_CLIENT_ID = "add_clientId";
-    private static final String PARAMETER_ADD_NB_RESULTS = "add_nbResults";
+    private static final String PARAMETER_MAP = "map";
+    private static final String PARAMETER_ADD = "add_parameter";
     
-    public static final String PARAM_URL = "url";
-    public static final String PARAM_DELAY = "delay";
-    public static final String PARAM_MIN_LENGTH = "minLength";
-    public static final String PARAM_TYPES = "types";
-    public static final String PARAM_ND_RESULT = "nbResults";
-    public static final String PARAM_CLIENT_ID = "clientId";
     // I18n
     private static final String PROPERTY_PAGE_TITLE_FEATURES = "gismap.manage_features.pageTitle";
 
-    // Templates
-    //private static final String TEMPLATE_HOME = "/admin/plugins/gismap/manage_gismap.html";
-
-    /**
-     * Returns the Gismap HTML code for a given view
-     *
-     * @param request The HTTP request.
-     * @param nMode The current mode. [not implemented]
-     * @throws UserNotSignedException
-     * @throws SiteMessageException occurs when a site message need to be
-     *             displayed
-     */
-    public String getMap( HttpServletRequest request )
-    {
-        String strViewCode = request.getParameter( PARAMETER_GISMAP_CODE );
-
-        return GismapService.getInstance(  ).getView( strViewCode, null, request );
-    }
-
+    private static final String TEMPLATE_HOME = "/admin/plugins/gismap/manage_gismap.html";
+    
+    
     /**
      * Returns the Gismap HTML management page
      *
@@ -112,17 +87,14 @@ public class GismapJspBean extends PluginAdminPageJspBean
     {
         setPageTitleProperty( PROPERTY_PAGE_TITLE_FEATURES );
 
-        Map<String, Object> rootModel = new HashMap<String, Object>(  );
-        String strInitView = AppPropertiesService.getProperty( GISMAP_VIEW_INIT );
-        View view = ViewHome.findByPrimaryKey(Integer.parseInt(strInitView));
+        Map<String, Object> model = new HashMap<String, Object>(  );
         
         //List<Geometry> listGeometry = GeometryHome.getList();
         
-        rootModel.put(PARAMETER_MAP_PARAMETER, view.getMapParameter());
-        rootModel.put(PARAMETER_ADD_URL, AddressParamHome.getAddressParameter(PARAM_URL));
-        rootModel.put(PARAMETER_ADD_CLIENT_ID, AddressParamHome.getAddressParameter(PARAM_CLIENT_ID));
-        rootModel.put(PARAMETER_ADD_NB_RESULTS, AddressParamHome.getAddressParameter(PARAM_ND_RESULT));
-        HtmlTemplate templateList = AppTemplateService.getTemplate( view.getTemplateFile(), getLocale(  ), rootModel );
+        model.put(PARAMETER_ADD, AddressParamHome.getAddressParameters());
+        model.put(PARAMETER_MAP, GismapService.getInstance().getMapTemplate(request));
+        
+        HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_HOME, request.getLocale(  ), model );
 
         return getAdminPage( templateList.getHtml(  ) );
     }

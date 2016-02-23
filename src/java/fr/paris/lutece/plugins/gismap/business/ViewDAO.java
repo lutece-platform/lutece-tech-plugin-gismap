@@ -40,13 +40,13 @@ import java.util.List;
  */
 public final class ViewDAO implements IViewDAO
 {
-	private static final String TEMPLATE_HOME = "/admin/plugins/gismap/manage_gismap.html";
+	private static final String MAP_TEMPLATE = "/admin/plugins/gismap/include/map_gismap.html";
 
 	@Override
 	public View findById(int nKey) {
 		View view = new View();
 		view.setId(nKey);
-		view.setTemplateFile(TEMPLATE_HOME);
+		view.setMapTemplateFile(MAP_TEMPLATE);
 		view.setMapParameter(MapParameterHome.findByPrimaryKey(nKey)); 
 		return view;
 	}

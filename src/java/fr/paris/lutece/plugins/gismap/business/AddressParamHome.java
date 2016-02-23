@@ -1,7 +1,7 @@
 package fr.paris.lutece.plugins.gismap.business;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
@@ -12,41 +12,31 @@ public final class AddressParamHome
     public static final String DELAY = "ui.delay";
     public static final String MIN_LENGTH = "param.query.minLength";
     public static final String TYPE = "param.types.default";
-    public static final String ND_RESULT = "param.nbResults.default";
+    public static final String NB_RESULT = "param.nbResults.default";
     public static final String CLIENT_ID = "param.clientId";
-    
-    public static final String PARAM_URL = "url";
-    public static final String PARAM_DELAY = "delay";
-    public static final String PARAM_MIN_LENGTH = "minLength";
-    public static final String PARAM_TYPES = "types";
-    public static final String PARAM_ND_RESULT = "nbResults";
-    public static final String PARAM_CLIENT_ID = "clientId";
-    
-    
-	public static Map<String, String> getAddressParameters() 
+     
+	public static AddressParam getAddressParameters() 
 	{
-		Map<String, String> parameters = new HashMap<String, String>();
+		AddressParam parameters = new AddressParam();
 		
 		String strUrlProperty = AppPropertiesService.getProperty( GISMAP_ADDRESS + URL );
+		parameters.setUrl(strUrlProperty);
 		String strDelayProperty = AppPropertiesService.getProperty( GISMAP_ADDRESS + DELAY );
+		parameters.setDelay(strDelayProperty);
 		String strMinLengthProperty = AppPropertiesService.getProperty( GISMAP_ADDRESS + MIN_LENGTH );
-		//String strTypeProperty = AppPropertiesService.getProperty( GISMAP_ADDRESS + TYPE );
-		//String[] arrayTypeProperty = strTypeProperty.split(",");
-		String strNbResultProperty = AppPropertiesService.getProperty( GISMAP_ADDRESS + ND_RESULT );
+		parameters.setMinLength(strMinLengthProperty);
+		String strTypeProperty = AppPropertiesService.getProperty( GISMAP_ADDRESS + TYPE );
+		String[] arrayTypeProperty = strTypeProperty.split(",");
+		List<String> listType = new ArrayList<String>();
+		for(int i=0;i<arrayTypeProperty.length;i++)
+			listType.add(arrayTypeProperty[i]);
+		parameters.setListType(listType);
+		String strNbResultProperty = AppPropertiesService.getProperty( GISMAP_ADDRESS + NB_RESULT );
+		parameters.setNbResult(strNbResultProperty);
 		String strClientIdProperty = AppPropertiesService.getProperty( GISMAP_ADDRESS + CLIENT_ID );
-		parameters.put(PARAM_URL, strUrlProperty);
-		parameters.put(PARAM_DELAY, strDelayProperty);
-		parameters.put(PARAM_MIN_LENGTH, strMinLengthProperty);
-		//parameters.put(PARAM_TYPES, arrayTypeProperty);
-		parameters.put(PARAM_ND_RESULT, strNbResultProperty);
-		parameters.put(PARAM_CLIENT_ID, strClientIdProperty);
+		parameters.setClientId(strClientIdProperty);
 		
 		return parameters;
 	}
 	
-	public static String getAddressParameter(String strKey) 
-	{
-		return getAddressParameters().get(strKey);
-	}
-
 }

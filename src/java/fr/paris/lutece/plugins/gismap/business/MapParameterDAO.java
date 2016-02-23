@@ -21,9 +21,9 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String ZOOMSTART = "ZoomStart";
     public static final String ZOOM = "Zoom";
     public static final String BACKGROUND = "BackGround";
-    public static final String WMS = "WMS";
+    //public static final String WMS = "WMS";
     public static final String WMTS = "WMTS";
-    public static final String WFS = "WFS";
+    //public static final String WFS = "WFS";
     
     
 	@Override
@@ -64,17 +64,17 @@ public class MapParameterDAO implements IMapParameterDAO
 		String[] strBackgroundPropertyArray = strBackgroundProperty.split(",");
 		mapParameter.setParameters(BACKGROUND, getCutString(strBackgroundPropertyArray));
 		
-		String strWMSProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WMS );
+		/*String strWMSProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WMS );
 		String[] strWMSPropertyArray = strWMSProperty.split(",");
-		mapParameter.setParameters(WMS, getCutString(strWMSPropertyArray));
+		mapParameter.setParameters(WMS, getCutString(strWMSPropertyArray));*/
 		
 		String strWMTSProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WMTS );
 		String[] strWMTSPropertyArray = strWMTSProperty.split(",");
 		mapParameter.setParameters(WMTS, getCutString(strWMTSPropertyArray));
 		
-		String strWFSProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WFS );
+		/*String strWFSProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WFS );
 		String[] strWFSPropertyArray = strWFSProperty.split(",");
-		mapParameter.setParameters(WFS, getCutString(strWFSPropertyArray));
+		mapParameter.setParameters(WFS, getCutString(strWFSPropertyArray));*/
 		
 		
 		return mapParameter;

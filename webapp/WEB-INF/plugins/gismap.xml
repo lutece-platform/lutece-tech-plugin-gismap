@@ -37,10 +37,11 @@
     </admin-features>
     
     <!-- Application XPage  -->
+    <!-- Application XPage  -->
     <applications>
        <application>
            <application-id>gismap</application-id>
-           <application-class>fr.paris.lutece.plugins.gismap.web.xpage.GismapXPageApplication</application-class>
+           <application-class>fr.paris.lutece.plugins.gismap.web.GismapXPageApplication</application-class>
        </application>
     </applications>    
 </plug-in>
