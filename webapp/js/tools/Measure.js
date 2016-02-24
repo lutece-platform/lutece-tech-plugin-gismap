@@ -1,15 +1,19 @@
-/*global ol */
+/*global ol, Map*/
 /**
  * Measure Class manage the several tools to measure on the map
  */
 function Measure() {
     'use strict';
     /**
-     * Graphic Elements
+     * listMeasureInteraction is the list of measure interaction active on the map
+     * @type {Map}
      */
-    var measureSelector = document.getElementById('measureType');
-    var geodesicMeasure = document.getElementById('measureAdv');
-
+    this.listMeasureInteraction = new Map();
+    /**
+     * geodesicMeasure define the sphere to geodetic measure
+     * @type {boolean}
+     */
+    var geodesicMeasure = false;
     /**
      * geodesicSphere define the sphere to geodetic measure
      * @type {ol.Sphere}
@@ -77,7 +81,7 @@ function Measure() {
      */
     function formatArea(polygon, map) {
         var area;
-        if (geodesicMeasure.checked) {
+        if (geodesicMeasure) {
             var geom = (polygon.clone().transform(map.getView().getProjection(), 'EPSG:4326'));
             var coordinates = geom.getLinearRing(0).getCoordinates();
             area = Math.abs(geodesicSphere.geodesicArea(coordinates));
@@ -103,7 +107,7 @@ function Measure() {
      */
     function formatLength(line, map) {
         var length;
-        if (geodesicMeasure.checked) {
+        if (geodesicMeasure) {
             var coordinates = line.getCoordinates();
             length = 0;
             var sourceProj = map.getView().getProjection();
@@ -153,23 +157,13 @@ function Measure() {
     };
 
     /**
-     *
-     * @param active
-     */
-    this.setMeasureSelector = function(active){
-        measureSelector.disabled = active;
-        geodesicMeasure.disabled = active;
-    };
-
-    /**
      * Measure Public Method
      * getMeasureInteracts is an accessor to activate the measure tools and draw a feature on the map
      * @param map
      * @returns {ol.interaction.Draw}
      */
-    this.getMeasureInteracts = function(map) {
+    this.getMeasureInteracts = function(map, value) {
         var listener;
-        var value = measureSelector.value;
         var type = (value === 'Area' ? 'Polygon' : 'LineString');
         var measureInteract = new ol.interaction.Draw({
             source: this.measureSource,
@@ -223,6 +217,44 @@ function Measure() {
             ol.Observable.unByKey(listener);
         }, this);
         return measureInteract;
+    };
+
+    /**
+     * Measure Public Method
+     * setActiveInteraction enable or disable measure interaction
+     * @param value
+     * @param active
+     */
+    this.setActiveInteraction = function(value, active){
+        if (value === null){
+            this.listMeasureInteraction.forEach(function(val, key){
+                val.setActive(false);
+            });
+        }else {
+            this.listMeasureInteraction.get(value).setActive(active);
+        }
+    };
+
+    /**
+     * Measure Public Method
+     * initMeasureTools initialize all measure interaction on the map
+     * @returns {Map}
+     */
+    this.initMeasureTools = function(map){
+        this.listMeasureInteraction.set('Length',this.getMeasureInteracts(map, 'Length'));
+        this.listMeasureInteraction.set('Area',this.getMeasureInteracts(map,  'Area'));
+        this.setActiveInteraction(null, false);
+        return this.listMeasureInteraction;
+    };
+
+    /**
+     * Measure Public Method
+     * getMeasureTools is a getter to access at the measure interaction
+     * @param value
+     * @returns {*}
+     */
+    this.getMeasureTools = function(value){
+        return this.listMeasureInteraction.get(value);
     };
 
     /**

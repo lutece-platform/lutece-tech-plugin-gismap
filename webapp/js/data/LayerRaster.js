@@ -92,25 +92,40 @@ function LayerRaster() {
      * createWMTSLayer initialize the background of the map to specific WMTS data
      * @param wmts
      */
-    this.createWMTSLayer = function(wmts){
-        var layerName = wmts[0];
-        var currentProj = new ol.proj.get(wmts[1]);
-        console.log(currentProj.getCode())
-        fetch(wmts[2]).then(function(response) {
-            return response.text();
-        }).then(function(text) {
-            var dataWMTS = readerWMTS.read(text);
-            console.log(dataWMTS);
-            rasterLayer.ListRasters[layerName] = new ol.layer.Tile({
+    this.createWMTSLayer = function(server, url, layerName, proj, tileSize){
+        if(server === 'AGS-MPS'){
+            var webImsService = url+layerName+'/MapServer/tile/{z}/{y}/{x}';
+            this.ListRasters[layerName] = new ol.layer.Tile({
                 title: layerName,
                 type: 'base',
-                source: new ol.source.WMTS.optionsFromCapabilities(dataWMTS,
-                {layer: layerName, matrixSet: currentProj.getCode()}),
+                source: new ol.source.XYZ({
+                    tileSize: tileSize,
+                    maxZoom:16,
+                    projection: proj,
+                    tileUrlFunction: function(tileCoord) {
+                        return webImsService.replace('{z}', (tileCoord[0] - 1).toString())
+                            .replace('{x}', tileCoord[1].toString())
+                            .replace('{y}', (-tileCoord[2] - 1).toString());
+                    }
+                }),
                 visible:false
             });
-
-        });
-        return layerName;
+        }else if(server === 'AGS-IMS'){
+            var webMapService = url+layerName+'/ImageServer/tile/{z}/{y}/{x}';
+            this.ListRasters[layerName] = new ol.layer.Tile({
+                title: layerName,
+                type: 'base',
+                source: new ol.source.XYZ({
+                    projection: ol.proj.get(proj),
+                    tileUrlFunction: function(tileCoord) {
+                        return webMapService.replace('{z}', (tileCoord[0] - 1).toString())
+                            .replace('{x}', tileCoord[1].toString())
+                            .replace('{y}', (-tileCoord[2] - 1).toString());
+                    }
+                }),
+                visible:false
+            });
+        }
     };
 
     /**

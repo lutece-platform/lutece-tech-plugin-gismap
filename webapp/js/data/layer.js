@@ -43,8 +43,13 @@ function Layer() {
      * @param wmts
      */
     this.addWMTSLayerRaster = function(wmts){
-        var name = rasterLayer.createWMTSLayer(wmts);
-        this.ListLayers.push(name);
+        var wmtsServer = wmts[0];
+        var wmtsUrl = wmts[1];
+        var wmtsLayer = wmts[2];
+        var wmtsProj = wmts[3];
+        var wmtsTile = wmts[4];
+        rasterLayer.createWMTSLayer(wmtsServer, wmtsUrl, wmtsLayer, wmtsProj, wmtsTile);
+        this.ListLayers.push(wmtsLayer);
     };
 
     /**

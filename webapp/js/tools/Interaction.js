@@ -1,4 +1,4 @@
-/*global ol, drawTools, measureTools, specifInteracts */
+/*global ol, drawTools, measureTools, specifInteracts, GlobalMap*/
 
 /**
  * Interaction Class manage interactions on the map
@@ -14,82 +14,114 @@ function Interaction (){
      */
     this.ListInteracts = [];
     /**
-     * currentDrawInteraction contains the current draw Interaction
-     * @type {null}
+     * ListInteracts contains all interactions enable on the map
+     * @type {Array}
      */
-    this.currentDrawInteraction = null;
+    var ListInteractsTemp = [];
     /**
-     * currentMeasureInteraction contains the current measure Interaction
-     * @type {null}
+     * currentInteract contains the current Interaction
+     * @type {string}
      */
-    this.currentMeasureInteraction = null;
+    this.currentInteract = "Select";
+
+
     /**
-     * currentSpecificInteract contains the current specific Interaction
-     * @type {null}
+     *
      */
-    this.currentSpecificInteract = null;
+    this.manageActiveInteraction = function(){
+        if(this.currentInteract === 'Select'){
+            this.activeSpecificTool(false);
+        }else if(this.currentInteract === "Measure"){
+            this.activeMeasureTool(null, false);
+        }else if(this.currentInteract === "Draw"){
+            this.activeDrawTool(null, false);
+        }
+    };
 
     /**
      * Interaction Private METHOD
-     * inactiveSpecificTool disable specific interaction
-     * @param map
+     * activeSpecificTool enable or disable specific interaction
+     * @param enable
      */
-     this.inactiveSpecificTool = function (map){
-        if(this.currentSpecificInteract !== null){
-            map.removeInteraction(this.currentSpecificInteract);
-            this.ListInteracts.pop();
-            this.currentSpecificInteract = null;
-        }
+     this.activeSpecificTool = function (enable){
+         specifInteracts.getSelectInteraction().setActive(enable);
     };
 
      /**
      * Interaction Private METHOD
-     * inactiveDrawTool disable draw interaction
-     * @param map
+     * activeMeasureTool enable or disable draw interaction
      */
-    this.inactiveDrawTool = function(map){
-        if(this.currentDrawInteraction !== null) {
-            map.removeInteraction(this.currentDrawInteraction);
-            this.ListInteracts.pop();
-            drawTools.setDrawSelector(true);
-            this.currentDrawInteraction = drawTools.getDrawInteraction();
-        }
+    this.activeDrawTool = function(value, enable){
+         drawTools.setActiveInteraction(value, enable);
     };
 
      /**
      * Interaction Private METHOD
-     * inactiveMeasureTool disable measure interaction
-     * @param map
+     * activeMeasureTool enable or disable measure interaction
      */
-    this.inactiveMeasureTool = function(map){
-        if(this.currentMeasureInteraction !== null) {
-            map.removeInteraction(this.currentMeasureInteraction);
-            this.ListInteracts.pop();
-            measureTools.setMeasureSelector(true);
-            this.currentMeasureInteraction = measureTools.getMeasureInteracts(map);
-        }
-    };
-
-     /**
-     * Interaction Private METHOD
-     * setSpecificInteraction define the current specific interaction
-     * @param map
-     */
-    this.setSpecificInteraction = function(map){
-        this.currentSpecificInteract = specifInteracts.getSelectInteraction();
-        this.ListInteracts.push(this.currentSpecificInteract);
-        map.addInteraction(this.currentSpecificInteract);
+    this.activeMeasureTool = function(value, enable){
+         measureTools.setActiveInteraction(value, enable);
     };
 
     /**
      * Interaction Public METHOD
      * initInteractions initialize interaction on the map
      */
-    this.initInteractions = function(){
-        this.ListInteracts.push(new ol.interaction.DragRotate());
-        this.ListInteracts.push(new ol.interaction.DragZoom());
-        this.currentSpecificInteract = specifInteracts.getSelectInteraction();
-        this.ListInteracts.push(this.currentSpecificInteract);
+    this.initInteractions = function(activeInteracts, layerEdit){
+        this.ListInteracts.push(specifInteracts.getSelectInteraction());
+        for(var ctrl = 0; ctrl < activeInteracts.length; ctrl++) {
+            if (activeInteracts[ctrl] === "Rotate") {
+                this.ListInteracts.push(new ol.interaction.DragRotate());
+            }
+            if (activeInteracts[ctrl] === "ZoomBox") {
+                this.ListInteracts.push(new ol.interaction.DragZoom());
+            }
+            if (activeInteracts[ctrl] === "Draw") {
+                var drawInteracts = drawTools.initDrawTools();
+                drawInteracts.forEach(function(val, key){
+                    ListInteractsTemp.push(val);
+                }, drawInteracts);
+                for(var i = 0; i < ListInteractsTemp.length; i++){
+                    this.ListInteracts.push(ListInteractsTemp[i]);
+                }
+                ListInteractsTemp = [];
+            }
+            if (activeInteracts[ctrl] === "Measure") {
+               var measureInteracts = measureTools.initMeasureTools(GlobalMap);
+                measureInteracts.forEach(function(val, key){
+                    ListInteractsTemp.push(val);
+                }, measureInteracts);
+                for(var j = 0; j < ListInteractsTemp.length; j++){
+                    this.ListInteracts.push(ListInteractsTemp[j]);
+                }
+                ListInteractsTemp = [];
+            }
+            if (activeInteracts[ctrl] === "Edit" && layerEdit !== null) {
+
+            }
+        }
+    };
+
+
+    /**
+     * Interaction Public METHOD
+     * setDrawInteraction define the current draw interaction
+     */
+    this.setSelectInteraction = function(){
+        this.manageActiveInteraction();
+        this.activeSpecificTool(true);
+        this.currentInteract = "Select";
+    };
+
+    /**
+     * Interaction Public METHOD
+     * setDrawInteraction define the current draw interaction
+     */
+    this.setEditInteraction = function(value){
+        this.manageActiveInteraction();
+        drawTools.getDrawTools(value);
+        this.activeDrawTool(true);
+        this.currentInteract = "Edit";
     };
 
     /**
@@ -97,12 +129,11 @@ function Interaction (){
      * setDrawInteraction define the current draw interaction
      * @param map
      */
-    this.setDrawInteraction = function(map){
-        map.removeInteraction(this.currentDrawInteraction);
-        this.ListInteracts.pop();
-        this.currentDrawInteraction = drawTools.getDrawInteraction();
-        this.ListInteracts.push(this.currentDrawInteraction);
-        map.addInteraction(this.currentDrawInteraction);
+    this.setDrawInteraction = function(value){
+        this.manageActiveInteraction();
+        drawTools.getDrawTools(value);
+        this.activeDrawTool(value, true);
+        this.currentInteract = "Draw";
     };
 
     /**
@@ -110,36 +141,11 @@ function Interaction (){
      * setMeasureInteraction define the current measure interaction
      * @param map
      */
-    this.setMeasureInteraction = function(map){
-        map.removeInteraction(this.currentMeasureInteraction);
-        this.ListInteracts.pop();
-        this.currentMeasureInteraction = measureTools.getMeasureInteracts(map);
-        this.ListInteracts.push(this.currentMeasureInteraction);
-        map.addInteraction(this.currentMeasureInteraction);
-    };
-
-    /**
-     * Interaction Public METHOD
-     * setTypeInteraction define the current interaction on the map
-     * @param map
-     */
-    this.setTypeInteraction = function(map){
-        var toolSelectorValue = toolSelector.value;
-        if(toolSelectorValue === "Select"){
-            this.inactiveDrawTool(map);
-            this.inactiveMeasureTool(map);
-            this.setSpecificInteraction(map);
-        }else if(toolSelectorValue === "Measure"){
-            measureTools.setMeasureSelector(false);
-            this.inactiveDrawTool(map);
-            this.inactiveSpecificTool(map);
-            this.setMeasureInteraction(map);
-        }else if(toolSelectorValue === "Draw"){
-            drawTools.setDrawSelector(false);
-            this.inactiveMeasureTool(map);
-            this.inactiveSpecificTool(map);
-            this.setDrawInteraction(map);
-        }
+    this.setMeasureInteraction = function(value){
+        this.manageActiveInteraction();
+        measureTools.getMeasureTools(value);
+        this.activeMeasureTool(value, true);
+        this.currentInteract = "Measure";
     };
 
     /**
@@ -149,5 +155,27 @@ function Interaction (){
      */
     this.getInteracts = function(){
         return this.ListInteracts;
+    };
+
+     /**
+     * Interaction Method
+     * deleteFeatures is a method to call an action to delete all selected elements
+     */
+    this.deleteFeatures = function () {
+        var selectFeatures = specifInteracts.getSelectedFeatures().getArray();
+        console.log(selectFeatures);
+        if (selectFeatures.length !== 0) {
+            var selectedLayer = specifInteracts.getSelectedLayer(selectFeatures[0]);
+            if (selectedLayer === measureTools.getMeasureLayer()) {
+                measureTools.cleanMeasureLayer(GlobalMap);
+            } else if (selectFeatures.length === 1) {
+                selectedLayer.getSource().removeFeature(selectFeatures[0]);
+            } else if (selectFeatures.length > 1) {
+                for (var selectFeature = 0; selectFeature < selectFeatures.length; selectFeature++) {
+                    selectedLayer.getSource().removeFeature(selectFeatures[selectFeature]);
+                }
+            }
+            specifInteracts.getSelectedFeatures().clear();
+        }
     };
 }

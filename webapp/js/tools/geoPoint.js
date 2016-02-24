@@ -1,4 +1,4 @@
-/*globals ol, projection*/
+/*globals ol, view*/
 
 /**
  *  GeoPoint Class manage the Geolocation system
@@ -11,7 +11,7 @@ function GeoPoint(currentMap) {
      * @type {ol.Geolocation}
      */
     this.geoloc = new ol.Geolocation({
-        projection: projection.getProjection()
+        projection: view.getView().getProjection()
     });
 
     /**
@@ -24,11 +24,11 @@ function GeoPoint(currentMap) {
      * geolocFeature contains all geoloc features
      * @type {Kw.http://www.opengis.net/wfs.Feature}
      */
-    this.geolocFeature = new ol.Feature();
+    var geolocFeature = new ol.Feature();
     /**
      * geolocFeature style definition
      */
-    this.geolocFeature.setStyle(
+    geolocFeature.setStyle(
         new ol.style.Style({
             image: new ol.style.Circle({
                 radius: 6,
@@ -46,8 +46,8 @@ function GeoPoint(currentMap) {
      * Handler to set the geometry of the geolocation
      */
     this.geoloc.on('change:position', function() {
-        var coordinates = this.geoloc.getPosition();
-        this.geolocFeature.setGeometry(coordinates ? new ol.geom.Point(coordinates) : null);
+        var coordinates = this.getPosition();
+        geolocFeature.setGeometry(coordinates ? new ol.geom.Point(coordinates) : null);
         currentMap.render();
     });
 
@@ -55,12 +55,12 @@ function GeoPoint(currentMap) {
      * accuracyFeature contains all geoloc features about accuracy
      * @type {Kw.http://www.opengis.net/wfs.Feature}
      */
-    this.accuracyFeature = new ol.Feature();
+    var accuracyFeature = new ol.Feature();
     /**
      * Handler to set the geometry of the accuracy geolocation
      */
     this.geoloc.on('change:accuracyGeometry', function() {
-        this.accuracyFeature.setGeometry(this.geoloc.getAccuracyGeometry());
+        accuracyFeature.setGeometry(this.getAccuracyGeometry());
         currentMap.render();
     });
 
@@ -72,7 +72,7 @@ function GeoPoint(currentMap) {
         map: currentMap,
         visible : false,
         source: new ol.source.Vector({
-            features: [this.accuracyFeature, this.geolocFeature]
+            features: [accuracyFeature, geolocFeature]
         })
     });
 
@@ -82,7 +82,7 @@ function GeoPoint(currentMap) {
      */
     this.enableGPS = function(){
         this.enable = true;
-        this.geolocation.setTracking(true);
+        this.geoloc.setTracking(true);
         this.geolocLayer.setVisible(true);
     };
 
@@ -92,7 +92,7 @@ function GeoPoint(currentMap) {
      */
     this.disableGPS = function(){
         this.enable = false;
-        this.geolocation.setTracking(false);
+        this.geoloc.setTracking(false);
         this.geolocLayer.setVisible(false);
         currentMap.render();
     };

@@ -1,4 +1,4 @@
-/*global view, control, layer, projection */
+/*global view, control, layer, projection, interact */
 /**
  * Manager Class read and manage all parameters of the Gis Component
  */
@@ -36,10 +36,8 @@ var Manager = function() {
         var projectionChanged = false;
         var specificExtent = false;
         var extentDefine = false;
+        var layerEdit = null;
 
-        /*if(parameters['TypeCarte'] !== ''){
-            $.mapChoose = parameters['TypeCarte'];
-        }*/
         if(parameters['Projection'] !== '') {
             projection.getEpsgData(parameters['Projection']);
             if (parameters['Projection'] !== '3857'){
@@ -59,6 +57,12 @@ var Manager = function() {
         if(parameters['Controles'] !== ''){
             control.initControls(parameters['Controles'], extentDefine, projectionChanged, specificExtent);
         }
+        if(parameters['LayerEdit'] !== '') {
+            layerEdit = parameters['LayerEdit'];
+        }
+        if(parameters['Interacts'] !== '') {
+            interact.initInteractions(parameters['Interacts'], layerEdit);
+        }
         if(parameters['BackGround'] !== ''){
             for(var background = 0; background < parameters['BackGround'].length; background++){
                 layer.addLayerRaster(parameters['BackGround'][background]);
@@ -75,9 +79,9 @@ var Manager = function() {
             }
         }
         if(parameters['WMTS'] !== ''){
-            for(var wmts = 0; wmts < parameters['WMTS'].length; wmts++){
+            /*for(var wmts = 0; wmts < parameters['WMTS'].length; wmts++){
                 layer.addWMTSLayerRaster(parameters['WMTS'][wmts]);
-            }
+            }*/
         }
         if(parameters['WKT'] !== ''){
             layer.addLayerVector(parameters['WKT'], 'WKT');

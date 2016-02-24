@@ -1,10 +1,14 @@
-/*global ol */
+/*global ol, Map*/
 /**
  * DrawTools Class manage the several tools to draw geometries on the map
  */
 function DrawTools (){
     'use strict';
-    var drawToolSelector = document.getElementById('drawToolSelector');
+    /**
+     * listDrawInteraction is the list of draw interaction active on the map
+     * @type {Map}
+     */
+    this.listDrawInteraction = new Map();
     /**
      * drawInteraction is the current interaction active on the map
      * @type {null}
@@ -51,20 +55,12 @@ function DrawTools (){
     });
 
     /**
-     *
-     * @param active
-     */
-    this.setDrawSelector = function(active){
-        drawToolSelector.disabled = active;
-    };
-
-    /**
      * DrawTools METHOD
-     * getModifyInteract is an accessor to get the modify interaction
+     * getModifyInteract is a getter to access at modify interaction to draw elements
      * @returns {ol.interaction.Modify}
      */
-    this.getModifyInteract = function(){
-        return this.modifyInteract;
+    this.getModifyDrawInteract= function (){
+         return this.modifyInteract;
     };
 
     /**
@@ -81,8 +77,7 @@ function DrawTools (){
      * getDrawInteraction is an accessor to activate a specific draw interaction on the map
      * @returns {ol.interaction.Draw}
      */
-    this.getDrawInteraction = function() {
-        var value = drawToolSelector.value;
+    this.getDrawInteraction = function(value) {
         var geometryFunction, maxPoints;
         if (value === 'Square') {
             value = 'Circle';
@@ -109,5 +104,49 @@ function DrawTools (){
             maxPoints: maxPoints
         });
         return this.drawInteraction;
+    };
+
+    /**
+     * DrawTools METHOD
+     * setActiveInteraction enable or disable draw interaction
+     * @param value
+     * @param active
+     */
+    this.setActiveInteraction = function(value, active){
+        if (value === null){
+            this.listDrawInteraction.forEach(function(val, key){
+                val.setActive(false);
+            });
+        }else {
+            this.listDrawInteraction.get(value).setActive(active);
+            this.listDrawInteraction.get('Modify').setActive(active);
+        }
+    };
+
+    /**
+     * DrawTools METHOD
+     * initDrawTools initialize all draw interaction on the map
+     * @returns {Map}
+     */
+    this.initDrawTools = function(){
+        this.listDrawInteraction.set('Modify',this.getModifyDrawInteract());
+        this.listDrawInteraction.set('Point',this.getDrawInteraction('Point'));
+        this.listDrawInteraction.set('LineString',this.getDrawInteraction('LineString'));
+        this.listDrawInteraction.set('Polygon',this.getDrawInteraction('Polygon'));
+        this.setActiveInteraction(null, false);
+        return this.listDrawInteraction;
+    };
+
+    /**
+     * DrawTools METHOD
+     * getDrawTools is a getter to access at the draw interaction
+     * @param value
+     * @returns {Array}
+     */
+    this.getDrawTools = function(value){
+        var listDraw = [];
+        listDraw.push(this.listDrawInteraction.get(value));
+        listDraw.push(this.listDrawInteraction.get('Modify'));
+        return listDraw;
     };
 }
