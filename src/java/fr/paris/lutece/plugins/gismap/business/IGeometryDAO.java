@@ -45,6 +45,15 @@ public interface IGeometryDAO
      * @return The geometry
      */
     Geometry load( int idKey, Plugin plugin );
+    
+    /**
+     * Load the data of the tables from the plugin genatt
+     *
+     * @param strKey The identifier of the value
+     * @param plugin the plugin
+     * @return The value
+     */
+    Geometry load( String strKey, Plugin plugin );
 
     /**
      * Load the data of all geometry returns them in a  list

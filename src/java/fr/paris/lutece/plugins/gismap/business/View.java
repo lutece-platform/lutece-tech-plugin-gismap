@@ -37,7 +37,7 @@ package fr.paris.lutece.plugins.gismap.business;
 public class View
 {
     private int _nId;
-    private String _strTemplateFile;
+    private String _strMapTemplateFile;
     private MapParameter _mapParameter;
 	/**
 	 * @return the _nId
@@ -51,17 +51,18 @@ public class View
 	public void setId(int nId) {
 		this._nId = nId;
 	}
+	
 	/**
 	 * @return the _strTemplateFile
 	 */
-	public String getTemplateFile() {
-		return _strTemplateFile;
+	public String getMapTemplateFile() {
+		return _strMapTemplateFile;
 	}
 	/**
 	 * @param _strTemplateFile the _strTemplateFile to set
 	 */
-	public void setTemplateFile(String strTemplateFile) {
-		this._strTemplateFile = strTemplateFile;
+	public void setMapTemplateFile(String strMapTemplateFile) {
+		this._strMapTemplateFile = strMapTemplateFile;
 	}
 	/**
 	 * @return the _mapParameter

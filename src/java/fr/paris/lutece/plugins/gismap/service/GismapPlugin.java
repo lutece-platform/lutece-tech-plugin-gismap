@@ -49,6 +49,6 @@ public class GismapPlugin extends PluginDefaultImplementation
     public void init(  )
     {
         // Initialize the Gismap service
-        GismapService.getInstance(  ).init(  );
+        //GismapService.getInstance(  ).init(  );
     }
 }
