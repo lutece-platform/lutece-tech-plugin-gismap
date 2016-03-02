@@ -47,6 +47,7 @@ var Projection = function() {
         this.projEspg= ol.proj.get(newProjCode);
         this.extentUser = ol.extent.applyTransform([bbox[1], bbox[2], bbox[3], bbox[0]], ol.proj.getTransform('EPSG:4326', this.projEspg));
         this.projEspg.setExtent(this.extentUser);
+        ol.proj.addProjection(this.getProjection());
     };
 
     /**
@@ -56,7 +57,7 @@ var Projection = function() {
      */
     this.getEpsgData = function(projValue) {
         var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", 'lib/EPSG.json', false);
+        xmlHttp.open("GET", 'js/lib/EPSG.json', false);
         xmlHttp.send(null);
         var json = JSON.parse(xmlHttp.responseText);
         var results = json[projValue]['results'];

@@ -4,6 +4,10 @@
  */
 var Manager = function() {
     'use strict';
+    this.projectionChanged = false;
+    this.specificExtent = false;
+    this.extentDefine = false;
+
     /**
      * Manager Method
      * Function to calculate the initial extent or center
@@ -32,37 +36,32 @@ var Manager = function() {
      * @param globalParameters
      * @param parameters
      */
-    var readAndInitParams = function (globalParameters, parameters){
-        var projectionChanged = false;
-        var specificExtent = false;
-        var extentDefine = false;
-        var layerEdit = null;
-
-        if(parameters['Projection'] !== '') {
+    var readAndInitGeneralParams = function (globalParameters, parameters) {
+        if (parameters['Projection'] !== '') {
             projection.getEpsgData(parameters['Projection']);
-            if (parameters['Projection'] !== '3857'){
-                projectionChanged = true;
+            if (parameters['Projection'] !== '3857') {
+                this.projectionChanged = true;
             }
         }
-        if(parameters['Extent'] !== '') {
-            extentDefine = parameters['Extent'];
-            specificExtent = true;
+        if (parameters['Extent'] !== '') {
+            this.extentDefine = parameters['Extent'];
+            this.specificExtent = true;
         }
-        if(parameters['ZoomStart'] !== ''){
+        if (parameters['ZoomStart'] !== '') {
             view.setZoomInit(parameters['ZoomStart']);
         }
-        if(parameters['Zoom'] !== ''){
+        if (parameters['Zoom'] !== '') {
             view.setZoom(parameters['Zoom'][0], parameters['Zoom'][1]);
         }
-        if(parameters['Controles'] !== ''){
-            control.initControls(parameters['Controles'], extentDefine, projectionChanged, specificExtent);
-        }
-        if(parameters['LayerEdit'] !== '') {
-            layerEdit = parameters['LayerEdit'];
-        }
-        if(parameters['Interacts'] !== '') {
-            interact.initInteractions(parameters['Interacts'], layerEdit);
-        }
+    };
+
+    /**
+     * Manager Method
+     * Function to read the properties map and initiate parameters
+     * @param globalParameters
+     * @param parameters
+     */
+    var readAndInitDataParams = function (globalParameters, parameters) {
         if(parameters['BackGround'] !== ''){
             for(var background = 0; background < parameters['BackGround'].length; background++){
                 layer.addLayerRaster(parameters['BackGround'][background]);
@@ -91,8 +90,25 @@ var Manager = function() {
         }
     };
 
+    /**
+     * Manager Method
+     * Function to read the properties map and initiate parameters
+     * @param globalParameters
+     * @param parameters
+     */
+    var readAndInitActionParams = function (globalParameters, parameters) {
+        if(parameters['Controles'] !== ''){
+            control.initControls(parameters['Controles'], this.extentDefine, this.projectionChanged, this.specificExtent);
+        }
+        if(parameters['Interacts'] !== '') {
+            interact.initInteractions(parameters['Interacts']);
+        }
+    };
+
     return{
         defineCenterAndExtentByParameter: defineCenterAndExtentByParameter,
-        readAndInitParams: readAndInitParams
+        readAndInitGeneralParams: readAndInitGeneralParams,
+        readAndInitDataParams: readAndInitDataParams,
+        readAndInitActionParams: readAndInitActionParams
     };
 };

@@ -12,6 +12,11 @@ function Feature() {
      */
     this.ListFeatures = [];
     /**
+     * dataGeoJSON is the source of the GeoJSON data
+     * @type {Array}
+     */
+    this.dataGeoJSON = [];
+    /**
      * wktFormat define the format WKT
      * @type {ol.format.WKT}
      */
@@ -25,7 +30,16 @@ function Feature() {
      * esrijsonFormat define the format EsriJSON
      * @type {ol.format.EsriJSON}
      */
-    var esrijsonFormat = new ol.format.EsriJSON();
+    var esriJSONFormat = new ol.format.EsriJSON();
+
+    /**
+     * Feature Method
+     * getDataGeoJSON return an array of GeoJSON Source
+     * @returns {Array}
+     */
+    this.getDataGeoJSON = function(name){
+        return this.dataGeoJSON[name];
+    };
 
     /**
      * Feature Method
@@ -45,6 +59,7 @@ function Feature() {
                 }));
             }
         }else if(dataFormat === 'GeoJSON'){
+            this.dataGeoJSON[dataName] = data[2];
             features = geoJSONFormat.readFeatures(data[2]);
         }
         if(features !== null) {
@@ -59,29 +74,32 @@ function Feature() {
         }
     };
 
-    //En Cours de Dev
     /**
      * Feature Method
      * createWFSLayer initialize the layer of the map to specific WFS data
      * @param server
      * @param url
      * @param layerName
+     * @param query
      */
-    this.createWFSLayer = function(server, url, layerName,query) {
+    this.createWFSLayer = function(server, url, layerName, query) {
         if (server === 'AGS') {
             if(query === '') {
                 var vectorSource = new ol.source.Vector({
                     loader: function (extent) {
+                        if(extent[0] === -Infinity){
+                            extent = projection.getExtent();
+                        }
                         var webService = url + '/query/?f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
                             encodeURIComponent('{"xmin":' + extent[0] + ',"ymin":' + extent[1] + ',"xmax":' + extent[2] + ',"ymax":' + extent[3] +
-                            ',"spatialReference":{"wkid":' + projection.getProjection().getCode().substring(4, projection.getProjection().getCode().length) +
-                            '}}') + '&geometryType=esriGeometryEnvelope&inSR=&outFields=*&' + 'outSR=' + projection.getProjection().getCode();
+                            ',"spatialReference":{"wkid":' + projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length) +
+                            '}}') + '&geometryType=esriGeometryEnvelope&inSR=&outFields=*&' + 'outSR=' + projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length);
                         $.ajax({
                             url: webService, dataType: 'jsonp', success: function (response) {
                                 if (response.error) {
                                     console.log(response.error.message + '\n' + response.error.details.join('\n'));
                                 }else {
-                                    var features = esrijsonFormat.readFeatures(response, {
+                                    var features = esriJSONFormat.readFeatures(response, {
                                         featureProjection: projection.getProjection().getCode()
                                     });
                                     if (features.length > 0) {
@@ -103,7 +121,7 @@ function Feature() {
                 this.ListFeatures[layerName] = new ol.layer.Vector({
                     title: layerName,
                     source: new ol.source.Vector({
-                        format: esrijsonFormat,
+                        format: esriJSONFormat,
                         url: url + '/query?where=' + query + '&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&' +
                         'inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=&returnGeometry=true&maxAllowableOffset=&' +
                         'geometryPrecision=&outSR=' + projection.getProjection().getCode() + '&gdbVersion=&returnIdsOnly=false&returnCountOnly=false&' +
@@ -116,6 +134,9 @@ function Feature() {
             }
         }else if (server === 'GeoServer'){
             var vectorLoader= function(extent) {
+                if(extent[0] === -Infinity){
+                    extent = projection.getExtent();
+                }
                 var extentCapture = ol.extent.applyTransform(extent, ol.proj.getTransform(projection.getProjection().getCode(), query));
                 var webService = url + '&outputFormat=text/javascript&format_options=callback:loadFeatures&' +
                     'srsname=' + query + '&bbox=' + extentCapture.join(',') + ',' + query;
@@ -145,15 +166,6 @@ function Feature() {
             });
         }
         return layerName;
-    };
-
-    /**
-     * Feature Method
-     * getFeaturesLayers is the getter to access at the list of features layers
-     * @returns {Array}
-     */
-    this.getFeaturesLayers = function(){
-        return this.ListFeatures;
     };
 
     /**

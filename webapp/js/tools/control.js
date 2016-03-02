@@ -22,7 +22,7 @@ function Control() {
      */
     this.initControls = function(activeControls, projectionChanged, specificExtent, extentDefine){
         for(var ctrl = 0; ctrl < activeControls.length; ctrl++){
-            if(activeControls[ctrl] === "Overview" && projectionChanged === false) {
+            if(activeControls[ctrl] === "Overview" && projectionChanged === true) {
                 this.ListControl.push(new ol.control.OverviewMap());
             }
             if(activeControls[ctrl] === "FullScreen" ){

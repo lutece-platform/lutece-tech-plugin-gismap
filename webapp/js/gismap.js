@@ -1,4 +1,5 @@
-/*global ol, Manager, Control, Projection,Interaction, Layer, LayerRaster, Feature, View, Measure, Editor, DrawTools, InterfaceElements, SpecificInteracts, GeoPoint, Print*/
+/*global ol, Manager, Control, Projection, Interaction, Layer, LayerRaster, Feature,
+View, Measure, Zoom, DrawTools, InterfaceElements, SpecificInteracts, GeoPoint, Print, Popup*/
 
 /**
  * File to manage the Gis Component with all parameters
@@ -19,13 +20,14 @@ var control;
 var interact;
 var drawTools;
 var measureTools;
-var editorTools;
 var specifInteracts;
 var projection;
 var interfaceElements;
 var GlobalMap;
 var geoPoint;
 var printer;
+var popup;
+var zoom;
 
 //var mapChoose;
 
@@ -34,21 +36,12 @@ var GisMap = function () {
     /**
      *  Global Object instantiation
      */
+    GlobalMap = new ol.Map({
+        target: 'map'
+    });
     var manager = new Manager();
-    projection = new Projection();
-    view = new View();
-    rasterLayer = new LayerRaster();
-    featureLayer = new Feature();
-    layer = new Layer();
-    control = new Control();
-    interact = new Interaction();
-    drawTools = new DrawTools();
-    editorTools = new Editor();
-    measureTools = new Measure();
-    specifInteracts = new SpecificInteracts();
-    interfaceElements = new InterfaceElements();
+    popup = new Popup();
     printer = new Print();
-
     /**
      * GisMap Private Method
      * initGis initialize all components of the map
@@ -60,10 +53,37 @@ var GisMap = function () {
         /*if ($(mapIdentifier).attr('class').indexOf("olMap")>=0){
          return false;
          }*/
-        GlobalMap = new ol.Map({
-            target: 'map'
-        });
-        manager.readAndInitParams(globalParameters, parameters);
+        globalInitialize(globalParameters,parameters);
+        dataInitialize(globalParameters,parameters);
+        controlInitialize(globalParameters,parameters);
+        mapInitialize();
+        view.getView().fit(projection.getExtent(), GlobalMap.getSize());
+    }
+
+    function globalInitialize(globalParameters, parameters){
+        view = new View();
+        zoom = new Zoom();
+        projection = new Projection();
+        manager.readAndInitGeneralParams(globalParameters, parameters);
+    }
+
+    function dataInitialize(globalParameters, parameters){
+        layer = new Layer();
+        featureLayer = new Feature();
+        rasterLayer = new LayerRaster();
+        manager.readAndInitDataParams(globalParameters, parameters);
+    }
+
+    function controlInitialize(globalParameters, parameters){
+        interact = new Interaction(parameters['LayerEdit']);
+        control = new Control();
+        drawTools = new DrawTools();
+        measureTools = new Measure();
+        specifInteracts = new SpecificInteracts();
+        manager.readAndInitActionParams(globalParameters, parameters);
+    }
+
+    function mapInitialize(){
         manager.defineCenterAndExtentByParameter(document.getElementById('id_Select').value);
         view.createView();
         GlobalMap.setView(view.getView());
@@ -79,28 +99,11 @@ var GisMap = function () {
         for (var k = 0; k < ListLayer.length; k++){
             GlobalMap.addLayer(ListLayer[k]);
         }
+        //GlobalMap.addOverlay(popup.getPopup());
         GlobalMap.addControl(control.getLayerSwitcher());
-        view.getView().fit(projection.getExtent(), GlobalMap.getSize());
+        geoPoint = new GeoPoint(GlobalMap);
+        interfaceElements = new InterfaceElements();
     }
-
-    /**
-     * GisMap Method
-     * zoomTo is a method to call an action to go on a specific area in function of selected elements
-     */
-    var zoomTo = function () {
-        var selectFeatures = specifInteracts.getSelectedFeatures().getArray();
-        if (selectFeatures.length === 1) {
-            view.getView().fit(selectFeatures[0].getGeometry(), GlobalMap.getSize());
-        } else if (selectFeatures.length > 1) {
-            var arrayGeom = [];
-            for (var selectFeature = 0; selectFeature < selectFeatures.length; selectFeature++) {
-                arrayGeom.push(selectFeatures[selectFeature].getGeometry());
-            }
-            var geomColl = new ol.geom.GeometryCollection(arrayGeom);
-            view.getView().fit(geomColl.getExtent(), GlobalMap.getSize());
-        }
-
-    };
 
     /**
      * GisMap Method
@@ -112,7 +115,6 @@ var GisMap = function () {
      */
     var initGisMap = function(globalParameters, parameters) {
         initGis('#map', globalParameters, parameters);
-        geoPoint = new GeoPoint(GlobalMap);
         var Elements = interfaceElements.getElements();
         for (var i = 0; i < Elements.length; i++) {
             GlobalMap.addControl(Elements[i]);
@@ -121,8 +123,6 @@ var GisMap = function () {
     };
 
     return {
-        initGisMap: initGisMap,
-        zoomTo: zoomTo,
+        initGisMap: initGisMap
     };
-
 };

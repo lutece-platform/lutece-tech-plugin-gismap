@@ -1,4 +1,4 @@
-/*global geoPoint, interact, editorTools, ol, app*/
+/*global geoPoint, interact, ol, app*/
 /**
  * InterfaceElements Class manage all elements included in the map
  */
@@ -20,6 +20,9 @@ var InterfaceElements = function() {
 
         var buttonDrawPolygon = document.createElement('button');
         buttonDrawPolygon.innerHTML = 'Pn';
+
+        var buttonAdd = document.createElement('button');
+        buttonAdd.innerHTML = 'Add';
 
         var buttonEdit = document.createElement('button');
         buttonEdit.innerHTML = 'Edit';
@@ -52,8 +55,12 @@ var InterfaceElements = function() {
             interact.setDrawInteraction('Polygon');
         };
 
+        var handleAdd = function(e) {
+            interact.setEditInteraction('Add');
+        };
+
         var handleEdit = function(e) {
-            geoPoint.manageGPS();
+            interact.setEditInteraction('Edit');
         };
 
         var handleClean = function(e) {
@@ -84,6 +91,9 @@ var InterfaceElements = function() {
         buttonDrawPolygon.addEventListener('click', handleDrawPolygon, false);
         buttonDrawPolygon.addEventListener('touchstart', handleDrawPolygon, false);
 
+        buttonAdd.addEventListener('click', handleAdd, false);
+        buttonAdd.addEventListener('touchstart', handleAdd, false);
+
         buttonEdit.addEventListener('click', handleEdit, false);
         buttonEdit.addEventListener('touchstart', handleEdit, false);
 
@@ -105,6 +115,7 @@ var InterfaceElements = function() {
         element.appendChild(buttonDrawPoint);
         element.appendChild(buttonDrawLine);
         element.appendChild(buttonDrawPolygon);
+        element.appendChild(buttonAdd);
         element.appendChild(buttonEdit);
         element.appendChild(buttonRuler);
         element.appendChild(buttonMeasureLen);

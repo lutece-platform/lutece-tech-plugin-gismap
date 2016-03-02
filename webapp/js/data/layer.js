@@ -62,7 +62,7 @@ function Layer() {
         var wfsUrl = wfs[1];
         var wfsLayer = wfs[2];
         var wfsQuery = wfs[3];
-        featureLayer.createWFSLayer(wfsServer, wfsUrl, wfsLayer, wfsQuery);
+        featureLayer.createWFSLayer(wfsServer, wfsUrl, wfsLayer,wfsQuery);
         this.ListLayers.push(wfsLayer);
     };
 

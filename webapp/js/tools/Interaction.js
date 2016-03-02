@@ -1,13 +1,17 @@
-/*global ol, drawTools, measureTools, specifInteracts, GlobalMap*/
+/*global ol, drawTools, measureTools, specifInteracts, Editor, GlobalMap*/
 
 /**
  * Interaction Class manage interactions on the map
  */
+var editorTools;
 
-function Interaction (){
+function Interaction(layerEdit){
     'use strict';
-    var toolSelector = document.getElementById('specificToolSelector');
-
+    /**
+     * editorTools is the manager of edition tools
+     * @type {Editor}
+     */
+    editorTools = new Editor(layerEdit);
     /**
      * ListInteracts contains all interactions enable on the map
      * @type {Array}
@@ -24,7 +28,6 @@ function Interaction (){
      */
     this.currentInteract = "Select";
 
-
     /**
      *
      */
@@ -35,6 +38,8 @@ function Interaction (){
             this.activeMeasureTool(null, false);
         }else if(this.currentInteract === "Draw"){
             this.activeDrawTool(null, false);
+        }else if(this.currentInteract === "Edit"){
+            this.activeEditorTool(null, false);
         }
     };
 
@@ -61,6 +66,14 @@ function Interaction (){
      */
     this.activeMeasureTool = function(value, enable){
          measureTools.setActiveInteraction(value, enable);
+    };
+
+     /**
+     * Interaction Private METHOD
+     * activeEditorTool enable or disable editor interaction
+     */
+    this.activeEditorTool = function(value, enable){
+         editorTools.setActiveInteraction(value, enable);
     };
 
     /**
@@ -96,8 +109,15 @@ function Interaction (){
                 }
                 ListInteractsTemp = [];
             }
-            if (activeInteracts[ctrl] === "Edit" && layerEdit !== null) {
-
+            if (activeInteracts[ctrl] === "Edit") {
+                var editorInteracts = editorTools.initEditInteraction();
+                editorInteracts.forEach(function(val, key){
+                    ListInteractsTemp.push(val);
+                }, editorInteracts);
+                for(var k = 0; k < ListInteractsTemp.length; k++){
+                    this.ListInteracts.push(ListInteractsTemp[k]);
+                }
+                ListInteractsTemp = [];
             }
         }
     };
@@ -119,8 +139,8 @@ function Interaction (){
      */
     this.setEditInteraction = function(value){
         this.manageActiveInteraction();
-        drawTools.getDrawTools(value);
-        this.activeDrawTool(true);
+        editorTools.getEditorTools(value);
+        this.activeEditorTool(value, true);
         this.currentInteract = "Edit";
     };
 
@@ -163,16 +183,22 @@ function Interaction (){
      */
     this.deleteFeatures = function () {
         var selectFeatures = specifInteracts.getSelectedFeatures().getArray();
-        console.log(selectFeatures);
         if (selectFeatures.length !== 0) {
             var selectedLayer = specifInteracts.getSelectedLayer(selectFeatures[0]);
             if (selectedLayer === measureTools.getMeasureLayer()) {
                 measureTools.cleanMeasureLayer(GlobalMap);
-            } else if (selectFeatures.length === 1) {
-                selectedLayer.getSource().removeFeature(selectFeatures[0]);
-            } else if (selectFeatures.length > 1) {
-                for (var selectFeature = 0; selectFeature < selectFeatures.length; selectFeature++) {
-                    selectedLayer.getSource().removeFeature(selectFeatures[selectFeature]);
+            } else if (selectedLayer === drawTools.getDrawLayer()) {
+                if (selectFeatures.length === 1) {
+                    selectedLayer.getSource().removeFeature(selectFeatures[0]);
+                } else if (selectFeatures.length > 1) {
+                    for (var selectFeature = 0; selectFeature < selectFeatures.length; selectFeature++) {
+                        selectedLayer.getSource().removeFeature(selectFeatures[selectFeature]);
+                    }
+                }
+            } else if (selectedLayer === editorTools.getEditLayer()){
+                if (selectFeatures.length === 1) {
+                    selectedLayer.getSource().removeFeature(selectFeatures[0]);
+                    editorTools.restartEdition();
                 }
             }
             specifInteracts.getSelectedFeatures().clear();
