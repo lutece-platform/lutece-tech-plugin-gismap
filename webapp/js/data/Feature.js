@@ -93,7 +93,8 @@ function Feature() {
                         var webService = url + '/query/?f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
                             encodeURIComponent('{"xmin":' + extent[0] + ',"ymin":' + extent[1] + ',"xmax":' + extent[2] + ',"ymax":' + extent[3] +
                             ',"spatialReference":{"wkid":' + projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length) +
-                            '}}') + '&geometryType=esriGeometryEnvelope&inSR=&outFields=*&' + 'outSR=' + projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length);
+                            '}}') + '&geometryType=esriGeometryEnvelope&inSR=&outFields=*&' + 'outSR=' +
+                            projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length);
                         $.ajax({
                             url: webService, dataType: 'jsonp', success: function (response) {
                                 if (response.error) {
@@ -118,28 +119,49 @@ function Feature() {
                     }))
                 });
             }else {
+                var vectorSourceQuery = new ol.source.Vector({
+                    loader: function (extent) {
+                        if(extent[0] === -Infinity){
+                            extent = projection.getExtent();
+                        }
+                        var webService = url + '/query?where=' + query + '&f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
+                            encodeURIComponent('{"xmin":' + extent[0] + ',"ymin":' + extent[1] + ',"xmax":' + extent[2] + ',"ymax":' + extent[3] +
+                            ',"spatialReference":{"wkid":' + projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length) +
+                            '}}') + '&geometryType=esriGeometryEnvelope&inSR=&outFields=*&' + 'outSR=' +
+                            projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length);
+                        $.ajax({
+                            url: webService, dataType: 'jsonp', success: function (response) {
+                                if (response.error) {
+                                    console.log(response.error.message + '\n' + response.error.details.join('\n'));
+                                }else {
+                                    var features = esriJSONFormat.readFeatures(response, {
+                                        featureProjection: projection.getProjection().getCode()
+                                    });
+                                    if (features.length > 0) {
+                                        vectorSourceQuery.addFeatures(features);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
                 this.ListFeatures[layerName] = new ol.layer.Vector({
                     title: layerName,
-                    source: new ol.source.Vector({
-                        format: esriJSONFormat,
-                        url: url + '/query?where=' + query + '&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&' +
-                        'inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=&returnGeometry=true&maxAllowableOffset=&' +
-                        'geometryPrecision=&outSR=' + projection.getProjection().getCode() + '&gdbVersion=&returnIdsOnly=false&returnCountOnly=false&' +
-                        'orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&f=pjson'
-                    }),
+                    source: vectorSourceQuery,
                     strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
                         tileSize: 512
                     }))
                 });
             }
         }else if (server === 'GeoServer'){
+            var projectionData =  projection.getEpsgData(query, false)[0];
             var vectorLoader= function(extent) {
                 if(extent[0] === -Infinity){
                     extent = projection.getExtent();
                 }
-                var extentCapture = ol.extent.applyTransform(extent, ol.proj.getTransform(projection.getProjection().getCode(), query));
+                var extentCapture = ol.extent.applyTransform(extent, ol.proj.getTransform(projection.getProjection().getCode(), projectionData.getCode()));
                 var webService = url + '&outputFormat=text/javascript&format_options=callback:loadFeatures&' +
-                    'srsname=' + query + '&bbox=' + extentCapture.join(',') + ',' + query;
+                    'srsname=' + projectionData.getCode() + '&bbox=' + extentCapture.join(',') + ',' + projectionData.getCode();
                 $.ajax({
                     url: webService,
                     dataType: 'jsonp'
@@ -148,7 +170,7 @@ function Feature() {
 
             window.loadFeatures = function(response) {
                 var features = geoJSONFormat.readFeatures(response, {
-                    dataProjection: query,
+                    dataProjection: projectionData.getCode(),
                     featureProjection: projection.getProjection().getCode()
                 });
                 vectorSourceGeo.addFeatures(features);

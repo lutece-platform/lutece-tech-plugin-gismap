@@ -52,10 +52,25 @@ var Projection = function() {
 
     /**
      * Projection Method
+     * getProjectionInformation return all value of projection
+     * @param code
+     * @param proj4def
+     * @param bbox
+     */
+    this.getProjectionInformation = function(code, proj4def, bbox) {
+        var newProjCode = 'EPSG:' + code;
+        proj4.defs(newProjCode, proj4def);
+        var projEspgInfo = ol.proj.get(newProjCode);
+        var extentInfo = ol.extent.applyTransform([bbox[1], bbox[2], bbox[3], bbox[0]], ol.proj.getTransform('EPSG:4326', projEspgInfo));
+        return [projEspgInfo, extentInfo];
+    };
+
+    /**
+     * Projection Method
      * getEpsgData load the EPSG.json and search the active projection to define the projection
      * @param projValue
      */
-    this.getEpsgData = function(projValue) {
+    this.getEpsgData = function(projValue, view) {
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open("GET", 'js/lib/EPSG.json', false);
         xmlHttp.send(null);
@@ -67,8 +82,12 @@ var Projection = function() {
                 if (result) {
                     var code = result['code'], proj4def = result['proj4'], bbox = result['bbox'];
                     if (code && code.length > 0 && proj4def && proj4def.length > 0 && bbox && bbox.length === 4) {
-                        this.defineProjection(code, proj4def, bbox);
-                        return;
+                        if(view === true) {
+                            this.defineProjection(code, proj4def, bbox);
+                            return;
+                        }else{
+                            return this.getProjectionInformation(code, proj4def, bbox);
+                        }
                     }
                 }
             }

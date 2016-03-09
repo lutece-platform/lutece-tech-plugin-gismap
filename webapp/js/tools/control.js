@@ -43,7 +43,12 @@ function Control() {
                 this.ListControl.push(new ol.control.ScaleLine());
             }
             if(activeControls[ctrl] === "MousePosition" ){
-                this.ListControl.push(new ol.control.MousePosition());
+                this.ListControl.push(new ol.control.MousePosition({
+                    undefinedHTML: 'Outside',
+                    coordinateFormat: function (coordinate) {
+                        return ol.coordinate.format(coordinate, '{x}, {y}', 4);
+                    }
+                }));
             }
         }
     };

@@ -49,15 +49,25 @@ var GisMap = function () {
      * @param globalParameters
      * @param parameters
      */
-    function initGis(idMap, globalParameters, parameters) {
+    function initGis(idMap, globalParameters, startParameters) {
         /*if ($(mapIdentifier).attr('class').indexOf("olMap")>=0){
          return false;
          }*/
+        var parameters = manager.readAndManageParameters(startParameters);
         globalInitialize(globalParameters,parameters);
         dataInitialize(globalParameters,parameters);
         controlInitialize(globalParameters,parameters);
-        mapInitialize();
+        mapInitialize(parameters);
         view.getView().fit(projection.getExtent(), GlobalMap.getSize());
+        initInterfaces('#map', parameters);
+    }
+
+    function initInterfaces(id, parameters) {
+        interfaceElements = new InterfaceElements(parameters);
+        var Elements = interfaceElements.getElements();
+        for (var i = 0; i < Elements.length; i++) {
+            GlobalMap.addControl(Elements[i]);
+        }
     }
 
     function globalInitialize(globalParameters, parameters){
@@ -74,7 +84,7 @@ var GisMap = function () {
         manager.readAndInitDataParams(globalParameters, parameters);
     }
 
-    function controlInitialize(globalParameters, parameters){
+    function controlInitialize(globalParameters, parameters) {
         interact = new Interaction(parameters['LayerEdit']);
         control = new Control();
         drawTools = new DrawTools();
@@ -83,7 +93,15 @@ var GisMap = function () {
         manager.readAndInitActionParams(globalParameters, parameters);
     }
 
-    function mapInitialize(){
+    function addGPSComponent(parameters){
+        for (var i = 0; i < parameters['Interacts'].length; i++) {
+            if (parameters['Interacts'][i] === 'GPS') {
+                geoPoint = new GeoPoint(GlobalMap);
+            }
+        }
+    }
+
+    function mapInitialize(parameters){
         manager.defineCenterAndExtentByParameter(document.getElementById('id_Select').value);
         view.createView();
         GlobalMap.setView(view.getView());
@@ -101,8 +119,7 @@ var GisMap = function () {
         }
         //GlobalMap.addOverlay(popup.getPopup());
         GlobalMap.addControl(control.getLayerSwitcher());
-        geoPoint = new GeoPoint(GlobalMap);
-        interfaceElements = new InterfaceElements();
+        addGPSComponent(parameters);
     }
 
     /**
@@ -115,10 +132,6 @@ var GisMap = function () {
      */
     var initGisMap = function(globalParameters, parameters) {
         initGis('#map', globalParameters, parameters);
-        var Elements = interfaceElements.getElements();
-        for (var i = 0; i < Elements.length; i++) {
-            GlobalMap.addControl(Elements[i]);
-        }
         return GlobalMap;
     };
 

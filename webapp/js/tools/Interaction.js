@@ -1,9 +1,9 @@
-/*global ol, drawTools, measureTools, specifInteracts, Editor, GlobalMap*/
+/*global ol, drawTools, measureTools, specifInteracts, Editor, EditorAdvance, GlobalMap*/
 
 /**
  * Interaction Class manage interactions on the map
  */
-var editorTools;
+var editorTools = null;
 
 function Interaction(layerEdit){
     'use strict';
@@ -11,7 +11,11 @@ function Interaction(layerEdit){
      * editorTools is the manager of edition tools
      * @type {Editor}
      */
-    editorTools = new Editor(layerEdit);
+    if(layerEdit !== '' && layerEdit.length <= 2) {
+        editorTools = new Editor(layerEdit);
+    }else if(layerEdit !== '' && layerEdit.length > 2) {
+        editorTools = new EditorAdvance(layerEdit);
+    }
     /**
      * ListInteracts contains all interactions enable on the map
      * @type {Array}
@@ -26,7 +30,7 @@ function Interaction(layerEdit){
      * currentInteract contains the current Interaction
      * @type {string}
      */
-    this.currentInteract = "Select";
+    this.currentInteract = "None";
 
     /**
      *
@@ -39,6 +43,8 @@ function Interaction(layerEdit){
         }else if(this.currentInteract === "Draw"){
             this.activeDrawTool(null, false);
         }else if(this.currentInteract === "Edit"){
+            this.activeEditorTool(null, false);
+        }else if(this.currentInteract === "SuggestPoi"){
             this.activeEditorTool(null, false);
         }
     };
@@ -80,9 +86,13 @@ function Interaction(layerEdit){
      * Interaction Public METHOD
      * initInteractions initialize interaction on the map
      */
-    this.initInteractions = function(activeInteracts, layerEdit){
-        this.ListInteracts.push(specifInteracts.getSelectInteraction());
+    this.initInteractions = function(activeInteracts){
+        var editorInteracts = null;
         for(var ctrl = 0; ctrl < activeInteracts.length; ctrl++) {
+            if(activeInteracts[ctrl] === "Select") {
+                this.ListInteracts.push(specifInteracts.getSelectInteraction());
+                this.currentInteract = "Select";
+            }
             if (activeInteracts[ctrl] === "Rotate") {
                 this.ListInteracts.push(new ol.interaction.DragRotate());
             }
@@ -110,7 +120,7 @@ function Interaction(layerEdit){
                 ListInteractsTemp = [];
             }
             if (activeInteracts[ctrl] === "Edit") {
-                var editorInteracts = editorTools.initEditInteraction();
+                editorInteracts = editorTools.initEditInteraction('Draw');
                 editorInteracts.forEach(function(val, key){
                     ListInteractsTemp.push(val);
                 }, editorInteracts);
@@ -118,6 +128,17 @@ function Interaction(layerEdit){
                     this.ListInteracts.push(ListInteractsTemp[k]);
                 }
                 ListInteractsTemp = [];
+            }
+            if (activeInteracts[ctrl] === "SuggestPOI") {
+                editorInteracts = editorTools.initEditInteraction('Suggest');
+                editorInteracts.forEach(function(val, key){
+                    ListInteractsTemp.push(val);
+                }, editorInteracts);
+                for(var l = 0; l < ListInteractsTemp.length; l++){
+                    this.ListInteracts.push(ListInteractsTemp[l]);
+                }
+                ListInteractsTemp = [];
+                this.currentInteract = "Suggest";
             }
         }
     };

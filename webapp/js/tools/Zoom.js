@@ -11,9 +11,14 @@ var Zoom = function() {
      * @param x
      * @param y
      */
-    var zoomSuggestPoi = function (x, y) {
+    var zoomSuggestPoi = function () {
+        var x = document.getElementById('address_x').value;
+        var y = document.getElementById('address_y').value;
         var pointPoi = new ol.geom.Point([x,y]);
         view.getView().fit(pointPoi, GlobalMap.getSize());
+        if(editorTools.getSuggestPoiEdit()){
+            editorTools.addPoint(pointPoi);
+        }
     };
 
     /**
@@ -22,9 +27,8 @@ var Zoom = function() {
      * @param x
      * @param y
      */
-    var zoomSuggestPoiAddPoint = function (x, y) {
+    var zoomSuggestPoiAddPoint = function (y, x) {
         var pointPoi = new ol.geom.Point([x,y]);
-        editorTools.addPoint(pointPoi);
         view.getView().fit(pointPoi, GlobalMap.getSize());
     };
 
@@ -48,6 +52,7 @@ var Zoom = function() {
 
     return{
         zoomSuggestPoi: zoomSuggestPoi,
+        zoomSuggestPoiAddPoint: zoomSuggestPoiAddPoint,
         zoomSelect: zoomSelect
     };
 };

@@ -1,4 +1,4 @@
-/*global ol, layer, rasterLayer, featureLayer, drawTools, measureTools*/
+/*global ol, layer, rasterLayer, featureLayer, drawTools, measureTools, editorTools*/
 
 /**
  * Layer Class manage all layers in the map
@@ -30,11 +30,9 @@ function Layer() {
     this.addWMSLayerRaster = function(wms){
         var wmsServer = wms[0];
         var wmsUrl = wms[1];
-        var wmsLayers = wms[2];
-        for(var wmsLayer = 0;  wmsLayer < wmsLayers.length; wmsLayer++){
-            rasterLayer.createWMSLayer(wmsServer, wmsUrl, wmsLayers[wmsLayer]);
-            this.ListLayers.push(wmsLayers[wmsLayer]);
-        }
+        var wmsLayer = wms[2];
+        rasterLayer.createWMSLayer(wmsServer, wmsUrl, wmsLayer);
+        this.ListLayers.push(wmsLayer);
     };
 
     /**
@@ -46,9 +44,12 @@ function Layer() {
         var wmtsServer = wmts[0];
         var wmtsUrl = wmts[1];
         var wmtsLayer = wmts[2];
-        var wmtsProj = wmts[3];
-        var wmtsTile = wmts[4];
-        rasterLayer.createWMTSLayer(wmtsServer, wmtsUrl, wmtsLayer, wmtsProj, wmtsTile);
+        var wmtsImg = wmts[3];
+        var wmtsMatrix = wmts[4];
+        var wmtsProj = wmts[5];
+        var wmtsReso = wmts[6];
+        var wmtsTile = wmts[7];
+        rasterLayer.createWMTSLayer(wmtsServer, wmtsUrl, wmtsLayer, wmtsImg, wmtsMatrix, wmtsProj, wmtsReso, wmtsTile);
         this.ListLayers.push(wmtsLayer);
     };
 
@@ -62,7 +63,7 @@ function Layer() {
         var wfsUrl = wfs[1];
         var wfsLayer = wfs[2];
         var wfsQuery = wfs[3];
-        featureLayer.createWFSLayer(wfsServer, wfsUrl, wfsLayer,wfsQuery);
+        featureLayer.createWFSLayer(wfsServer, wfsUrl, wfsLayer, wfsQuery);
         this.ListLayers.push(wfsLayer);
     };
 
@@ -131,6 +132,11 @@ function Layer() {
          }));
          ListLayersMap.push(drawTools.getDrawLayer());
          ListLayersMap.push(measureTools.getMeasureLayer());
+         if(editorTools !== null){
+             if(editorTools.getLevel()){
+                 ListLayersMap.push(editorTools.getEditLayer());
+             }
+         }
          return ListLayersMap;
     };
 }

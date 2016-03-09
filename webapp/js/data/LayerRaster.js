@@ -1,4 +1,4 @@
-/*global ol, view, rasterLayer*/
+/*global ol, view, rasterLayer, projection*/
 /**
  * LayerRaster Class manage all rasters layers in the map
  */
@@ -14,11 +14,6 @@ function LayerRaster() {
      * @type {null}
      */
     this.currentRaster = null;
-    /**
-     * readerWMTS define the format WMTS Capabilities
-     * @type {ol.format.WMTSCapabilities}
-     */
-    var readerWMTS = new ol.format.WMTSCapabilities();
 
     /**
      * LayerRaster Method
@@ -92,39 +87,41 @@ function LayerRaster() {
      * createWMTSLayer initialize the background of the map to specific WMTS data
      * @param wmts
      */
-    this.createWMTSLayer = function(server, url, layerName, proj, tileSize){
-        if(server === 'AGS-MPS'){
-            var webImsService = url+layerName+'/MapServer/tile/{z}/{y}/{x}';
+    this.createWMTSLayer = function(server, url, layerName, formatImage, matrixSet, proj, resolution, tileSize){
+        if(server === 'AGS'){
+            var infoProjData = projection.getEpsgData(proj, false);
+            var projData = infoProjData[0];
+            var extent = [636297.3752,6842143.7202,672752.1101,6880245.6689];
+            var resolutions = new Array(resolution);
+            var size = ol.extent.getWidth(extent) / tileSize;
+            var matrixIds = new Array(resolution);
+            for (var i = 0; i < resolution; ++i) {
+                resolutions[i] = size / Math.pow(2, i);
+                matrixIds[i] = i;
+            }
+            console.log(matrixIds);
+            console.log(resolutions);
             this.ListRasters[layerName] = new ol.layer.Tile({
                 title: layerName,
                 type: 'base',
-                source: new ol.source.XYZ({
-                    tileSize: tileSize,
-                    maxZoom:16,
-                    projection: proj,
-                    tileUrlFunction: function(tileCoord) {
-                        return webImsService.replace('{z}', (tileCoord[0] - 1).toString())
-                            .replace('{x}', tileCoord[1].toString())
-                            .replace('{y}', (-tileCoord[2] - 1).toString());
-                    }
+                source: new ol.source.WMTS({
+                    url: url,
+                    layer: layerName,
+                    requestEncoding: 'REST',
+                    format: formatImage,
+                    matrixSet: matrixSet,
+                    projection: projData,
+                    extent: extent,
+                    tileGrid: new ol.tilegrid.WMTS({
+                        origin: ol.extent.getTopLeft(extent),
+                        resolutions: resolutions,
+                        matrixIds: matrixIds
+                    }),
                 }),
                 visible:false
             });
-        }else if(server === 'AGS-IMS'){
-            var webMapService = url+layerName+'/ImageServer/tile/{z}/{y}/{x}';
-            this.ListRasters[layerName] = new ol.layer.Tile({
-                title: layerName,
-                type: 'base',
-                source: new ol.source.XYZ({
-                    projection: ol.proj.get(proj),
-                    tileUrlFunction: function(tileCoord) {
-                        return webMapService.replace('{z}', (tileCoord[0] - 1).toString())
-                            .replace('{x}', tileCoord[1].toString())
-                            .replace('{y}', (-tileCoord[2] - 1).toString());
-                    }
-                }),
-                visible:false
-            });
+        }else if(server === 'GeoServer'){
+           console.log('coucou')
         }
     };
 

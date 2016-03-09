@@ -1,15 +1,7 @@
-/*global ol, Map, featureLayer, projection, GlobalMap*/
+/*global ol, alert, Map, projection, GlobalMap*/
 
 /**
  * Editor Class manage all Edition of data on the map
- */
-
-/*
-var format = new ol.format.WFS({featureNS:"Mairie",
-            featureType:'arrondissements',
-            schemaLocation:"http://www.opengis.net/wfs \
-                    http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd \
-                    http://localhost:8080/geoserver/wfs/DescribeFeatureType?typename=Mairie:arrondissements"});
  */
 function Editor(layerEdit) {
     'use strict';
@@ -19,61 +11,49 @@ function Editor(layerEdit) {
      */
     this.editInteraction = new Map();
     /**
-     * dirty is an array to stock the information of the edit feature
-     * @type {{}}
-     */
-    var dirty = {};
-    /**
-     * editServer is an id to know the server provide the data to be edit
-     * @type {String}
-     */
-    var editServer = layerEdit[0];
-    /**
-     * editLayer is the layer can be edit on the map
-     * @type {ol.layer.Layer}
-     */
-    var editLayer = featureLayer.getFeatureByName(layerEdit[1]);
-    /**
-     * editUrl is an url to access at the data to be edit
-     * @type {String}
-     */
-    var editUrl = layerEdit[2];
-    /**
-     * editProj is the projection of the data can be edit
-     * @type {String}
-     */
-    var editProj = layerEdit[3];
-    /**
-     * editType is the type of the data can be edit
-     * @type {String}
-     */
-    var editType = layerEdit[4];
-    /**
-     * esriJSONFormat is the format to write on the esri data
-     * @type {ol.format.EsriJSON}
-     */
-    var esriJSONFormat = new ol.format.EsriJSON();
-    /**
      * geoJSONFormat is the format to write on the GeoJSON data
      * @type {ol.format.GeoJSON}
      */
     var geoJSONFormat = new ol.format.GeoJSON();
     /**
-     * formatWFS is the format to write on the geoserver
-     * @type {ol.format.WFS}
+     * dirty is an array to stock the information of the edit feature
+     * @type {{}}
      */
-    var formatWFS = new ol.format.WFS({featureNS:"Mairie",
-            featureType:'arrondissements',
-            schemaLocation:"http://www.opengis.net/wfs \ http://schemas.opengis.net/wfs/1.1.0/WFS-transaction.xsd \ http://localhost:8080/geoserver/wfs/DescribeFeatureType?typename=Mairie:arrondissements"});
+    var dirty = {};
     /**
-     * formatGML is the format to write on the geoserver
-     * @type {ol.format.GML}
+     * fieldData is the field where we stock data value
+     * @type {Element}
      */
-    var formatGML = new ol.format.GML({
-        featureNS: layerEdit[1].split(':')[0],
-        featureType: layerEdit[1],//.split(':')[1],
-        srsName: editProj
+    var fieldData = document.getElementById('GeomGeoJson');
+    /**
+     * fieldCentroid is the field where we stock centroid value
+     * @type {Element}
+     */
+    var fieldCentroid = document.getElementById('GeomCentroidGeoJson');
+    /**
+     * editSource is the source of the data can be edit on the map
+     * @type {String}
+     */
+    var editSource = fieldData.value;
+    /**
+     * editLayer is the layer can be edit on the map
+     * @type {ol.layer.Layer}
+     */
+    var editLayer = new ol.layer.Vector({
+        name:"EditLayer",
+        source: new ol.source.Vector()
     });
+    /**
+     * editProj is the projection of the data can be edit
+     * @type {String}
+     */
+    var editProj = layerEdit[0];
+    /**
+     * editType is the type of the data can be edit
+     * @type {String}
+     */
+    var editType = layerEdit[1];
+    var editAvailable = true;
     /**
      * selectInteract is the interaction to select a feature on the map
      * @type {ol.interaction.Select}
@@ -95,10 +75,20 @@ function Editor(layerEdit) {
         type: editType
     });
     /**
-     * editAction contains the current edition
-     * @type {Array}
+     * suggestPoiEdit is the marker to know the mode of edition on the map
+     * @type {ol.interaction.Draw}
      */
-    var editAction = [];
+    this.suggestPoiEdit = false;
+
+    /**
+     * Editor Method
+     * getLevel is a getter to know the editor interaction use
+     * @returns {boolean}
+     */
+    this.getLevel = function(){
+        return true;
+    };
+
     /**
      * Editor Method
      * getSelectInteract is a getter to access at select editor interaction
@@ -144,18 +134,32 @@ function Editor(layerEdit) {
         return editLayer;
     };
 
+    this.getSuggestPoiEdit = function(){
+        return this.suggestPoiEdit;
+    }
+
     /**
      * Editor Method
      * initEditInteraction initialize the List of interacts to edit data
      */
-    this.initEditInteraction = function () {
-        this.editInteraction.set('Select', this.getSelectEditInteract());
-        this.editInteraction.set('Modify', this.getModifyEditInteract());
-        this.editInteraction.set('Draw', this.getDrawEditInteraction());
-        this.setActiveInteraction(null, false);
+    this.initEditInteraction = function (mode) {
+        if(editSource !== '') {
+            editLayer.getSource().addFeatures(geoJSONFormat.readFeatures(editSource));
+        }
+        if(mode === 'Draw') {
+            this.editInteraction.set('Select', this.getSelectEditInteract());
+            this.editInteraction.set('Modify', this.getModifyEditInteract());
+            this.editInteraction.set('Draw', this.getDrawEditInteraction());
+            this.suggestPoiEdit = false;
+            this.setActiveInteraction(null, false);
+        }else if(mode === 'Suggest') {
+            this.editInteraction.set('Select', this.getSelectEditInteract());
+            this.editInteraction.set('Modify', this.getModifyEditInteract());
+            this.suggestPoiEdit = true;
+            this.setActiveInteraction('Edit', true);
+        }
         return this.editInteraction;
     };
-
 
     /**
      * Editor METHOD
@@ -172,7 +176,11 @@ function Editor(layerEdit) {
             this.editInteraction.get('Select').setActive(active);
             this.editInteraction.get('Modify').setActive(active);
         } else if (value === 'Add') {
-            this.editInteraction.get('Draw').setActive(active);
+            if(active === true && fieldData.value !== '') {
+                alert("Il ne peut avoir plusieurs géométries pour un enregistrement!");
+            }else {
+                this.editInteraction.get('Draw').setActive(active);
+            }
         }
     };
 
@@ -187,11 +195,43 @@ function Editor(layerEdit) {
         if (value === 'Edit') {
             listEditor.push(this.editInteraction.get('Select'));
             listEditor.push(this.editInteraction.get('Modify'));
-        } else if (value === 'Add') {
+        } else if (value === 'Add'){
             listEditor.push(this.editInteraction.get('Draw'));
         }
         return listEditor;
     };
+
+    /**
+     * Editor METHOD
+     * writeGeoJSON send all information at Lutece to insert data in the database
+     * @returns {*[]}
+     */
+     function writeGeoJSON(feature){
+        if(editAvailable) {
+            fieldCentroid.value = geoJSONFormat.writeGeometry(getCentroid(feature.getGeometry()), {
+                featureProjection: projection.getProjection().getCode(),
+                dataProjection: editProj
+            });
+            fieldData.value = geoJSONFormat.writeFeature(feature, {
+                featureProjection: projection.getProjection().getCode(),
+                dataProjection: editProj
+            });
+        }
+    }
+
+    /**
+     * Editor METHOD
+     * getCentroid calculate the centroid of the current geometry
+     * @param geom
+     * @returns {*}
+     */
+    function getCentroid(geom) {
+        if(editType === 'Point') {
+            return geom;
+        }else{
+            return new ol.geom.Point(ol.extent.getCenter(geom.getExtent()));
+        }
+    }
 
     /**
      * Editor METHOD
@@ -209,8 +249,20 @@ function Editor(layerEdit) {
      * getSelectedEditFeatures().on is a Listener to send information of the data edit
      */
     this.getSelectedEditFeatures().on('remove', function (evt) {
-        editAction.push('Modify');
-        editAction.push(evt.element);
+        writeGeoJSON(evt.element);
+    });
+
+    /**
+     * Editor METHOD
+     * drawEditInteract.on is a Listener to add a feature
+     */
+    this.drawEditInteract.on('drawstart', function (evt) {
+        if(fieldData.value !== ''){
+            editAvailable = false;
+            if(editType !== 'Point') {
+                this.finishDrawing();
+            }
+        }
     });
 
     /**
@@ -218,159 +270,12 @@ function Editor(layerEdit) {
      * drawEditInteract.on is a Listener to add a feature
      */
     this.drawEditInteract.on('drawend', function (evt) {
-        editAction.push('Add');
-        editAction.push(evt.feature);
+        if(editAvailable) {
+            writeGeoJSON(evt.feature);
+        }
     });
 
-    /**
-     * Editor METHOD
-     * getCentroid calculate the centroid of the current geometry
-     * @param geom
-     * @returns {*}
-     */
-    this.getCentroid = function(geom) {
-        if(editType === 'Point') {
-            return geom;
-        }else{
-            return new ol.geom.Point(ol.extent.getCenter(geom.getExtent()));
-        }
-    };
-
-    /**
-     * Editor METHOD
-     * restartEdition clean the table of the current edition
-     */
-    this.restartEdition = function() {
-        editAction = [];
-    };
-
-    /**
-     * Editor METHOD
-     * cleanEdition restore the layer at this initial source
-     */
-    this.cleanEdition = function() {
-        if(editServer === 'GeoJSON') {
-            var features = featureLayer.getDataGeoJSON(layerEdit[1]);
-            editLayer.getSource().clear();
-            editLayer.getSource().addFeatures(geoJSONFormat.readFeatures(features));
-        }else{
-            editLayer.getSource().clear();
-        }
-        this.restartEdition();
-    };
-
-    /**
-     * Editor METHOD
-     * writeGeoJSON send all information at Lutece to insert data in the database
-     * @returns {*[]}
-     */
-    this.writeGeoJSON = function(){
-        var centroidFeature = this.getCentroid(editAction[1].getGeometry());
-        var centroidFeatureGeoJSON = geoJSONFormat.writeGeometry(centroidFeature, {
-                featureProjection: projection.getProjection().getCode(),
-                dataProjection: editProj
-        });
-        var geojsonDataEdit = geoJSONFormat.writeFeature(editAction[1], {
-                featureProjection: projection.getProjection().getCode(),
-                dataProjection: editProj
-        });
-        this.restartEdition();
-        return [null, geojsonDataEdit, centroidFeatureGeoJSON];
-    };
-
-    /**
-     * Editor METHOD
-     * writeGeoServer send all information at lutece and insert the geometry in the database by GeoServer
-     * @returns {null[]}
-     */
-    this.writeGeoServer = function(){
-        var feature = editAction[1];
-        var geom;
-        if(editAction[0] === 'Add') {
-            geom = formatWFS.writeTransaction([feature], null, null, formatGML);
-        }else{
-            geom = formatWFS.writeTransaction(null,[feature],null, formatGML);
-        }
-        var s = new XMLSerializer();
-        var str = s.serializeToString(geom);
-        console.log(str)
-        $.ajax({
-            url: editUrl,
-            origin: 'http://localhost:63342',
-            type: 'POST',
-            contentType: 'text/xml',
-            data: str
-        }).done();
-        this.restartEdition();
-        return [feature.getId(), null, null];
-    };
-
-    /**
-     * Editor METHOD
-     * writeArcGISServer send all information at lutece and insert the geometry in the database by ArcGIS Server
-     * @returns {null[]}
-     */
-    this.writeArcGISServer = function(){
-        if(editAction[0] === 'Add') {
-            var feature = editAction[1];
-            var payload = '[' + esriJSONFormat.writeFeature(feature, {
-                    featureProjection: projection.getProjection().getCode(),
-                    dataProjection: editProj
-                }) + ']';
-            var url = editUrl + '/addFeatures';
-            $.post(url, {f: 'json', features: payload}).done(function (data) {
-                var result = JSON.parse(data);
-                if (result.addResults && result.addResults.length > 0) {
-                    if (result.addResults[0].success === true) {
-                        var fid = result.addResults[0]['objectId'];
-                        feature.setId(fid);
-                        editLayer.getSource().clear();
-                        this.restartEdition();
-                        return [fid, null, null];
-                    }
-                }
-            });
-        }else if(editAction[0] === 'Modify'){
-            var featureEdit = editAction[1];
-            var fid = featureEdit.getId();
-            if (editServer === 'AGS') {
-                if (dirty[fid] === true) {
-                    var payloadEdit = '[' + esriJSONFormat.writeFeature(featureEdit, {
-                            featureProjection: projection.getProjection().getCode(),
-                            dataProjection: editProj
-                        }) + ']';
-                    var urlEdit = editUrl + '/updateFeatures';
-                    $.post(urlEdit, {f: 'json', features: payloadEdit}).done(function (data) {
-                        var result = JSON.parse(data);
-                        if (result.updateResults && result.updateResults.length > 0) {
-                            if (result.updateResults[0].success === true) {
-                                delete dirty[fid];
-                                this.restartEdition();
-                                return [fid, null, null];
-                            }
-                        }
-                    });
-                }
-            }
-        }
-    };
-
      /**
-     * Editor METHOD
-     * validateEdition is the manager to run the method to actualise database
-     * @returns {*}
-     */
-    this.validateEdition = function() {
-        if(editServer === 'GeoJSON'){
-            return this.writeGeoJSON();
-        }else if(editServer === 'GeoServer'){
-            return this.writeGeoServer();
-        }else if (editServer === 'AGS') {
-            return this.writeArcGISServer();
-        }
-    };
-
-    /**
      * Editor METHOD
      * validateEdition is the manager to run the method to actualise database
      * @returns {*}
@@ -379,6 +284,25 @@ function Editor(layerEdit) {
         if(editType === 'Point'){
             var feature = new ol.Feature(point);
             editLayer.getSource().addFeature(feature);
+            writeGeoJSON(feature);
         }
     };
+
+    /**
+     * Editor METHOD
+     * restartEdition clean the table of the current edition
+     */
+    this.restartEdition = function() {
+        fieldData.value = '';
+        fieldCentroid.value = '';
+    };
+
+    /**
+     * Editor METHOD
+     * cleanEdition restore the layer at this initial source
+     */
+    function cleanEdition() {
+        editLayer.getSource().clear();
+        editLayer.getSource().addFeatures(geoJSONFormat.readFeatures(editSource));
+    }
 }
