@@ -11,6 +11,15 @@ var InterfaceElements = function(parameters) {
         var rulerActive = false;
         element.className = 'ol-unselectable ol-mycontrol';
         for (var i = 0; i < parameters['Interacts'].length; i++) {
+            /*if (parameters['Interacts'][i] === "SuggestPOISearch") {
+                var suggestPoiText = document.createElement('text');
+                suggestPoiText.innerHTML = 'Pt';
+                var handleSuggestPoiText = function (e) {
+                    interact.setDrawInteraction('Point');
+                };
+                suggestPoiText.addEventListener('touchstart', handleSuggestPoiText, false);
+                element.appendChild(suggestPoiText);
+            }*/
             if (parameters['Interacts'][i] === "Draw") {
                 var buttonDrawPoint = document.createElement('button');
                 buttonDrawPoint.innerHTML = 'Pt';
@@ -56,21 +65,13 @@ var InterfaceElements = function(parameters) {
                 element.appendChild(buttonMeasureArea);
             }
             if (parameters['Interacts'][i] === 'Edit') {
-                var buttonAdd = document.createElement('button');
-                buttonAdd.innerHTML = 'Add';
                 var buttonEdit = document.createElement('button');
                 buttonEdit.innerHTML = 'Edit';
-                var handleAdd = function (e) {
-                    interact.setEditInteraction('Add');
-                };
                 var handleEdit = function (e) {
                     interact.setEditInteraction('Edit');
                 };
-                buttonAdd.addEventListener('click', handleAdd, false);
-                buttonAdd.addEventListener('touchstart', handleAdd, false);
                 buttonEdit.addEventListener('click', handleEdit, false);
                 buttonEdit.addEventListener('touchstart', handleEdit, false);
-                element.appendChild(buttonAdd);
                 element.appendChild(buttonEdit);
             }
             if (parameters['Interacts'][i] === 'Select') {
@@ -93,7 +94,7 @@ var InterfaceElements = function(parameters) {
                 buttonGPS.addEventListener('touchstart', handleGPS, false);
                 element.appendChild(buttonGPS);
             }
-            if (parameters['Interacts'][i] === 'Draw' || parameters['Interacts'][i] === 'Measure'|| parameters['Interacts'][i] === 'Edit'){
+            if (parameters['Interacts'][i] === 'Draw' || parameters['Interacts'][i] === 'Measure'|| parameters['Interacts'][i] === 'Edit'|| parameters['Interacts'][i] === 'AutoEdit'){
                 if(rulerActive === false) {
                     var buttonRuler = document.createElement('button');
                     buttonRuler.innerHTML = 'Ruler';

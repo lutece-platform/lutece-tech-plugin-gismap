@@ -10,24 +10,11 @@ var Manager = function() {
 
     /**
      * Manager Method
-     * Function to calculate the initial extent or center
-     * @param data
+     * getSpecificExtent is a getter to check if a specific extent is define
+     * @returns {boolean}
      */
-    var defineCenterAndExtentByParameter = function (data){
-        if (data !== ''){
-            data = data.split(',');
-            if(data.length <= 2 ){
-                for(var i = 0; i < data.length; i++){
-                    data[i] = parseFloat(data[i]);
-                }
-                view.setCenter(data);
-            }else{
-                for(var j = 0; j < data.length; j++){
-                    data[j] = parseFloat(data[j]);
-                }
-                view.setExtent(data);
-            }
-        }
+    this.getSpecificExtent = function(){
+        return this.extentDefine;
     };
 
     /**
@@ -36,7 +23,7 @@ var Manager = function() {
      * @param globalParameters
      * @param parameters
      */
-    var readAndManageParameters = function (startParameters) {
+    var readAndManageParameters = function (startParameters, fieldParameters) {
         var parameters = [];
         var controls = [];
         var interacts = [];
@@ -89,11 +76,18 @@ var Manager = function() {
         if (startParameters['Measure'] !== false) {
             interacts.push('Measure');
         }
-        if (startParameters['Edit'] !== false) {
-            interacts.push('Edit');
+        if (fieldParameters['TypeEdit'] === 'Point' || fieldParameters['TypeEdit'] === 'LuneString' || fieldParameters['TypeEdit'] === 'Polygon'){
+            if (startParameters['AutoEdit'] === false) {
+                interacts.push('Edit');
+            } else if (startParameters['AutoEdit'] === true) {
+                interacts.push('AutoEdit');
+            }
         }
-        if (startParameters['SuggestPOI'] !== false) {
-            interacts.push('SuggestPOI');
+        if (fieldParameters['TypeEdit'] === 'SuggestPOI') {
+            interacts.push('SuggestPOIEdit');
+        }
+        if (startParameters['SuggestPOISearch'] !== false) {
+            interacts.push('SuggestPOISearch');
         }
         if (startParameters['GPS'] !== false) {
             interacts.push('GPS');
@@ -200,7 +194,6 @@ var Manager = function() {
     };
 
     return{
-        defineCenterAndExtentByParameter: defineCenterAndExtentByParameter,
         readAndManageParameters: readAndManageParameters,
         readAndInitGeneralParams: readAndInitGeneralParams,
         readAndInitDataParams: readAndInitDataParams,

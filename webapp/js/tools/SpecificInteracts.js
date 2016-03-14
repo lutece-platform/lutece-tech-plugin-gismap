@@ -1,4 +1,4 @@
-/*global ol*/
+/*global ol, layer, featureLayer*/
 
 /**
  * SpecificInteracts Class manage a part of interaction enabled on the map
@@ -27,6 +27,40 @@ function SpecificInteracts(){
      */
     this.getSelectedFeatures = function(){
         return this.selectInteract.getFeatures();
+    };
+
+    /**
+     * SpecificInteracts Method
+     * getSpecificSelectedFeatures is a getter to send all features selected to another plugin
+     * @returns {*}
+     */
+    this.getSpecificSelectedFeatures = function(){
+        var selectedElementId = [];
+        var selectableLayers = layer.getSelectableLayers();
+        var selection = this.selectInteract.getFeatures().getArray();
+        for(var i = 0; i < selection.length; i++){
+            for(var j = 0; j < selectableLayers.length; j++){
+                if(selectableLayers[j] === this.selectInteract.getLayer(selection[i]).getProperties()['title']) {
+                    selectedElementId.push(selection[i].getId());
+                }
+            }
+        }
+        return selectedElementId;
+    };
+
+    /**
+     * SpecificInteracts Method
+     * setSelectedFeatures is a setter to select features by another plugin
+     * @param idFeature
+     */
+    this.setSelectedFeatures = function(idFeatures){
+        var features = this.selectInteract.getFeatures();
+        var selectableLayers = layer.getSelectableLayers();
+        for(var i = 0; i < idFeatures.length; i++) {
+            for (var j = 0; j < selectableLayers.length; j++) {
+                features.push(featureLayer.getFeatureByName(selectableLayers[j]).getSource().getFeatureById(idFeatures[i]));
+            }
+        }
     };
 
     /**

@@ -11,25 +11,12 @@ var Zoom = function() {
      * @param x
      * @param y
      */
-    var zoomSuggestPoi = function () {
-        var x = document.getElementById('address_x').value;
-        var y = document.getElementById('address_y').value;
+    var zoomSuggestPoi = function (x, y) {
         var pointPoi = new ol.geom.Point([x,y]);
         view.getView().fit(pointPoi, GlobalMap.getSize());
         if(editorTools.getSuggestPoiEdit()){
             editorTools.addPoint(pointPoi);
         }
-    };
-
-    /**
-     * Zoom Method
-     * zoomSuggestPoiAddPoint is a method to call an action to go on a specific area in function of selected elements
-     * @param x
-     * @param y
-     */
-    var zoomSuggestPoiAddPoint = function (y, x) {
-        var pointPoi = new ol.geom.Point([x,y]);
-        view.getView().fit(pointPoi, GlobalMap.getSize());
     };
 
     /**
@@ -52,7 +39,6 @@ var Zoom = function() {
 
     return{
         zoomSuggestPoi: zoomSuggestPoi,
-        zoomSuggestPoiAddPoint: zoomSuggestPoiAddPoint,
         zoomSelect: zoomSelect
     };
 };

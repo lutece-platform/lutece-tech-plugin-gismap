@@ -1,20 +1,18 @@
-/*global ol, drawTools, measureTools, specifInteracts, Editor, EditorAdvance, GlobalMap*/
+/*global ol, drawTools, measureTools, specifInteracts, Editor, GlobalMap*/
 
 /**
  * Interaction Class manage interactions on the map
  */
 var editorTools = null;
 
-function Interaction(layerEdit){
+function Interaction(layerEdit, fieldParameters){
     'use strict';
     /**
      * editorTools is the manager of edition tools
      * @type {Editor}
      */
-    if(layerEdit !== '' && layerEdit.length <= 2) {
-        editorTools = new Editor(layerEdit);
-    }else if(layerEdit !== '' && layerEdit.length > 2) {
-        editorTools = new EditorAdvance(layerEdit);
+    if(fieldParameters !== undefined && layerEdit !== '' && layerEdit.length === 1) {
+        editorTools = new Editor(layerEdit, fieldParameters);
     }
     /**
      * ListInteracts contains all interactions enable on the map
@@ -44,7 +42,7 @@ function Interaction(layerEdit){
             this.activeDrawTool(null, false);
         }else if(this.currentInteract === "Edit"){
             this.activeEditorTool(null, false);
-        }else if(this.currentInteract === "SuggestPoi"){
+        }else if(this.currentInteract === "SuggestPoiEdit"){
             this.activeEditorTool(null, false);
         }
     };

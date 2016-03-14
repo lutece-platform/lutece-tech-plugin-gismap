@@ -11,6 +11,7 @@ function Layer() {
      * @type {Array}
      */
     this.ListLayers = [];
+    this.selectableLayers = [];
 
     /**
      * Layer Method
@@ -74,6 +75,7 @@ function Layer() {
     this.addLayerVector = function(wkt, format){
         var name = featureLayer.addLayerFeature(wkt, format);
         this.ListLayers.push(name);
+        this.selectableLayers.push(name);
     };
 
     /**
@@ -83,6 +85,15 @@ function Layer() {
      */
     this.getLayers = function(){
         return this.ListLayers;
+    };
+
+    /**
+     * Layer Method
+     * getSelectedLayers is a getter to all selectable Layers
+     * @returns {Array}
+     */
+    this.getSelectableLayers = function(){
+        return this.selectableLayers;
     };
 
     /**

@@ -1,11 +1,9 @@
 /*global ol, Manager, Control, Projection, Interaction, Layer, LayerRaster, Feature,
-View, Measure, Zoom, DrawTools, InterfaceElements, SpecificInteracts, GeoPoint, Print, Popup*/
+View, Measure, Zoom, DrawTools, InterfaceElements, SpecificInteracts, GeoPoint, Print*/
 
 /**
  * File to manage the Gis Component with all parameters
  */
-
-
 window.app = {};
 var app = window.app;
 
@@ -26,43 +24,40 @@ var interfaceElements;
 var GlobalMap;
 var geoPoint;
 var printer;
-var popup;
 var zoom;
 
-//var mapChoose;
-
-var GisMap = function () {
+var GisMap = function (idMapInit) {
     'use strict';
     /**
      *  Global Object instantiation
      */
+    this.idMap = idMapInit;
     GlobalMap = new ol.Map({
-        target: 'map'
+        target: this.idMap
     });
     var manager = new Manager();
-    popup = new Popup();
     printer = new Print();
     /**
      * GisMap Private Method
      * initGis initialize all components of the map
-     * @param idMap
      * @param globalParameters
      * @param parameters
      */
-    function initGis(idMap, globalParameters, startParameters) {
-        /*if ($(mapIdentifier).attr('class').indexOf("olMap")>=0){
-         return false;
-         }*/
-        var parameters = manager.readAndManageParameters(startParameters);
+    function initGis(globalParameters, startParameters, fieldParameters) {
+        var parameters = manager.readAndManageParameters(startParameters, fieldParameters);
         globalInitialize(globalParameters,parameters);
         dataInitialize(globalParameters,parameters);
-        controlInitialize(globalParameters,parameters);
+        controlInitialize(globalParameters,parameters, fieldParameters);
         mapInitialize(parameters);
-        view.getView().fit(projection.getExtent(), GlobalMap.getSize());
-        initInterfaces('#map', parameters);
+        if(manager.getSpecificExtent() !== false){
+            view.getView().fit(manager.extentDefine, GlobalMap.getSize());
+        }else {
+            view.getView().fit(projection.getExtent(), GlobalMap.getSize());
+        }
+        initInterfaces(parameters);
     }
 
-    function initInterfaces(id, parameters) {
+    function initInterfaces(parameters) {
         interfaceElements = new InterfaceElements(parameters);
         var Elements = interfaceElements.getElements();
         for (var i = 0; i < Elements.length; i++) {
@@ -84,8 +79,8 @@ var GisMap = function () {
         manager.readAndInitDataParams(globalParameters, parameters);
     }
 
-    function controlInitialize(globalParameters, parameters) {
-        interact = new Interaction(parameters['LayerEdit']);
+    function controlInitialize(globalParameters, parameters, fieldParameters) {
+        interact = new Interaction(parameters['LayerEdit'], fieldParameters);
         control = new Control();
         drawTools = new DrawTools();
         measureTools = new Measure();
@@ -130,8 +125,8 @@ var GisMap = function () {
      * @param parameters
      * @returns {*}
      */
-    var initGisMap = function(globalParameters, parameters) {
-        initGis('#map', globalParameters, parameters);
+    var initGisMap = function(globalParameters, parameters, fieldParameters) {
+        initGis(globalParameters, parameters, fieldParameters);
         return GlobalMap;
     };
 

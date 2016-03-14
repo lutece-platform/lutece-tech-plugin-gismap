@@ -3,7 +3,7 @@
 /**
  * Editor Class manage all Edition of data on the map
  */
-function Editor(layerEdit) {
+function Editor(layerEdit, fieldName) {
     'use strict';
     /**
      * editInteraction is the map to stock all edit interaction
@@ -24,17 +24,29 @@ function Editor(layerEdit) {
      * fieldData is the field where we stock data value
      * @type {Element}
      */
-    var fieldData = document.getElementById('GeomGeoJson');
+    var fieldData = document.getElementById(fieldName['GeomGeoJson']);
     /**
-     * fieldCentroid is the field where we stock centroid value
+     * fieldCentroidX is the field where we stock centroid value
      * @type {Element}
      */
-    var fieldCentroid = document.getElementById('GeomCentroidGeoJson');
+    var fieldCentroidX = document.getElementById(fieldName['GeomCentroidX']);
+    /**
+     * fieldCentroidY is the field where we stock centroid value
+     * @type {Element}
+     */
+    var fieldCentroidY = document.getElementById(fieldName['GeomCentroidY']);
+    /**
+     * fieldEditionStatus is the field where we stock centroid value
+     * @type {Element}
+     */
+    var fieldEditionStatus = document.getElementById(fieldName['GeomState']);
     /**
      * editSource is the source of the data can be edit on the map
      * @type {String}
      */
     var editSource = fieldData.value;
+
+    var editAvailable = true;
     /**
      * editLayer is the layer can be edit on the map
      * @type {ol.layer.Layer}
@@ -52,8 +64,7 @@ function Editor(layerEdit) {
      * editType is the type of the data can be edit
      * @type {String}
      */
-    var editType = layerEdit[1];
-    var editAvailable = true;
+    var editType = fieldName['TypeEdit'];
     /**
      * selectInteract is the interaction to select a feature on the map
      * @type {ol.interaction.Select}
@@ -136,7 +147,7 @@ function Editor(layerEdit) {
 
     this.getSuggestPoiEdit = function(){
         return this.suggestPoiEdit;
-    }
+    };
 
     /**
      * Editor Method
@@ -151,10 +162,11 @@ function Editor(layerEdit) {
             this.editInteraction.set('Modify', this.getModifyEditInteract());
             this.editInteraction.set('Draw', this.getDrawEditInteraction());
             this.suggestPoiEdit = false;
-            this.setActiveInteraction(null, false);
+            this.setActiveInteraction('Edit', true);
         }else if(mode === 'Suggest') {
+            /* Lignes à décommenter pour le géocodage inverse
             this.editInteraction.set('Select', this.getSelectEditInteract());
-            this.editInteraction.set('Modify', this.getModifyEditInteract());
+            this.editInteraction.set('Modify', this.getModifyEditInteract());*/
             this.suggestPoiEdit = true;
             this.setActiveInteraction('Edit', true);
         }
@@ -186,6 +198,23 @@ function Editor(layerEdit) {
 
     /**
      * Editor METHOD
+     * setAutoEditorTools is a setter to activate all interaction automatically
+     * @param value
+     * @returns {Array}
+     */
+    this.setAutoEditorTools = function (value) {
+        var listEditor = [];
+        if (value === 'Edit') {
+            listEditor.push(this.editInteraction.get('Select'));
+            listEditor.push(this.editInteraction.get('Modify'));
+        } else if (value === 'Add'){
+            listEditor.push(this.editInteraction.get('Draw'));
+        }
+        return listEditor;
+    };
+
+    /**
+     * Editor METHOD
      * getDrawTools is a getter to access at the draw interaction
      * @param value
      * @returns {Array}
@@ -208,14 +237,14 @@ function Editor(layerEdit) {
      */
      function writeGeoJSON(feature){
         if(editAvailable) {
-            fieldCentroid.value = geoJSONFormat.writeGeometry(getCentroid(feature.getGeometry()), {
-                featureProjection: projection.getProjection().getCode(),
-                dataProjection: editProj
-            });
+            var point = getCentroid(feature.getGeometry());
+            fieldCentroidX.value = point.getCoordinates()[0];
+            fieldCentroidY.value = point.getCoordinates()[1];
             fieldData.value = geoJSONFormat.writeFeature(feature, {
                 featureProjection: projection.getProjection().getCode(),
                 dataProjection: editProj
             });
+            fieldEditionStatus.value = false;
         }
     }
 
@@ -294,7 +323,8 @@ function Editor(layerEdit) {
      */
     this.restartEdition = function() {
         fieldData.value = '';
-        fieldCentroid.value = '';
+        fieldCentroidX.value = '';
+        fieldCentroidY.value = '';
     };
 
     /**
