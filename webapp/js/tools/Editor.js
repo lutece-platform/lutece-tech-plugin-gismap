@@ -1,10 +1,11 @@
-/*global ol, alert, Map, projection, GlobalMap*/
+/*global ol, alert, Map, projection, GlobalMap, interact*/
 
 /**
  * Editor Class manage all Edition of data on the map
  */
 function Editor(layerEdit, fieldName) {
     'use strict';
+    var thisEditor = this;
     /**
      * editInteraction is the map to stock all edit interaction
      * @type {Map}
@@ -14,7 +15,7 @@ function Editor(layerEdit, fieldName) {
      * geoJSONFormat is the format to write on the GeoJSON data
      * @type {ol.format.GeoJSON}
      */
-    var geoJSONFormat = new ol.format.GeoJSON();
+    this.geoJSONFormat = new ol.format.GeoJSON();
     /**
      * dirty is an array to stock the information of the edit feature
      * @type {{}}
@@ -24,29 +25,32 @@ function Editor(layerEdit, fieldName) {
      * fieldData is the field where we stock data value
      * @type {Element}
      */
-    var fieldData = document.getElementById(fieldName['GeomGeoJson']);
+    this.fieldData = document.getElementById(fieldName['GeomGeoJson']);
     /**
      * fieldCentroidX is the field where we stock centroid value
      * @type {Element}
      */
-    var fieldCentroidX = document.getElementById(fieldName['GeomCentroidX']);
+    this.fieldCentroidX = document.getElementById(fieldName['GeomCentroidX']);
     /**
      * fieldCentroidY is the field where we stock centroid value
      * @type {Element}
      */
-    var fieldCentroidY = document.getElementById(fieldName['GeomCentroidY']);
+    this.fieldCentroidY = document.getElementById(fieldName['GeomCentroidY']);
     /**
      * fieldEditionStatus is the field where we stock centroid value
      * @type {Element}
      */
-    var fieldEditionStatus = document.getElementById(fieldName['GeomState']);
+    this.fieldEditionStatus = document.getElementById(fieldName['GeomState']);
     /**
      * editSource is the source of the data can be edit on the map
      * @type {String}
      */
-    var editSource = fieldData.value;
-
-    var editAvailable = true;
+    var editSource = this.fieldData.value;
+    /**
+     * editAvailable is the marker to expose the editable data of the map
+     * @type {boolean}
+     */
+    this.editAvailable = editSource === '' ? true : false;
     /**
      * editLayer is the layer can be edit on the map
      * @type {ol.layer.Layer}
@@ -64,7 +68,12 @@ function Editor(layerEdit, fieldName) {
      * editType is the type of the data can be edit
      * @type {String}
      */
-    var editType = fieldName['TypeEdit'];
+    var editType = fieldName['TypeEdit'] === 'SuggestPOI' ? 'Point': fieldName['TypeEdit'];
+    /**
+     * suggestPoiEdit is the marker to know the mode of edition on the map
+     * @type {ol.interaction.Draw}
+     */
+    this.suggestPoiEdit = fieldName['TypeEdit'] === 'SuggestPOI' ? true : false;
     /**
      * selectInteract is the interaction to select a feature on the map
      * @type {ol.interaction.Select}
@@ -85,11 +94,6 @@ function Editor(layerEdit, fieldName) {
         source: editLayer.getSource(),
         type: editType
     });
-    /**
-     * suggestPoiEdit is the marker to know the mode of edition on the map
-     * @type {ol.interaction.Draw}
-     */
-    this.suggestPoiEdit = false;
 
     /**
      * Editor Method
@@ -99,7 +103,6 @@ function Editor(layerEdit, fieldName) {
     this.getLevel = function(){
         return true;
     };
-
     /**
      * Editor Method
      * getSelectInteract is a getter to access at select editor interaction
@@ -108,7 +111,6 @@ function Editor(layerEdit, fieldName) {
     this.getSelectEditInteract = function () {
         return this.selectInteract;
     };
-
     /**
      * Editor Method
      * getSelectedEditFeatures is a getter to access at all features selected
@@ -117,7 +119,6 @@ function Editor(layerEdit, fieldName) {
     this.getSelectedEditFeatures = function () {
         return this.selectInteract.getFeatures();
     };
-
     /**
      * Editor Method
      * getModifyInteract is a getter to access at modify editor interaction
@@ -126,7 +127,6 @@ function Editor(layerEdit, fieldName) {
     this.getModifyEditInteract = function () {
         return this.modifyInteract;
     };
-
     /**
      * Editor Method
      * getDrawInteract is a getter to access at draw editor interaction
@@ -135,7 +135,14 @@ function Editor(layerEdit, fieldName) {
     this.getDrawEditInteraction = function () {
         return this.drawEditInteract;
     };
-
+    /**
+     * Editor Method
+     * getSuggestPoiEdit is a getter to access at suggest poi editor interaction
+     * @returns {*}
+     */
+    this.getSuggestPoiEdit = function(){
+        return this.suggestPoiEdit;
+    };
     /**
      * Editor Method
      * getDrawInteract is a getter to access at draw editor interaction
@@ -145,30 +152,24 @@ function Editor(layerEdit, fieldName) {
         return editLayer;
     };
 
-    this.getSuggestPoiEdit = function(){
-        return this.suggestPoiEdit;
-    };
-
     /**
      * Editor Method
      * initEditInteraction initialize the List of interacts to edit data
      */
     this.initEditInteraction = function (mode) {
-        if(editSource !== '') {
-            editLayer.getSource().addFeatures(geoJSONFormat.readFeatures(editSource));
+        if(this.editAvailable !== true) {
+            editLayer.getSource().addFeatures(this.geoJSONFormat.readFeatures(editSource));
         }
         if(mode === 'Draw') {
             this.editInteraction.set('Select', this.getSelectEditInteract());
             this.editInteraction.set('Modify', this.getModifyEditInteract());
             this.editInteraction.set('Draw', this.getDrawEditInteraction());
-            this.suggestPoiEdit = false;
-            this.setActiveInteraction('Edit', true);
+            this.setActiveInteraction(null, false);
         }else if(mode === 'Suggest') {
             /* Lignes à décommenter pour le géocodage inverse
             this.editInteraction.set('Select', this.getSelectEditInteract());
             this.editInteraction.set('Modify', this.getModifyEditInteract());*/
-            this.suggestPoiEdit = true;
-            this.setActiveInteraction('Edit', true);
+            this.setActiveInteraction(null, false);
         }
         return this.editInteraction;
     };
@@ -182,35 +183,14 @@ function Editor(layerEdit, fieldName) {
     this.setActiveInteraction = function (value, active) {
         if (value === null) {
             this.editInteraction.forEach(function (val, key) {
-                val.setActive(false);
+                val.setActive(active);
             });
-        } else if (value === 'Edit') {
+        }else if(value === 'Act' && this.editAvailable === false) {
             this.editInteraction.get('Select').setActive(active);
             this.editInteraction.get('Modify').setActive(active);
-        } else if (value === 'Add') {
-            if(active === true && fieldData.value !== '') {
-                alert("Il ne peut avoir plusieurs géométries pour un enregistrement!");
-            }else {
-                this.editInteraction.get('Draw').setActive(active);
-            }
+        }else if(value === 'Act' && this.editAvailable) {
+            this.editInteraction.get('Draw').setActive(active);
         }
-    };
-
-    /**
-     * Editor METHOD
-     * setAutoEditorTools is a setter to activate all interaction automatically
-     * @param value
-     * @returns {Array}
-     */
-    this.setAutoEditorTools = function (value) {
-        var listEditor = [];
-        if (value === 'Edit') {
-            listEditor.push(this.editInteraction.get('Select'));
-            listEditor.push(this.editInteraction.get('Modify'));
-        } else if (value === 'Add'){
-            listEditor.push(this.editInteraction.get('Draw'));
-        }
-        return listEditor;
     };
 
     /**
@@ -219,12 +199,13 @@ function Editor(layerEdit, fieldName) {
      * @param value
      * @returns {Array}
      */
-    this.getEditorTools = function (value) {
+    this.getEditorTools = function () {
         var listEditor = [];
-        if (value === 'Edit') {
+        console.log(this.editAvailable)
+        if(this.editAvailable === false) {
             listEditor.push(this.editInteraction.get('Select'));
             listEditor.push(this.editInteraction.get('Modify'));
-        } else if (value === 'Add'){
+        } else if(this.editAvailable) {
             listEditor.push(this.editInteraction.get('Draw'));
         }
         return listEditor;
@@ -235,18 +216,17 @@ function Editor(layerEdit, fieldName) {
      * writeGeoJSON send all information at Lutece to insert data in the database
      * @returns {*[]}
      */
-     function writeGeoJSON(feature){
-        if(editAvailable) {
-            var point = getCentroid(feature.getGeometry());
-            fieldCentroidX.value = point.getCoordinates()[0];
-            fieldCentroidY.value = point.getCoordinates()[1];
-            fieldData.value = geoJSONFormat.writeFeature(feature, {
-                featureProjection: projection.getProjection().getCode(),
-                dataProjection: editProj
-            });
-            fieldEditionStatus.value = false;
-        }
-    }
+     this.writeGeoJSON = function(feature){
+        var point = getCentroid(feature.getGeometry());
+        this.fieldCentroidX.value = point.getCoordinates()[0];
+        this.fieldCentroidY.value = point.getCoordinates()[1];
+        this.fieldData.value = this.geoJSONFormat.writeFeature(feature, {
+            featureProjection: projection.getProjection().getCode(),
+            dataProjection: editProj
+        });
+        this.fieldEditionStatus.value = false;
+        this.editAvailable = false;
+    };
 
     /**
      * Editor METHOD
@@ -267,6 +247,7 @@ function Editor(layerEdit, fieldName) {
      * getSelectedEditFeatures().on is a Listener to affect an ID at the current selection
      */
     this.getSelectedEditFeatures().on('add', function (evt) {
+        thisEditor.fieldEditionStatus.value = true;
         var feature = evt.element;
         feature.on('change', function (evt) {
             dirty[evt.target.getId()] = true;
@@ -278,20 +259,9 @@ function Editor(layerEdit, fieldName) {
      * getSelectedEditFeatures().on is a Listener to send information of the data edit
      */
     this.getSelectedEditFeatures().on('remove', function (evt) {
-        writeGeoJSON(evt.element);
-    });
-
-    /**
-     * Editor METHOD
-     * drawEditInteract.on is a Listener to add a feature
-     */
-    this.drawEditInteract.on('drawstart', function (evt) {
-        if(fieldData.value !== ''){
-            editAvailable = false;
-            if(editType !== 'Point') {
-                this.finishDrawing();
-            }
-        }
+        thisEditor.writeGeoJSON(evt.element);
+        thisEditor.getEditorTools();
+        thisEditor.setActiveInteraction('Act', true);
     });
 
     /**
@@ -299,9 +269,9 @@ function Editor(layerEdit, fieldName) {
      * drawEditInteract.on is a Listener to add a feature
      */
     this.drawEditInteract.on('drawend', function (evt) {
-        if(editAvailable) {
-            writeGeoJSON(evt.feature);
-        }
+        thisEditor.writeGeoJSON(evt.feature);
+        thisEditor.getEditorTools();
+        thisEditor.setActiveInteraction('Act', true);
     });
 
      /**
@@ -313,26 +283,28 @@ function Editor(layerEdit, fieldName) {
         if(editType === 'Point'){
             var feature = new ol.Feature(point);
             editLayer.getSource().addFeature(feature);
-            writeGeoJSON(feature);
+            this.writeGeoJSON(feature);
         }
     };
 
     /**
      * Editor METHOD
-     * restartEdition clean the table of the current edition
+     * cleanEdition clean the data of the current edition
      */
-    this.restartEdition = function() {
-        fieldData.value = '';
-        fieldCentroidX.value = '';
-        fieldCentroidY.value = '';
+    this.cleanEdition = function() {
+        this.fieldData.value = '';
+        this.fieldCentroidX.value = '';
+        this.fieldCentroidY.value = '';
+        this.fieldEditionStatus.value = false;
+        this.editAvailable = true;
     };
 
-    /**
-     * Editor METHOD
-     * cleanEdition restore the layer at this initial source
-     */
-    function cleanEdition() {
-        editLayer.getSource().clear();
-        editLayer.getSource().addFeatures(geoJSONFormat.readFeatures(editSource));
-    }
+    this.deleteFeature = function () {
+        var selectFeatures = this.selectInteract.getFeatures();
+        if (selectFeatures.length !== 0) {
+            this.selectInteract.getFeatures().clear();
+            this.getEditLayer().getSource().clear();
+            this.cleanEdition();
+        }
+    };
 }

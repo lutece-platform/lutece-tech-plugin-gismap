@@ -45,12 +45,10 @@ function Layer() {
         var wmtsServer = wmts[0];
         var wmtsUrl = wmts[1];
         var wmtsLayer = wmts[2];
-        var wmtsImg = wmts[3];
-        var wmtsMatrix = wmts[4];
-        var wmtsProj = wmts[5];
-        var wmtsReso = wmts[6];
-        var wmtsTile = wmts[7];
-        rasterLayer.createWMTSLayer(wmtsServer, wmtsUrl, wmtsLayer, wmtsImg, wmtsMatrix, wmtsProj, wmtsReso, wmtsTile);
+        var wmtsProj = wmts[3];
+        var wmtsReso = wmts[4];
+        var wmtsOrigin = wmts[5];
+        rasterLayer.createWMTSLayer(wmtsServer, wmtsUrl, wmtsLayer, wmtsProj, wmtsReso, wmtsOrigin);
         this.ListLayers.push(wmtsLayer);
     };
 

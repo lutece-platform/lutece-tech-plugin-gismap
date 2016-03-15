@@ -1,4 +1,4 @@
-/*global ol, drawTools, measureTools, specifInteracts, Editor, GlobalMap*/
+/*global ol, drawTools, measureTools, specifInteracts, Editor, GlobalMap, alert*/
 
 /**
  * Interaction Class manage interactions on the map
@@ -11,7 +11,7 @@ function Interaction(layerEdit, fieldParameters){
      * editorTools is the manager of edition tools
      * @type {Editor}
      */
-    if(fieldParameters !== undefined && layerEdit !== '' && layerEdit.length === 1) {
+    if(fieldParameters[0] !== '' &&fieldParameters[0] !== undefined && layerEdit !== '' && layerEdit.length === 1) {
         editorTools = new Editor(layerEdit, fieldParameters);
     }
     /**
@@ -76,8 +76,8 @@ function Interaction(layerEdit, fieldParameters){
      * Interaction Private METHOD
      * activeEditorTool enable or disable editor interaction
      */
-    this.activeEditorTool = function(value, enable){
-         editorTools.setActiveInteraction(value, enable);
+    this.activeEditorTool = function(enable){
+         editorTools.setActiveInteraction("Act", enable);
     };
 
     /**
@@ -117,7 +117,7 @@ function Interaction(layerEdit, fieldParameters){
                 }
                 ListInteractsTemp = [];
             }
-            if (activeInteracts[ctrl] === "Edit") {
+            if (activeInteracts[ctrl] === "Edit" || activeInteracts[ctrl] === "AutoEdit") {
                 editorInteracts = editorTools.initEditInteraction('Draw');
                 editorInteracts.forEach(function(val, key){
                     ListInteractsTemp.push(val);
@@ -126,6 +126,8 @@ function Interaction(layerEdit, fieldParameters){
                     this.ListInteracts.push(ListInteractsTemp[k]);
                 }
                 ListInteractsTemp = [];
+                this.currentInteract = "Edit";
+                this.activeEditorTool(true);
             }
             if (activeInteracts[ctrl] === "SuggestPOI") {
                 editorInteracts = editorTools.initEditInteraction('Suggest');
@@ -137,6 +139,7 @@ function Interaction(layerEdit, fieldParameters){
                 }
                 ListInteractsTemp = [];
                 this.currentInteract = "Suggest";
+                this.activeEditorTool(true);
             }
         }
     };
@@ -156,10 +159,10 @@ function Interaction(layerEdit, fieldParameters){
      * Interaction Public METHOD
      * setDrawInteraction define the current draw interaction
      */
-    this.setEditInteraction = function(value){
+    this.setEditInteraction = function(){
         this.manageActiveInteraction();
-        editorTools.getEditorTools(value);
-        this.activeEditorTool(value, true);
+        editorTools.getEditorTools();
+        this.activeEditorTool(true);
         this.currentInteract = "Edit";
     };
 
@@ -215,12 +218,12 @@ function Interaction(layerEdit, fieldParameters){
                     }
                 }
             } else if (selectedLayer === editorTools.getEditLayer()){
-                if (selectFeatures.length === 1) {
-                    selectedLayer.getSource().removeFeature(selectFeatures[0]);
-                    editorTools.restartEdition();
-                }
+                alert("Cette valeur appartient à la couche d'édition!");
             }
             specifInteracts.getSelectedFeatures().clear();
+        }else {
+            editorTools.deleteFeature();
+            this.setEditInteraction();
         }
     };
 }
