@@ -76,8 +76,8 @@ function Interaction(layerEdit, fieldParameters){
      * Interaction Private METHOD
      * activeEditorTool enable or disable editor interaction
      */
-    this.activeEditorTool = function(enable){
-         editorTools.setActiveInteraction("Act", enable);
+    this.activeEditorTool = function(value, enable){
+         editorTools.setActiveInteraction(value, enable);
     };
 
     /**
@@ -127,7 +127,7 @@ function Interaction(layerEdit, fieldParameters){
                 }
                 ListInteractsTemp = [];
                 this.currentInteract = "Edit";
-                this.activeEditorTool(true);
+                this.setEditInteraction();
             }
             if (activeInteracts[ctrl] === "SuggestPOI") {
                 editorInteracts = editorTools.initEditInteraction('Suggest');
@@ -139,7 +139,7 @@ function Interaction(layerEdit, fieldParameters){
                 }
                 ListInteractsTemp = [];
                 this.currentInteract = "Suggest";
-                this.activeEditorTool(true);
+                this.setEditInteraction();
             }
         }
     };
@@ -162,7 +162,7 @@ function Interaction(layerEdit, fieldParameters){
     this.setEditInteraction = function(){
         this.manageActiveInteraction();
         editorTools.getEditorTools();
-        this.activeEditorTool(true);
+        this.activeEditorTool("Act", true);
         this.currentInteract = "Edit";
     };
 

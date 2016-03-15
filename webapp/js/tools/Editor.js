@@ -1,11 +1,10 @@
-/*global ol, alert, Map, projection, GlobalMap, interact*/
+/*global ol, alert, Map, projection, GlobalMap, interact, editorTools*/
 
 /**
  * Editor Class manage all Edition of data on the map
  */
 function Editor(layerEdit, fieldName) {
     'use strict';
-    var thisEditor = this;
     /**
      * editInteraction is the map to stock all edit interaction
      * @type {Map}
@@ -201,7 +200,6 @@ function Editor(layerEdit, fieldName) {
      */
     this.getEditorTools = function () {
         var listEditor = [];
-        console.log(this.editAvailable)
         if(this.editAvailable === false) {
             listEditor.push(this.editInteraction.get('Select'));
             listEditor.push(this.editInteraction.get('Modify'));
@@ -216,17 +214,18 @@ function Editor(layerEdit, fieldName) {
      * writeGeoJSON send all information at Lutece to insert data in the database
      * @returns {*[]}
      */
-     this.writeGeoJSON = function(feature){
-        var point = getCentroid(feature.getGeometry());
-        this.fieldCentroidX.value = point.getCoordinates()[0];
-        this.fieldCentroidY.value = point.getCoordinates()[1];
-        this.fieldData.value = this.geoJSONFormat.writeFeature(feature, {
-            featureProjection: projection.getProjection().getCode(),
-            dataProjection: editProj
-        });
-        this.fieldEditionStatus.value = false;
-        this.editAvailable = false;
-    };
+     this.writeGeoJSON = function(feature) {
+         var point = getCentroid(feature.getGeometry());
+         this.fieldCentroidX.value = point.getCoordinates()[0];
+         this.fieldCentroidY.value = point.getCoordinates()[1];
+         this.fieldData.value = this.geoJSONFormat.writeFeature(feature, {
+             featureProjection: projection.getProjection().getCode(),
+             dataProjection: editProj
+         });
+         this.fieldEditionStatus.value = false;
+         this.editAvailable = false;
+         interact.setEditInteraction();
+     };
 
     /**
      * Editor METHOD
@@ -247,7 +246,7 @@ function Editor(layerEdit, fieldName) {
      * getSelectedEditFeatures().on is a Listener to affect an ID at the current selection
      */
     this.getSelectedEditFeatures().on('add', function (evt) {
-        thisEditor.fieldEditionStatus.value = true;
+        editorTools.fieldEditionStatus.value = true;
         var feature = evt.element;
         feature.on('change', function (evt) {
             dirty[evt.target.getId()] = true;
@@ -259,9 +258,7 @@ function Editor(layerEdit, fieldName) {
      * getSelectedEditFeatures().on is a Listener to send information of the data edit
      */
     this.getSelectedEditFeatures().on('remove', function (evt) {
-        thisEditor.writeGeoJSON(evt.element);
-        thisEditor.getEditorTools();
-        thisEditor.setActiveInteraction('Act', true);
+        editorTools.writeGeoJSON(evt.element);
     });
 
     /**
@@ -269,9 +266,7 @@ function Editor(layerEdit, fieldName) {
      * drawEditInteract.on is a Listener to add a feature
      */
     this.drawEditInteract.on('drawend', function (evt) {
-        thisEditor.writeGeoJSON(evt.feature);
-        thisEditor.getEditorTools();
-        thisEditor.setActiveInteraction('Act', true);
+        editorTools.writeGeoJSON(evt.feature);
     });
 
      /**
