@@ -7,6 +7,7 @@ var Manager = function() {
     this.projectionChanged = false;
     this.specificExtent = false;
     this.extentDefine = false;
+    
     /**
      * Manager Method
      * getSpecificExtent is a getter to check if a specific extent is define
