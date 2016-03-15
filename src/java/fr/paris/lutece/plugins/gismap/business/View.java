@@ -39,6 +39,7 @@ public class View
     private int _nId;
     private String _strMapTemplateFile;
     private MapParameter _mapParameter;
+    private AddressParam _addressParam;
 	/**
 	 * @return the _nId
 	 */
@@ -76,4 +77,17 @@ public class View
 	public void setMapParameter(MapParameter mapParameter) {
 		this._mapParameter = mapParameter;
 	}
+	/**
+	 * @return the _addressParam
+	 */
+	public AddressParam getAddressParam() {
+		return _addressParam;
+	}
+	/**
+	 * @param _addressParam the _addressParam to set
+	 */
+	public void setAddressParam(AddressParam addressParam) {
+		this._addressParam = addressParam;
+	}
+	
 }

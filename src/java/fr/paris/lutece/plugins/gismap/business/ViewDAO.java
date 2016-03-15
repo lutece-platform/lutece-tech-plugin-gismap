@@ -48,6 +48,7 @@ public final class ViewDAO implements IViewDAO
 		view.setId(nKey);
 		view.setMapTemplateFile(MAP_TEMPLATE);
 		view.setMapParameter(MapParameterHome.findByPrimaryKey(nKey)); 
+		view.setAddressParam(AddressParamHome.getAddressParameters());
 		return view;
 	}
 

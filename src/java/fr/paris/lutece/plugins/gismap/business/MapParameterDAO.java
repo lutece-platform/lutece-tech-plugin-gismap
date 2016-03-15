@@ -15,7 +15,7 @@ public class MapParameterDAO implements IMapParameterDAO
 	public static final String PARAMETER = ".parameter.";
     public static final String MAP_TYPE = "TypeCarte";
     public static final String CONTROLS = "Controles";
-    //public static final String INTERACTS = "Interacts";
+    public static final String INTERACTS = "Interacts";
     public static final String PROJECTION = "Projection";
     public static final String EXTENT = "Extent";
     public static final String ZOOMSTART = "ZoomStart";
@@ -32,7 +32,7 @@ public class MapParameterDAO implements IMapParameterDAO
 		
 		mapParameter.setId(nKey);
 		
-		String strMapTypeProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER +  MAP_TYPE );
+		/*String strMapTypeProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER +  MAP_TYPE );
 		String[] strMapTypePropertyArray = strMapTypeProperty.split(",");
 		mapParameter.setParameters(MAP_TYPE, getCutString(strMapTypePropertyArray));
 		
@@ -40,9 +40,9 @@ public class MapParameterDAO implements IMapParameterDAO
 		String[] strControlPropertyArray = strControlProperty.split(",");
 		mapParameter.setParameters(CONTROLS, getCutString(strControlPropertyArray));
 		
-		/*String strInteractsProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + INTERACTS );
+		String strInteractsProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + INTERACTS );
 		String[] strInteractsPropertyArray = strInteractsProperty.split(",");
-		mapParameter.setParameters(INTERACTS, getCutString(strInteractsPropertyArray));*/
+		mapParameter.setParameters(INTERACTS, getCutString(strInteractsPropertyArray));
 		
 		String strProjectionProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + PROJECTION );
 		String[] strProjectionPropertyArray = strProjectionProperty.split(",");
@@ -62,15 +62,15 @@ public class MapParameterDAO implements IMapParameterDAO
 		
 		String strBackgroundProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + BACKGROUND );
 		String[] strBackgroundPropertyArray = strBackgroundProperty.split(",");
-		mapParameter.setParameters(BACKGROUND, getCutString(strBackgroundPropertyArray));
+		mapParameter.setParameters(BACKGROUND, getCutString(strBackgroundPropertyArray));*/
 		
 		/*String strWMSProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WMS );
 		String[] strWMSPropertyArray = strWMSProperty.split(",");
 		mapParameter.setParameters(WMS, getCutString(strWMSPropertyArray));*/
 		
-		String strWMTSProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WMTS );
+		/*String strWMTSProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WMTS );
 		String[] strWMTSPropertyArray = strWMTSProperty.split(",");
-		mapParameter.setParameters(WMTS, getCutString(strWMTSPropertyArray));
+		mapParameter.setParameters(WMTS, getCutString(strWMTSPropertyArray));*/
 		
 		/*String strWFSProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WFS );
 		String[] strWFSPropertyArray = strWFSProperty.split(",");
