@@ -121,12 +121,12 @@ parameters.push(parameters['FullScreen']=true);
 parameters.push(parameters['ZoomSlider']=false);
 parameters.push(parameters['Rotate']=true);
 parameters.push(parameters['ZoomZone']=true);
-parameters.push(parameters['Select']=true);
+parameters.push(parameters['Select']=false);
 parameters.push(parameters['Draw']=false);
 parameters.push(parameters['Measure']=false);
 parameters.push(parameters['AutoEdit']=true);
 parameters.push(parameters['SuggestPOISearch']=false);
-parameters.push(parameters['GPS']=true);
+parameters.push(parameters['GPS']=false);
 parameters.push(parameters['LayerEdit']=['EPSG:2154']);
 parameters.push(parameters['Extent']='');
 parameters.push(parameters['ZoomStart']='11');
@@ -139,8 +139,8 @@ parameters.push(parameters['WMS3']=['AGS-MPS','http://capgeo.sig.paris.fr/arcgis
 parameters.push(parameters['WFS1']=['AGS','http://capgeo.sig.paris.fr/arcgis/rest/services/capgeo_dasco/DASCO_Evenements_ecoles/FeatureServer/0','Lieu','ARRONDISSEMENT=10']);
 parameters.push(parameters['WFS2']=['AGS','http://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/services/PDX_Pedestrian_Districts/FeatureServer/0','PDX_Pedestrian_Districts','']);
 parameters.push(parameters['WFS3']=['GeoServer','http://localhost:8080/geoserver/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=Mairie:arrondissements','Mairie:arrondissements','4326']);
-parameters.push(parameters['WMTS1']=['AGS','http://capgeo.sig.paris.fr/arcgis/rest/services/CapGEO_FDP/FDP_CAPGEO_Fond_Neutre/MapServer/WMTS/','CapGEO_FDP_FDP_CAPGEO_Fond_Neutre','image/png','urn:ogc:def:crs:EPSG::102110','2154','12','256']);
-parameters.push(parameters['WMTS2']=['AGS','http://services.arcgisonline.com/arcgis/rest/services/Demographics/USA_Population_Density/MapServer/WMTS/','0','image/png','urn:ogc:def:crs:EPSG::3857','EPSG:3857','14','256']);
+parameters.push(parameters['WMTS1']=['AGS','http://capgeo.sig.paris.fr/arcgis/rest/services/CapGEO_FDP/Ortho_AERODATA_Ete2013/ImageServer',
+    'Ortho_AERODATA_Ete2013','2154',[19.109040301413938,9.554387858775717,4.777061637456608,2.3883985267970536,1.1940669714672763,0.5969011938023876,0.2984505969011938,0.13229193125052918],[-35597500, 48953100]]);
 parameters.push(parameters['GeoJSON'] = ['Test','EPSG:4326',{'type':'FeatureCollection',
     'features':
     [

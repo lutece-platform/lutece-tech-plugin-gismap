@@ -85,43 +85,31 @@ function LayerRaster() {
     /**
      * LayerRaster Method
      * createWMTSLayer initialize the background of the map to specific WMTS data
-     * @param wmts
+     * @param server
+     * @param url
+     * @param layerName
+     * @param proj
+     * @param resolutions
+     * @param origin
      */
-    this.createWMTSLayer = function(server, url, layerName, formatImage, matrixSet, proj, resolution, tileSize){
-        if(server === 'AGS'){
+
+    this.createWMTSLayer = function(server, url, layerName, proj, resolutions, origin){
+        if(server === 'AGS') {
             var infoProjData = projection.getEpsgData(proj, false);
             var projData = infoProjData[0];
-            var extent = [636297.3752,6842143.7202,672752.1101,6880245.6689];
-            var resolutions = new Array(resolution);
-            var size = ol.extent.getWidth(extent) / tileSize;
-            var matrixIds = new Array(resolution);
-            for (var i = 0; i < resolution; ++i) {
-                resolutions[i] = size / Math.pow(2, i);
-                matrixIds[i] = i;
-            }
-            console.log(matrixIds);
-            console.log(resolutions);
             this.ListRasters[layerName] = new ol.layer.Tile({
                 title: layerName,
                 type: 'base',
-                source: new ol.source.WMTS({
-                    url: url,
-                    layer: layerName,
-                    requestEncoding: 'REST',
-                    format: formatImage,
-                    matrixSet: matrixSet,
+                source: new ol.source.XYZ({
+                    url: url+'/tile/{z}/{y}/{x}',
                     projection: projData,
-                    extent: extent,
-                    tileGrid: new ol.tilegrid.WMTS({
-                        origin: ol.extent.getTopLeft(extent),
-                        resolutions: resolutions,
-                        matrixIds: matrixIds
-                    }),
+                    tileGrid: new ol.tilegrid.TileGrid({
+                        origin: origin,
+                        resolutions: resolutions
+                    })
                 }),
-                visible:false
+                visible: false
             });
-        }else if(server === 'GeoServer'){
-           console.log('coucou')
         }
     };
 

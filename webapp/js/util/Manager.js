@@ -7,14 +7,35 @@ var Manager = function() {
     this.projectionChanged = false;
     this.specificExtent = false;
     this.extentDefine = false;
-
     /**
      * Manager Method
      * getSpecificExtent is a getter to check if a specific extent is define
      * @returns {boolean}
      */
-    this.getSpecificExtent = function(){
+    var getSpecificExtent = function(){
         return this.extentDefine;
+    };
+
+    /**
+     * Manager Method
+     * Function to calculate the initial extent or center
+     * @param data
+     */
+    var defineCenterAndExtentByParameter = function (data){
+        if (data !== ''){
+            data = data.split(',');
+            if(data.length <= 2 ){
+                for(var i = 0; i < data.length; i++){
+                    data[i] = parseFloat(data[i]);
+                }
+                view.setCenter(data);
+            }else{
+                for(var j = 0; j < data.length; j++){
+                    data[j] = parseFloat(data[j]);
+                }
+                view.setExtent(data);
+            }
+        }
     };
 
     /**
@@ -100,7 +121,7 @@ var Manager = function() {
                 wms.push(startParameters['WMS'+n]);
             }
             if (startParameters['WMTS'+n] !== '' && startParameters['WMTS'+n] !== undefined ) {
-                //wmts.push(startParameters['WMTS'+n]);
+                wmts.push(startParameters['WMTS'+n]);
             }
             if (startParameters['WFS'+n] !== '' && startParameters['WFS'+n] !== undefined ) {
                 wfs.push(startParameters['WFS'+n]);
@@ -134,6 +155,9 @@ var Manager = function() {
         if (parameters['Extent'] !== '' && parameters['Extent'] !== undefined ) {
             this.extentDefine = parameters['Extent'];
             this.specificExtent = true;
+        }else{
+            this.extentDefine = false;
+            this.specificExtent = false;
         }
         if (parameters['ZoomStart'] !== '' && parameters['ZoomStart'] !== undefined) {
             view.setZoomInit(parameters['ZoomStart']);
@@ -194,6 +218,8 @@ var Manager = function() {
     };
 
     return{
+        getSpecificExtent: getSpecificExtent,
+        defineCenterAndExtentByParameter: defineCenterAndExtentByParameter,
         readAndManageParameters: readAndManageParameters,
         readAndInitGeneralParams: readAndInitGeneralParams,
         readAndInitDataParams: readAndInitDataParams,

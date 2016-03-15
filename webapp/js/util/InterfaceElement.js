@@ -68,7 +68,7 @@ var InterfaceElements = function(parameters) {
                 var buttonEdit = document.createElement('button');
                 buttonEdit.innerHTML = 'Edit';
                 var handleEdit = function (e) {
-                    interact.setEditInteraction('Edit');
+                    interact.setEditInteraction();
                 };
                 buttonEdit.addEventListener('click', handleEdit, false);
                 buttonEdit.addEventListener('touchstart', handleEdit, false);
