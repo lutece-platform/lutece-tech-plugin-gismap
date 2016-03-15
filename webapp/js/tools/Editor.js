@@ -44,7 +44,7 @@ function Editor(layerEdit, fieldName) {
      * editSource is the source of the data can be edit on the map
      * @type {String}
      */
-    var editSource = this.fieldData.value;
+    var editSource = this.fieldData.value === null ? '' : this.fieldData.value;
     /**
      * editAvailable is the marker to expose the editable data of the map
      * @type {boolean}
@@ -294,12 +294,29 @@ function Editor(layerEdit, fieldName) {
         this.editAvailable = true;
     };
 
+    /**
+     * Editor METHOD
+     * deleteFeature delete the data of the current edition
+     */
     this.deleteFeature = function () {
-        var selectFeatures = this.selectInteract.getFeatures();
+        var selectFeatures = this.selectInteract.getFeatures().getArray();
         if (selectFeatures.length !== 0) {
             this.selectInteract.getFeatures().clear();
             this.getEditLayer().getSource().clear();
             this.cleanEdition();
         }
+    };
+
+
+    /**
+     * Editor METHOD
+     * forceValidate force to validate current edition
+     */
+    this.forceValidate = function () {
+        var selectFeatures = this.selectInteract.getFeatures().getArray();
+        if (selectFeatures.length !== 0) {
+            this.writeGeoJSON(selectFeatures[0]);
+        }
+        this.selectInteract.getFeatures().clear();
     };
 }
