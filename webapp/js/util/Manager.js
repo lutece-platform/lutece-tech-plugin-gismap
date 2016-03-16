@@ -98,7 +98,7 @@ var Manager = function() {
         if (startParameters['Measure'] !== false) {
             interacts.push('Measure');
         }
-        if (fieldParameters['TypeEdit'] === 'Point' || fieldParameters['TypeEdit'] === 'LuneString' || fieldParameters['TypeEdit'] === 'Polygon'){
+        if (fieldParameters['TypeEdit'] === 'Point' || fieldParameters['TypeEdit'] === 'LineString' || fieldParameters['TypeEdit'] === 'Polygon'){
             if (startParameters['AutoEdit'] === false) {
                 interacts.push('Edit');
             } else if (startParameters['AutoEdit'] === true) {

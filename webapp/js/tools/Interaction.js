@@ -11,7 +11,7 @@ function Interaction(layerEdit, fieldParameters){
      * editorTools is the manager of edition tools
      * @type {Editor}
      */
-    if(fieldParameters[0] !== '' &&fieldParameters[0] !== undefined && layerEdit !== '' && layerEdit.length === 1) {
+    if(fieldParameters['TypeEdit'] !== '' && fieldParameters['TypeEdit'] !== undefined && layerEdit !== '' && layerEdit.length === 1) {
         editorTools = new Editor(layerEdit, fieldParameters);
     }
     /**
@@ -138,8 +138,8 @@ function Interaction(layerEdit, fieldParameters){
                     this.ListInteracts.push(ListInteractsTemp[l]);
                 }
                 ListInteractsTemp = [];
-                this.currentInteract = "Suggest";
-                this.setEditInteraction();
+                this.currentInteract = "SuggestPoiEdit";
+                this.setSuggestEditInteraction();
             }
         }
     };
@@ -164,6 +164,17 @@ function Interaction(layerEdit, fieldParameters){
         editorTools.getEditorTools();
         this.activeEditorTool("Act", true);
         this.currentInteract = "Edit";
+    };
+
+    /**
+     * Interaction Public METHOD
+     * setDrawInteraction define the current draw interaction
+     */
+    this.setSuggestEditInteraction = function(){
+        this.manageActiveInteraction();
+        editorTools.getEditorTools();
+        this.activeEditorTool("Suggest", true);
+        this.currentInteract = "SuggestPoiEdit";
     };
 
     /**
@@ -203,7 +214,7 @@ function Interaction(layerEdit, fieldParameters){
      * Interaction Method
      * deleteFeatures is a method to call an action to delete all selected elements
      */
-    this.deleteFeatures = function () {
+    this.deleteFeatures = function (value) {
         var selectFeatures = specifInteracts.getSelectedFeatures().getArray();
         if (selectFeatures.length !== 0) {
             var selectedLayer = specifInteracts.getSelectedLayer(selectFeatures[0]);
@@ -222,7 +233,7 @@ function Interaction(layerEdit, fieldParameters){
             }
             specifInteracts.getSelectedFeatures().clear();
         }else {
-            editorTools.deleteFeature();
+            editorTools.deleteFeature(value);
             this.setEditInteraction();
         }
     };

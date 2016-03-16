@@ -14,7 +14,7 @@ var Zoom = function() {
     var zoomSuggestPoi = function (x, y) {
         var pointPoi = new ol.geom.Point([x,y]);
         view.getView().fit(pointPoi, GlobalMap.getSize());
-        if(editorTools.getSuggestPoiEdit()){
+        if(editorTools!== null && editorTools.getSuggestPoiEdit()){
             editorTools.addPoint(pointPoi);
         }
     };

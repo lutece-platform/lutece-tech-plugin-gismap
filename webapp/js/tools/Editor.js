@@ -246,10 +246,11 @@ function Editor(layerEdit, fieldName) {
          })+"'";
          this.fieldEditionStatus.value = false;
          this.editAvailable = false;
-         if(this.drawEditInteract.getActive()) {
-             this.editLayer.getSource().clear();
+         if(this.suggestPoiEdit === false) {
+             interact.setEditInteraction();
+         }else{
+             interact.setSuggestEditInteraction();
          }
-         interact.setEditInteraction();
      };
 
     /**
@@ -290,21 +291,13 @@ function Editor(layerEdit, fieldName) {
         editorTools.writeGeoJSON(evt.element);
     });
 
-    /**
-     * Editor METHOD
-     * drawEditInteract.on is a Listener to add a feature
-     */
-    this.drawEditInteract.on('drawend', function (evt) {
-        editorTools.fieldEditionStatus.value = true;
-    });
-
      /**
      * Editor METHOD
      * drawEditInteract.on is a Listener to add a feature
      */
     this.drawEditInteract.on('drawend', function (evt) {
         editorTools.writeGeoJSON(evt.feature);
-        interact.deleteFeatures();
+        interact.deleteFeatures("draw");
     });
 
      /**
@@ -336,10 +329,12 @@ function Editor(layerEdit, fieldName) {
      * Editor METHOD
      * deleteFeature delete the data of the current edition
      */
-    this.deleteFeature = function () {
+    this.deleteFeature = function (value) {
         this.getEditLayer().getSource().clear();
         this.selectInteract.getFeatures().clear();
-        this.cleanEdition();
+        if(value !== "draw") {
+            this.cleanEdition();
+        }
     };
 
     /**
