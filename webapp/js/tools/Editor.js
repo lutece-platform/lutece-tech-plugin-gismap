@@ -337,12 +337,9 @@ function Editor(layerEdit, fieldName) {
      * deleteFeature delete the data of the current edition
      */
     this.deleteFeature = function () {
-        var selectFeatures = this.selectInteract.getFeatures().getArray();
-        if (selectFeatures.length !== 0) {
-            this.getEditLayer().getSource().removeFeature(selectFeatures[0]);
-            this.selectInteract.getFeatures().clear();
-            this.cleanEdition();
-        }
+        this.getEditLayer().getSource().clear();
+        this.selectInteract.getFeatures().clear();
+        this.cleanEdition();
     };
 
     /**
