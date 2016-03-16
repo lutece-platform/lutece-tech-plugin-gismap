@@ -22,10 +22,13 @@ var InterfaceElements = function(parameters) {
             }*/
             if (parameters['Interacts'][i] === "Draw") {
                 var buttonDrawPoint = document.createElement('button');
+                buttonDrawPoint.setAttribute('type','button');
                 buttonDrawPoint.innerHTML = 'Pt';
                 var buttonDrawLine = document.createElement('button');
+                buttonDrawLine.setAttribute('type','button');
                 buttonDrawLine.innerHTML = 'L';
                 var buttonDrawPolygon = document.createElement('button');
+                buttonDrawPolygon.setAttribute('type','button');
                 buttonDrawPolygon.innerHTML = 'Pn';
                 var handleDrawPoint = function (e) {
                     interact.setDrawInteraction('Point');
@@ -48,8 +51,10 @@ var InterfaceElements = function(parameters) {
             }
             if (parameters['Interacts'][i] === 'Measure') {
                 var buttonMeasureLen = document.createElement('button');
+                buttonMeasureLen.setAttribute('type','button');
                 buttonMeasureLen.innerHTML = 'Len';
                 var buttonMeasureArea = document.createElement('button');
+                buttonMeasureArea.setAttribute('type','button');
                 buttonMeasureArea.innerHTML = 'Area';
                 var handleMeasureLen = function (e) {
                     interact.setMeasureInteraction('Length');
@@ -66,6 +71,7 @@ var InterfaceElements = function(parameters) {
             }
             if (parameters['Interacts'][i] === 'Edit') {
                 var buttonEdit = document.createElement('button');
+                buttonEdit.setAttribute('type','button');
                 buttonEdit.innerHTML = 'Edit';
                 var handleEdit = function (e) {
                     interact.setEditInteraction();
@@ -76,6 +82,7 @@ var InterfaceElements = function(parameters) {
             }
             if (parameters['Interacts'][i] === 'Select') {
                 var buttonSelect = document.createElement('button');
+                buttonSelect.setAttribute('type','button');
                 buttonSelect.innerHTML = 'Select';
                 var handleSelect = function (e) {
                     interact.setSelectInteraction();
@@ -86,6 +93,7 @@ var InterfaceElements = function(parameters) {
             }
             if (parameters['Interacts'][i] === 'GPS') {
                 var buttonGPS = document.createElement('button');
+                buttonGPS.setAttribute('type','button');
                 buttonGPS.innerHTML = 'GPS';
                 var handleGPS = function (e) {
                     geoPoint.manageGPS();
@@ -97,6 +105,7 @@ var InterfaceElements = function(parameters) {
             if (parameters['Interacts'][i] === 'Draw' || parameters['Interacts'][i] === 'Measure'|| parameters['Interacts'][i] === 'Edit'|| parameters['Interacts'][i] === 'AutoEdit'){
                 if(rulerActive === false) {
                     var buttonRuler = document.createElement('button');
+                    buttonRuler.setAttribute('type','button');
                     buttonRuler.innerHTML = 'Ruler';
                     var handleClean = function (e) {
                         interact.deleteFeatures();

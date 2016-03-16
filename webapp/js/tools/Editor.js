@@ -44,19 +44,42 @@ function Editor(layerEdit, fieldName) {
      * editSource is the source of the data can be edit on the map
      * @type {String}
      */
-    var editSource = this.fieldData.value === null ? '' : this.fieldData.value;
+    var editSource = this.fieldData.value === null ? '' : this.fieldData.value.substring(1,this.fieldData.value.length-1);
     /**
      * editAvailable is the marker to expose the editable data of the map
      * @type {boolean}
      */
     this.editAvailable = editSource === '' ? true : false;
     /**
+     * editSource is the source of data can be edit on the map
+     * @type {ol.Collection}
+     */
+    this.editSource = new ol.source.Vector({
+        features: new ol.Collection()
+    });
+    /**
      * editLayer is the layer can be edit on the map
      * @type {ol.layer.Layer}
      */
-    var editLayer = new ol.layer.Vector({
+    this.editLayer = new ol.layer.Vector({
         name:"EditLayer",
-        source: new ol.source.Vector()
+        source: this.editSource,
+        style: new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.2)'
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#ffcc33',
+                width: 2
+            }),
+            image: new ol.style.Circle({
+                radius: 7,
+                fill: new ol.style.Fill({
+                    color: '#ffcc33'
+                })
+            })
+        }),
+        wrapX: false
     });
     /**
      * editProj is the projection of the data can be edit
@@ -90,10 +113,9 @@ function Editor(layerEdit, fieldName) {
      * @type {ol.interaction.Draw}
      */
     this.drawEditInteract = new ol.interaction.Draw({
-        source: editLayer.getSource(),
+        source: this.editSource,
         type: editType
     });
-
     /**
      * Editor Method
      * getLevel is a getter to know the editor interaction use
@@ -148,7 +170,7 @@ function Editor(layerEdit, fieldName) {
      * @returns {*}
      */
     this.getEditLayer = function () {
-        return editLayer;
+        return this.editLayer;
     };
 
     /**
@@ -157,7 +179,7 @@ function Editor(layerEdit, fieldName) {
      */
     this.initEditInteraction = function (mode) {
         if(this.editAvailable !== true) {
-            editLayer.getSource().addFeatures(this.geoJSONFormat.readFeatures(editSource));
+            this.editLayer.getSource().addFeatures(this.geoJSONFormat.readFeatures(editSource));
         }
         if(mode === 'Draw') {
             this.editInteraction.set('Select', this.getSelectEditInteract());
@@ -218,12 +240,15 @@ function Editor(layerEdit, fieldName) {
          var point = getCentroid(feature.getGeometry());
          this.fieldCentroidX.value = point.getCoordinates()[0];
          this.fieldCentroidY.value = point.getCoordinates()[1];
-         this.fieldData.value = this.geoJSONFormat.writeFeature(feature, {
+         this.fieldData.value = "'"+this.geoJSONFormat.writeFeature(feature, {
              featureProjection: projection.getProjection().getCode(),
              dataProjection: editProj
-         });
+         })+"'";
          this.fieldEditionStatus.value = false;
          this.editAvailable = false;
+         if(this.drawEditInteract.getActive()) {
+             this.editLayer.getSource().clear();
+         }
          interact.setEditInteraction();
      };
 
@@ -246,11 +271,15 @@ function Editor(layerEdit, fieldName) {
      * getSelectedEditFeatures().on is a Listener to affect an ID at the current selection
      */
     this.getSelectedEditFeatures().on('add', function (evt) {
-        editorTools.fieldEditionStatus.value = true;
         var feature = evt.element;
-        feature.on('change', function (evt) {
-            dirty[evt.target.getId()] = true;
-        });
+        if (editorTools.selectInteract.getLayer(feature).get('name') === editorTools.editLayer.get('name')){
+            editorTools.fieldEditionStatus.value = true;
+            feature.on('change', function (evt) {
+                dirty[evt.target.getId()] = true;
+            });
+        }else{
+            editorTools.selectInteract.getFeatures().clear();
+        }
     });
 
     /**
@@ -266,7 +295,16 @@ function Editor(layerEdit, fieldName) {
      * drawEditInteract.on is a Listener to add a feature
      */
     this.drawEditInteract.on('drawend', function (evt) {
+        editorTools.fieldEditionStatus.value = true;
+    });
+
+     /**
+     * Editor METHOD
+     * drawEditInteract.on is a Listener to add a feature
+     */
+    this.drawEditInteract.on('drawend', function (evt) {
         editorTools.writeGeoJSON(evt.feature);
+        interact.deleteFeatures();
     });
 
      /**
@@ -277,7 +315,7 @@ function Editor(layerEdit, fieldName) {
     this.addPoint = function(point) {
         if(editType === 'Point'){
             var feature = new ol.Feature(point);
-            editLayer.getSource().addFeature(feature);
+            this.editLayer.getSource().addFeature(feature);
             this.writeGeoJSON(feature);
         }
     };
@@ -301,12 +339,11 @@ function Editor(layerEdit, fieldName) {
     this.deleteFeature = function () {
         var selectFeatures = this.selectInteract.getFeatures().getArray();
         if (selectFeatures.length !== 0) {
+            this.getEditLayer().getSource().removeFeature(selectFeatures[0]);
             this.selectInteract.getFeatures().clear();
-            this.getEditLayer().getSource().clear();
             this.cleanEdition();
         }
     };
-
 
     /**
      * Editor METHOD

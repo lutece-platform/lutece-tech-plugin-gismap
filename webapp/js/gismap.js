@@ -1,5 +1,5 @@
-/*global ol, Manager, Control, Projection, Interaction, Layer, LayerRaster, Feature,
-View, Measure, Zoom, DrawTools, InterfaceElements, SpecificInteracts, GeoPoint, Print*/
+/*global ol, Manager, Control, Projection, Interaction, Layer, LayerRaster, Feature, editorTools,
+View, Measure, Zoom, DrawTools, InterfaceElements, SpecificInteracts, GeoPoint, Print, fieldParameters*/
 
 /**
  * File to manage the Gis Component with all parameters
@@ -127,6 +127,7 @@ var GisMap = function (idMapInit) {
      */
     var initGisMap = function(globalParameters, parameters, fieldParameters) {
         initGis(globalParameters, parameters, fieldParameters);
+        GlobalMap.removeInteraction(GlobalMap.getInteractions().getArray()[1]);
         return GlobalMap;
     };
 
