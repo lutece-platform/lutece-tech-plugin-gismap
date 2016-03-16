@@ -112,11 +112,11 @@ var globalParameters = [];
 var parameters = [];
 var fieldParameters = [];
 ol.proj.setProj4(proj4);
-parameters.push(parameters['Projection']='4326');
+parameters.push(parameters['Projection']='2154');
 parameters.push(parameters['Overview']=true);
 parameters.push(parameters['ZoomExtent']=true);
 parameters.push(parameters['ScaleBar']=true);
-parameters.push(parameters['MousePosition']=true);
+parameters.push(parameters['MousePosition']=false);
 parameters.push(parameters['FullScreen']=true);
 parameters.push(parameters['ZoomSlider']=false);
 parameters.push(parameters['Rotate']=true);
@@ -125,8 +125,10 @@ parameters.push(parameters['Select']=false);
 parameters.push(parameters['Draw']=false);
 parameters.push(parameters['Measure']=false);
 parameters.push(parameters['AutoEdit']=false);
-parameters.push(parameters['SuggestPOISearch']=false);
+parameters.push(parameters['SuggestPOISearch']=true);
+parameters.push(parameters['SuggestPOIParams']=['https://teleservices.paris.fr/SuggestPOI_L93/rest/services/SuggestPOI.jsp','gismap',3]);
 parameters.push(parameters['GPS']=false);
+parameters.push(parameters['Print']=false);
 parameters.push(parameters['LayerEdit']=['EPSG:2154']);
 parameters.push(parameters['Extent']='');
 parameters.push(parameters['ZoomStart']='11');
@@ -155,7 +157,7 @@ parameters.push(parameters['GeoJSON'] = ['Test','EPSG:4326',{'type':'FeatureColl
         }
     ]
 }]);
-fieldParameters.push(fieldParameters['TypeEdit']='Polygon');
+fieldParameters.push(fieldParameters['TypeEdit']='');
 fieldParameters.push(fieldParameters['GeomGeoJson']='GeomGeoJson');
 fieldParameters.push(fieldParameters['GeomCentroidX']='GeomCentroidX');
 fieldParameters.push(fieldParameters['GeomCentroidY']='GeomCentroidY');

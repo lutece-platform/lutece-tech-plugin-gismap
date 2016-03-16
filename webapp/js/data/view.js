@@ -55,6 +55,15 @@ function View() {
 
     /**
      * View Method
+     * getZoomInit is a getter to access at the initial zoom of the view
+     * @returns {number[]|*}
+     */
+    this.getZoomInit = function (){
+        return this.zoomInit;
+    };
+
+    /**
+     * View Method
      * setZoomInit is a setter to define the initial zoom of the view
      * @param newZoomInit
      */

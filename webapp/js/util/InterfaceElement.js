@@ -1,4 +1,4 @@
-/*global geoPoint, interact, ol, app*/
+/*global geoPoint, interact, zoom, suggestPoiLocator, ol, app*/
 /**
  * InterfaceElements Class manage all elements included in the map
  */
@@ -11,15 +11,18 @@ var InterfaceElements = function(parameters) {
         var rulerActive = false;
         element.className = 'ol-unselectable ol-mycontrol';
         for (var i = 0; i < parameters['Interacts'].length; i++) {
-            /*if (parameters['Interacts'][i] === "SuggestPOISearch") {
-                var suggestPoiText = document.createElement('text');
-                suggestPoiText.innerHTML = 'Pt';
+            if (parameters['Interacts'][i] === "SuggestPOISearch") {
+                var suggestPoiText = document.createElement('input');
+		        suggestPoiText.setAttribute('type', 'text');
+                suggestPoiText.setAttribute('id','addressSuggestPoi');
+                suggestPoiText.setAttribute('name','addressSuggestPoi');
+                suggestPoiText.setAttribute('class','ui-autocomplete-input');
                 var handleSuggestPoiText = function (e) {
-                    interact.setDrawInteraction('Point');
+                    suggestPoiLocator.locateBySuggestPoi();
                 };
-                suggestPoiText.addEventListener('touchstart', handleSuggestPoiText, false);
+                suggestPoiText.addEventListener('focus', handleSuggestPoiText, false);
                 element.appendChild(suggestPoiText);
-            }*/
+            }
             if (parameters['Interacts'][i] === "Draw") {
                 var buttonDrawPoint = document.createElement('button');
                 buttonDrawPoint.setAttribute('type','button');
@@ -121,7 +124,6 @@ var InterfaceElements = function(parameters) {
             element: element,
             target: options.target
         });
-
     };
     ol.inherits(app.CmdControl, ol.control.Control);
 

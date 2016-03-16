@@ -44,7 +44,7 @@ function Editor(layerEdit, fieldName) {
      * editSource is the source of the data can be edit on the map
      * @type {String}
      */
-    var editSource = this.fieldData.value === null ? '' : this.fieldData.value.substring(1,this.fieldData.value.length-1);
+    var editSource = this.fieldData.value === null ? '' : this.fieldData.value;
     /**
      * editAvailable is the marker to expose the editable data of the map
      * @type {boolean}
@@ -240,10 +240,10 @@ function Editor(layerEdit, fieldName) {
          var point = getCentroid(feature.getGeometry());
          this.fieldCentroidX.value = point.getCoordinates()[0];
          this.fieldCentroidY.value = point.getCoordinates()[1];
-         this.fieldData.value = "'"+this.geoJSONFormat.writeFeature(feature, {
+         this.fieldData.value = this.geoJSONFormat.writeFeature(feature, {
              featureProjection: projection.getProjection().getCode(),
              dataProjection: editProj
-         })+"'";
+         });
          this.fieldEditionStatus.value = false;
          this.editAvailable = false;
          if(this.suggestPoiEdit === false) {
