@@ -240,10 +240,10 @@ function Editor(layerEdit, fieldName) {
          var point = getCentroid(feature.getGeometry());
          this.fieldCentroidX.value = point.getCoordinates()[0];
          this.fieldCentroidY.value = point.getCoordinates()[1];
-         this.fieldData.value = this.geoJSONFormat.writeFeature(feature, {
+         this.fieldData.value = getValidString(this.geoJSONFormat.writeFeature(feature, {
              featureProjection: projection.getProjection().getCode(),
              dataProjection: editProj
-         });
+         }));
          this.fieldEditionStatus.value = false;
          this.editAvailable = false;
          if(this.suggestPoiEdit === false) {
@@ -265,6 +265,23 @@ function Editor(layerEdit, fieldName) {
         }else{
             return new ol.geom.Point(ol.extent.getCenter(geom.getExtent()));
         }
+    }
+
+    /**
+     * Editor METHOD
+     * getValidString to formate the geoJson for Lutece
+     * @param st
+     * @returns {*}
+     */
+    function getValidString(st){
+        var l = st.length;
+        var i;
+        for(i = 0; i<l; i++){
+            if(st[i]=== '"' ){
+                st = st.substr(0, i) + "'" + st.substr(i+1, l);
+            }
+        }
+        return st;
     }
 
     /**
