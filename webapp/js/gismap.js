@@ -1,5 +1,5 @@
-/*global ol, Manager, Control, Projection, Interaction, Layer, LayerRaster, Feature, editorTools,
-View, Measure, Zoom, DrawTools, InterfaceElements, SpecificInteracts, GeoPoint, Print, fieldParameters*/
+/*global ol, Manager, Control, Projection, Interaction, Layer, LayerRaster, Feature, SuggestPoiLocator,
+View, Measure, Zoom, DrawTools, InterfaceElements, SpecificInteracts, GeoPoint, Print*/
 
 /**
  * File to manage the Gis Component with all parameters
@@ -24,6 +24,7 @@ var interfaceElements;
 var GlobalMap;
 var geoPoint;
 var printer;
+var suggestPoiLocator;
 var zoom;
 
 var GisMap = function (idMapInit) {
@@ -33,15 +34,17 @@ var GisMap = function (idMapInit) {
      */
     this.idMap = idMapInit;
     GlobalMap = new ol.Map({
-        target: this.idMap
+        target: this.idMap,
+        interactions: ol.interaction.defaults({doubleClickZoom :false})
     });
     var manager = new Manager();
-    printer = new Print();
+
     /**
      * GisMap Private Method
      * initGis initialize all components of the map
      * @param globalParameters
-     * @param parameters
+     * @param startParameters
+     * @param fieldParameters
      */
     function initGis(globalParameters, startParameters, fieldParameters) {
         var parameters = manager.readAndManageParameters(startParameters, fieldParameters);
@@ -55,8 +58,17 @@ var GisMap = function (idMapInit) {
             view.getView().fit(projection.getExtent(), GlobalMap.getSize());
         }
         initInterfaces(parameters);
+        var geomElement = document.getElementById(fieldParameters['GeomGeoJson']).value;
+        if(geomElement !== null && geomElement !== '' && geomElement !== undefined) {
+            zoom.initialZoom(fieldParameters['GeomGeoJson']);
+        }
     }
 
+    /**
+     * GisMap Private Method
+     * initInterfaces initiate the interfaces elements of the map
+     * @param parameters
+     */
     function initInterfaces(parameters) {
         interfaceElements = new InterfaceElements(parameters);
         var Elements = interfaceElements.getElements();
@@ -65,6 +77,12 @@ var GisMap = function (idMapInit) {
         }
     }
 
+    /**
+     * GisMap Private Method
+     * globalInitialize initiate the general parameters of the map
+     * @param globalParameters
+     * @param parameters
+     */
     function globalInitialize(globalParameters, parameters){
         view = new View();
         zoom = new Zoom();
@@ -72,6 +90,12 @@ var GisMap = function (idMapInit) {
         manager.readAndInitGeneralParams(globalParameters, parameters);
     }
 
+    /**
+     * GisMap Private Method
+     * dataInitialize initiate the layers of the map
+     * @param globalParameters
+     * @param parameters
+     */
     function dataInitialize(globalParameters, parameters){
         layer = new Layer();
         featureLayer = new Feature();
@@ -79,6 +103,13 @@ var GisMap = function (idMapInit) {
         manager.readAndInitDataParams(globalParameters, parameters);
     }
 
+    /**
+     * GisMap Private Method
+     * controlInitialize initiate the controls and interactions components of the map
+     * @param globalParameters
+     * @param parameters
+     * @param fieldParameters
+     */
     function controlInitialize(globalParameters, parameters, fieldParameters) {
         interact = new Interaction(parameters['LayerEdit'], fieldParameters);
         control = new Control();
@@ -88,16 +119,31 @@ var GisMap = function (idMapInit) {
         manager.readAndInitActionParams(globalParameters, parameters);
     }
 
-    function addGPSComponent(parameters){
+    /**
+     * GisMap Private Method
+     * addAnnexeComponent initiate the others components of the map
+     * @param parameters
+     */
+    function addAnnexeComponent(parameters){
         for (var i = 0; i < parameters['Interacts'].length; i++) {
+            if (parameters['Interacts'][i] === 'SuggestPOISearch') {
+                suggestPoiLocator = new SuggestPoiLocator(parameters['SuggestPOIParams']);
+            }
             if (parameters['Interacts'][i] === 'GPS') {
                 geoPoint = new GeoPoint(GlobalMap);
+            }
+            if (parameters['Interacts'][i] === 'Print') {
+                printer = new Print();
             }
         }
     }
 
+    /**
+     * GisMap Private Method
+     * mapInitialize initiate the map and integrate all components
+     * @param parameters
+     */
     function mapInitialize(parameters){
-        manager.defineCenterAndExtentByParameter(document.getElementById('id_Select').value);
         view.createView();
         GlobalMap.setView(view.getView());
         var ListControl = control.getControls();
@@ -114,20 +160,19 @@ var GisMap = function (idMapInit) {
         }
         //GlobalMap.addOverlay(popup.getPopup());
         GlobalMap.addControl(control.getLayerSwitcher());
-        addGPSComponent(parameters);
+        addAnnexeComponent(parameters);
     }
 
     /**
      * GisMap Method
      * initGisMap is the enter point of the GisMap plugin
-     *
      * @param globalParameters
      * @param parameters
+     * @param fieldParameters
      * @returns {*}
      */
     var initGisMap = function(globalParameters, parameters, fieldParameters) {
         initGis(globalParameters, parameters, fieldParameters);
-        GlobalMap.removeInteraction(GlobalMap.getInteractions().getArray()[1]);
         return GlobalMap;
     };
 

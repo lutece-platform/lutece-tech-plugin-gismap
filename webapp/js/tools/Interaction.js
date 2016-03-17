@@ -233,8 +233,10 @@ function Interaction(layerEdit, fieldParameters){
             }
             specifInteracts.getSelectedFeatures().clear();
         }else {
-            editorTools.deleteFeature(value);
-            this.setEditInteraction();
+            if(editorTools !== null) {
+                editorTools.deleteFeature(value);
+                this.setEditInteraction();
+            }
         }
     };
 }

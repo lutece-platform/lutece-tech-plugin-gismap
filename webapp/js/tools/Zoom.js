@@ -13,7 +13,9 @@ var Zoom = function() {
      */
     var zoomSuggestPoi = function (x, y) {
         var pointPoi = new ol.geom.Point([x,y]);
-        view.getView().fit(pointPoi, GlobalMap.getSize());
+        view.getView().fit(pointPoi, GlobalMap.getSize(),{
+            maxZoom: view.getZoomInit()
+        });
         if(editorTools!== null && editorTools.getSuggestPoiEdit()){
             editorTools.addPoint(pointPoi);
         }
@@ -25,6 +27,9 @@ var Zoom = function() {
      */
     var zoomSelect = function () {
         var selectFeatures = specifInteracts.getSelectedFeatures().getArray();
+        if(selectFeatures < 0 ) {
+            selectFeatures = editorTools.getSelectInteraction().getFeatures().getArray();
+        }
         if (selectFeatures.length === 1) {
             view.getView().fit(selectFeatures[0].getGeometry(), GlobalMap.getSize());
         } else if (selectFeatures.length > 1) {
@@ -37,8 +42,21 @@ var Zoom = function() {
         }
     };
 
+    /**
+     * Zoom Method
+     * initialZoom is a method to call an action to go on a specific area at the initialization of the map
+     * @param fieldGeom
+     */
+    var initialZoom = function (fieldGeom) {
+        var geom = new ol.format.GeoJSON().readGeometry(document.getElementById(fieldGeom).value);
+        view.getView().fit(geom, GlobalMap.getSize(),{
+            maxZoom: view.getZoomInit()
+        });
+    };
+
     return{
         zoomSuggestPoi: zoomSuggestPoi,
-        zoomSelect: zoomSelect
+        zoomSelect: zoomSelect,
+        initialZoom: initialZoom
     };
 };

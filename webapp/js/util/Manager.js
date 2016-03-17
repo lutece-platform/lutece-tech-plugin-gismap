@@ -19,31 +19,10 @@ var Manager = function() {
 
     /**
      * Manager Method
-     * Function to calculate the initial extent or center
-     * @param data
-     */
-    var defineCenterAndExtentByParameter = function (data){
-        if (data !== ''){
-            data = data.split(',');
-            if(data.length <= 2 ){
-                for(var i = 0; i < data.length; i++){
-                    data[i] = parseFloat(data[i]);
-                }
-                view.setCenter(data);
-            }else{
-                for(var j = 0; j < data.length; j++){
-                    data[j] = parseFloat(data[j]);
-                }
-                view.setExtent(data);
-            }
-        }
-    };
-
-    /**
-     * Manager Method
-     * Function to read the properties map and initiate parameters
-     * @param globalParameters
-     * @param parameters
+     * readAndManageParameters is a function to read the properties map
+     * @param startParameters
+     * @param fieldParameters
+     * @returns {Array}
      */
     var readAndManageParameters = function (startParameters, fieldParameters) {
         var parameters = [];
@@ -110,9 +89,13 @@ var Manager = function() {
         }
         if (startParameters['SuggestPOISearch'] !== false) {
             interacts.push('SuggestPOISearch');
+            parameters['SuggestPOIParams'] = startParameters['SuggestPOIParams'];
         }
         if (startParameters['GPS'] !== false) {
             interacts.push('GPS');
+        }
+        if (startParameters['Print'] !== false) {
+            interacts.push('Print');
         }
         for(var n = 1; n < 10; n++) {
             if (startParameters['BackGround'+n] !== '' && startParameters['BackGround'+n] !== undefined ) {
@@ -142,7 +125,7 @@ var Manager = function() {
 
     /**
      * Manager Method
-     * Function to read the properties map and initiate parameters
+     * readAndInitGeneralParams initiate generals properties of the map
      * @param globalParameters
      * @param parameters
      */
@@ -170,7 +153,7 @@ var Manager = function() {
 
     /**
      * Manager Method
-     * Function to read the properties map and initiate parameters
+     * readAndInitDataParams initiate data properties of the map
      * @param globalParameters
      * @param parameters
      */
@@ -205,7 +188,7 @@ var Manager = function() {
 
     /**
      * Manager Method
-     * Function to read the properties map and initiate parameters
+     * readAndInitActionParams initiate actions properties of the map
      * @param globalParameters
      * @param parameters
      */
@@ -220,7 +203,6 @@ var Manager = function() {
 
     return{
         getSpecificExtent: getSpecificExtent,
-        defineCenterAndExtentByParameter: defineCenterAndExtentByParameter,
         readAndManageParameters: readAndManageParameters,
         readAndInitGeneralParams: readAndInitGeneralParams,
         readAndInitDataParams: readAndInitDataParams,
