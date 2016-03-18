@@ -1,4 +1,4 @@
-/*global ol, specifInteracts, view, editorTools, GlobalMap*/
+/*global ol, specifInteracts, view, editorTools, projection, GlobalMap*/
 /**
  * Zoom Class manage all Zoom action included in the map
  */
@@ -31,7 +31,9 @@ var Zoom = function() {
             selectFeatures = editorTools.getSelectInteraction().getFeatures().getArray();
         }
         if (selectFeatures.length === 1) {
-            view.getView().fit(selectFeatures[0].getGeometry(), GlobalMap.getSize());
+            view.getView().fit(selectFeatures[0].getGeometry(), GlobalMap.getSize(),{
+                maxZoom: view.getZoomInit()
+            });
         } else if (selectFeatures.length > 1) {
             var arrayGeom = [];
             for (var selectFeature = 0; selectFeature < selectFeatures.length; selectFeature++) {
@@ -48,8 +50,11 @@ var Zoom = function() {
      * @param fieldGeom
      */
     var initialZoom = function (fieldGeom) {
-        var geom = new ol.format.GeoJSON().readGeometry(document.getElementById(fieldGeom).value);
-        view.getView().fit(geom, GlobalMap.getSize(),{
+        var feature = new ol.format.GeoJSON().readFeature(editorTools.getTransformStringToGeoJSON(document.getElementById(fieldGeom).value), {
+            featureProjection: projection.getProjection().getCode(),
+            dataProjection: editorTools.getEditProj()
+        });
+        view.getView().fit(feature.getGeometry(), GlobalMap.getSize(),{
             maxZoom: view.getZoomInit()
         });
     };

@@ -12,11 +12,6 @@ function Feature() {
      */
     this.ListFeatures = [];
     /**
-     * dataGeoJSON is the source of the GeoJSON data
-     * @type {Array}
-     */
-    this.dataGeoJSON = [];
-    /**
      * wktFormat define the format WKT
      * @type {ol.format.WKT}
      */
@@ -34,11 +29,11 @@ function Feature() {
 
     /**
      * Feature Method
-     * getDataGeoJSON return an array of GeoJSON Source
+     * getListFeatures return an array of layer Source
      * @returns {Array}
      */
-    this.getDataGeoJSON = function(name){
-        return this.dataGeoJSON[name];
+    this.getListFeatures = function(){
+        return this.ListFeatures;
     };
 
     /**
@@ -50,6 +45,7 @@ function Feature() {
     this.addLayerFeature = function(data, dataFormat){
         var dataName = data[0];
         var dataProj = data[1];
+        var vectorSource;
         var features = [];
         if(dataFormat === 'WKT'){
             for(var i = 2; i < data.length; i++){
@@ -58,20 +54,39 @@ function Feature() {
                     featureProjection: projection.getProjection().getCode()
                 }));
             }
+            vectorSource = new ol.source.Vector({
+                features: features
+            });
         }else if(dataFormat === 'GeoJSON'){
-            this.dataGeoJSON[dataName] = data[2];
-            features = geoJSONFormat.readFeatures(data[2]);
-        }
-        if(features !== null) {
-            this.ListFeatures[dataName]= new ol.layer.Vector({
-                    title: dataName,
-                    source: new ol.source.Vector({
-                        features: features
-                    })
+            vectorSource = new ol.source.Vector({
+                loader: function () {
+                    $.ajax({
+                        url : data[2],
+                        dataType: 'jsonp',
+                        jsonpCallback: 'callback',
+                        success: function (response) {
+                            if (response.error) {
+                                console.log(response.error.message + '\n' + response.error.details.join('\n'));
+                            }else {
+                                features = geoJSONFormat.readFeatures(response,{
+                                    dataProjection: dataProj,
+                                    featureProjection: projection.getProjection().getCode()
+                                });
+                                if (features.length > 0) {
+                                    vectorSource.addFeatures(features);
+                                }
+                            }
+                        }
+                    });
                 }
-            );
-            return dataName;
+            });
         }
+        this.ListFeatures[dataName]= new ol.layer.Vector({
+                title: dataName,
+                source: vectorSource
+            }
+        );
+        return dataName;
     };
 
     /**
@@ -96,7 +111,9 @@ function Feature() {
                             '}}') + '&geometryType=esriGeometryEnvelope&inSR=&outFields=*&' + 'outSR=' +
                             projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length);
                         $.ajax({
-                            url: webService, dataType: 'jsonp', success: function (response) {
+                            url: webService,
+                            dataType: 'jsonp',
+                            success: function (response) {
                                 if (response.error) {
                                     console.log(response.error.message + '\n' + response.error.details.join('\n'));
                                 }else {
@@ -130,7 +147,9 @@ function Feature() {
                             '}}') + '&geometryType=esriGeometryEnvelope&inSR=&outFields=*&' + 'outSR=' +
                             projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length);
                         $.ajax({
-                            url: webService, dataType: 'jsonp', success: function (response) {
+                            url: webService,
+                            dataType: 'jsonp',
+                            success: function (response) {
                                 if (response.error) {
                                     console.log(response.error.message + '\n' + response.error.details.join('\n'));
                                 }else {

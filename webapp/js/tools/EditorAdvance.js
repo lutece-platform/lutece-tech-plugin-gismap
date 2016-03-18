@@ -249,21 +249,6 @@ function EditorAdvance(layerEdit) {
 
     /**
      * Editor METHOD
-     * cleanEdition restore the layer at this initial source
-     */
-    this.cleanEdition = function() {
-        if(editServer === 'GeoJSON') {
-            var features = featureLayer.getDataGeoJSON(layerEdit[1]);
-            editLayer.getSource().clear();
-            editLayer.getSource().addFeatures(geoJSONFormat.readFeatures(features));
-        }else{
-            editLayer.getSource().clear();
-        }
-        this.restartEdition();
-    };
-
-    /**
-     * Editor METHOD
      * writeGeoJSON send all information at Lutece to insert data in the database
      * @returns {*[]}
      */

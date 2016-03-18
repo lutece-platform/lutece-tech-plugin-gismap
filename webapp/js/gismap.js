@@ -1,5 +1,5 @@
 /*global ol, Manager, Control, Projection, Interaction, Layer, LayerRaster, Feature, SuggestPoiLocator,
-View, Measure, Zoom, DrawTools, InterfaceElements, SpecificInteracts, GeoPoint, Print*/
+View, Measure, Zoom, DrawTools, InterfaceElements, SpecificInteracts, GeoPoint, Print, Filter*/
 
 /**
  * File to manage the Gis Component with all parameters
@@ -25,6 +25,7 @@ var GlobalMap;
 var geoPoint;
 var printer;
 var suggestPoiLocator;
+var filter;
 var zoom;
 
 var GisMap = function (idMapInit) {
@@ -136,6 +137,7 @@ var GisMap = function (idMapInit) {
                 printer = new Print();
             }
         }
+        filter = new Filter();
     }
 
     /**

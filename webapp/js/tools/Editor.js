@@ -44,12 +44,12 @@ function Editor(layerEdit, fieldName) {
      * editSource is the source of the data can be edit on the map
      * @type {String}
      */
-    var editSource = this.fieldData.value === null ? '' : this.fieldData.value;
+    var editData = this.fieldData.value === null ? '' : this.fieldData.value;
     /**
      * editAvailable is the marker to expose the editable data of the map
      * @type {boolean}
      */
-    this.editAvailable = editSource === '' ? true : false;
+    this.editAvailable = editData === '' ? true : false;
     /**
      * editSource is the source of data can be edit on the map
      * @type {ol.Collection}
@@ -85,7 +85,7 @@ function Editor(layerEdit, fieldName) {
      * editProj is the projection of the data can be edit
      * @type {String}
      */
-    var editProj = layerEdit[0];
+    this.editProj = layerEdit[0];
     /**
      * editType is the type of the data can be edit
      * @type {String}
@@ -123,6 +123,14 @@ function Editor(layerEdit, fieldName) {
      */
     this.getLevel = function(){
         return true;
+    };
+    /**
+     * Editor Method
+     * getEditProj is a getter to know the projection of editor data
+     * @returns {String}
+     */
+    this.getEditProj = function(){
+        return this.editProj;
     };
     /**
      * Editor Method
@@ -179,7 +187,10 @@ function Editor(layerEdit, fieldName) {
      */
     this.initEditInteraction = function (mode) {
         if(this.editAvailable !== true) {
-            this.editLayer.getSource().addFeatures(this.geoJSONFormat.readFeatures(editSource));
+            this.editLayer.getSource().addFeature(this.geoJSONFormat.readFeature(this.getTransformStringToGeoJSON(editData), {
+                featureProjection: projection.getProjection().getCode(),
+                dataProjection: this.editProj
+            }));
         }
         if(mode === 'Draw') {
             this.editInteraction.set('Select', this.getSelectEditInteract());
@@ -187,9 +198,8 @@ function Editor(layerEdit, fieldName) {
             this.editInteraction.set('Draw', this.getDrawEditInteraction());
             this.setActiveInteraction(null, false);
         }else if(mode === 'Suggest') {
-            /* Lignes à décommenter pour le géocodage inverse
             this.editInteraction.set('Select', this.getSelectEditInteract());
-            this.editInteraction.set('Modify', this.getModifyEditInteract());*/
+            this.editInteraction.set('Modify', this.getModifyEditInteract());
             this.setActiveInteraction(null, false);
         }
         return this.editInteraction;
@@ -206,7 +216,7 @@ function Editor(layerEdit, fieldName) {
             this.editInteraction.forEach(function (val, key) {
                 val.setActive(active);
             });
-        }else if(value === 'Act' && this.editAvailable === false) {
+        }else if((value === 'Suggest' || value === 'Act') && this.editAvailable === false) {
             this.editInteraction.get('Select').setActive(active);
             this.editInteraction.get('Modify').setActive(active);
         }else if(value === 'Act' && this.editAvailable) {
@@ -240,9 +250,9 @@ function Editor(layerEdit, fieldName) {
          var point = getCentroid(feature.getGeometry());
          this.fieldCentroidX.value = point.getCoordinates()[0];
          this.fieldCentroidY.value = point.getCoordinates()[1];
-         this.fieldData.value = getValidString(this.geoJSONFormat.writeFeature(feature, {
+         this.fieldData.value = this.getTransformGeoJSONToString(this.geoJSONFormat.writeFeature(feature, {
              featureProjection: projection.getProjection().getCode(),
-             dataProjection: editProj
+             dataProjection: this.editProj
          }));
          this.fieldEditionStatus.value = false;
          this.editAvailable = false;
@@ -269,11 +279,11 @@ function Editor(layerEdit, fieldName) {
 
     /**
      * Editor METHOD
-     * getValidString to formate the geoJson for Lutece
+     * getTransformGeoJSONToString to formate the geoJson for Lutece
      * @param st
      * @returns {*}
      */
-    function getValidString(st){
+    this.getTransformGeoJSONToString = function(st){
         var l = st.length;
         var i;
         for(i = 0; i<l; i++){
@@ -282,7 +292,24 @@ function Editor(layerEdit, fieldName) {
             }
         }
         return st;
-    }
+    };
+
+     /**
+     * Editor METHOD
+     * getTransformStringToGeoJSON to formate the geoJson for OpenLayers
+     * @param st
+     * @returns {*}
+     */
+    this.getTransformStringToGeoJSON = function(st){
+        var l = st.length;
+        var i;
+        for(i = 0; i<l; i++){
+            if(st[i]=== "'" ){
+                st = st.substr(0, i) + '"' + st.substr(i+1, l);
+            }
+        }
+        return st;
+    };
 
     /**
      * Editor METHOD
@@ -305,7 +332,10 @@ function Editor(layerEdit, fieldName) {
      * getSelectedEditFeatures().on is a Listener to send information of the data edit
      */
     this.getSelectedEditFeatures().on('remove', function (evt) {
-        editorTools.writeGeoJSON(evt.element);
+        var feature = evt.element;
+        if (editorTools.selectInteract.getLayer(feature).get('name') === editorTools.editLayer.get('name')){
+            editorTools.writeGeoJSON(feature);
+        }
     });
 
      /**
@@ -324,6 +354,7 @@ function Editor(layerEdit, fieldName) {
      */
     this.addPoint = function(point) {
         if(editType === 'Point'){
+            this.deleteFeature('draw');
             var feature = new ol.Feature(point);
             this.editLayer.getSource().addFeature(feature);
             this.writeGeoJSON(feature);

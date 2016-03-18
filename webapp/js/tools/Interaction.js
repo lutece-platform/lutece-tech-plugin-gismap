@@ -53,6 +53,7 @@ function Interaction(layerEdit, fieldParameters){
      * @param enable
      */
      this.activeSpecificTool = function (enable){
+         specifInteracts.getSelectedFeatures().clear();
          specifInteracts.getSelectInteraction().setActive(enable);
     };
 
@@ -129,7 +130,7 @@ function Interaction(layerEdit, fieldParameters){
                 this.currentInteract = "Edit";
                 this.setEditInteraction();
             }
-            if (activeInteracts[ctrl] === "SuggestPOI") {
+            if (activeInteracts[ctrl] === "SuggestPOIEdit") {
                 editorInteracts = editorTools.initEditInteraction('Suggest');
                 editorInteracts.forEach(function(val, key){
                     ListInteractsTemp.push(val);
