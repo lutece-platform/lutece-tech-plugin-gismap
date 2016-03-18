@@ -153,8 +153,10 @@ parameters.push(parameters['WMTS1']=['AGS','http://capgeo.sig.paris.fr/arcgis/re
 parameters.push(parameters['GeoJSON'] = ['Test','EPSG:4326','http://localhost:8081/myapp/myresource']);
 fieldParameters.push(fieldParameters['TypeEdit']='Point');
 fieldParameters.push(fieldParameters['GeomGeoJson']='GeomGeoJson');
-fieldParameters.push(fieldParameters['GeomCentroidX']='GeomCentroidX');
-fieldParameters.push(fieldParameters['GeomCentroidY']='GeomCentroidY');
+fieldParameters.push(fieldParameters['GeomCentroidXStockage']='GeomCentroidXStockage');
+fieldParameters.push(fieldParameters['GeomCentroidYStockage']='GeomCentroidYStockage');
+fieldParameters.push(fieldParameters['GeomCentroidXGeocodage']='GeomCentroidXGeocodage');
+fieldParameters.push(fieldParameters['GeomCentroidYGeocodage']='GeomCentroidYGeocodage');
 fieldParameters.push(fieldParameters['GeomState']='GeomState');
 var GisMapDisplay = new GisMap(idMap);
 GisMapDisplay.initGisMap(globalParameters, parameters, fieldParameters);

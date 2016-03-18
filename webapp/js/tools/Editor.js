@@ -26,15 +26,25 @@ function Editor(layerEdit, fieldName) {
      */
     this.fieldData = document.getElementById(fieldName['GeomGeoJson']);
     /**
-     * fieldCentroidX is the field where we stock centroid value
+     * fieldCentroidXStockage is the field where we stock centroid value
      * @type {Element}
      */
-    this.fieldCentroidX = document.getElementById(fieldName['GeomCentroidX']);
+    this.fieldCentroidXStockage = document.getElementById(fieldName['GeomCentroidXStockage']);
     /**
-     * fieldCentroidY is the field where we stock centroid value
+     * fieldCentroidYStockage is the field where we stock centroid value
      * @type {Element}
      */
-    this.fieldCentroidY = document.getElementById(fieldName['GeomCentroidY']);
+    this.fieldCentroidYStockage = document.getElementById(fieldName['GeomCentroidYStockage']);
+    /**
+     * fieldCentroidXGeocodage is the field where we stock centroid value
+     * @type {Element}
+     */
+    this.fieldCentroidXGeocodage = document.getElementById(fieldName['GeomCentroidXGeocodage']);
+    /**
+     * fieldCentroidYGeocodage is the field where we stock centroid value
+     * @type {Element}
+     */
+    this.fieldCentroidYGeocodage = document.getElementById(fieldName['GeomCentroidYGeocodage']);
     /**
      * fieldEditionStatus is the field where we stock centroid value
      * @type {Element}
@@ -247,13 +257,11 @@ function Editor(layerEdit, fieldName) {
      * @returns {*[]}
      */
      this.writeGeoJSON = function(feature) {
-         var point = getCentroid(feature.getGeometry());
-         this.fieldCentroidX.value = point.getCoordinates()[0];
-         this.fieldCentroidY.value = point.getCoordinates()[1];
          this.fieldData.value = this.getTransformGeoJSONToString(this.geoJSONFormat.writeFeature(feature, {
              featureProjection: projection.getProjection().getCode(),
              dataProjection: this.editProj
          }));
+         this.managePoint(feature);
          this.fieldEditionStatus.value = false;
          this.editAvailable = false;
          if(this.suggestPoiEdit === false) {
@@ -265,16 +273,30 @@ function Editor(layerEdit, fieldName) {
 
     /**
      * Editor METHOD
+     * managePoint manage all information about the centroid of the current geometry
+     * @param feature
+     */
+    this.managePoint = function(feature){
+        /*Lambert 93*/
+        var pointL93 = getCentroid(feature.getGeometry());
+        pointL93.transform(projection.getProjection().getCode(), 'EPSG:2154');
+        this.fieldCentroidXGeocodage.value = pointL93.getCoordinates()[0];
+        this.fieldCentroidYGeocodage.value = pointL93.getCoordinates()[1];
+        /*WGS 84*/
+        var pointWGS84 = getCentroid(feature.getGeometry());
+        pointWGS84.transform(projection.getProjection().getCode(), this.editProj);
+        this.fieldCentroidXStockage.value = pointWGS84.getCoordinates()[0];
+        this.fieldCentroidYStockage.value = pointWGS84.getCoordinates()[1];
+    };
+
+    /**
+     * Editor METHOD
      * getCentroid calculate the centroid of the current geometry
      * @param geom
      * @returns {*}
      */
     function getCentroid(geom) {
-        if(editType === 'Point') {
-            return geom;
-        }else{
-            return new ol.geom.Point(ol.extent.getCenter(geom.getExtent()));
-        }
+        return new ol.geom.Point(ol.extent.getCenter(geom.getExtent()));
     }
 
     /**
@@ -367,8 +389,10 @@ function Editor(layerEdit, fieldName) {
      */
     this.cleanEdition = function() {
         this.fieldData.value = '';
-        this.fieldCentroidX.value = '';
-        this.fieldCentroidY.value = '';
+        this.fieldCentroidXStockage.value = '';
+        this.fieldCentroidYStockage.value = '';
+        this.fieldCentroidXGeocodage.value = '';
+        this.fieldCentroidYGeocodage.value = '';
         this.fieldEditionStatus.value = false;
         this.editAvailable = true;
     };

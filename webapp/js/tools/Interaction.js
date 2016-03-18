@@ -52,9 +52,11 @@ function Interaction(layerEdit, fieldParameters){
      * activeSpecificTool enable or disable specific interaction
      * @param enable
      */
-     this.activeSpecificTool = function (enable){
-         specifInteracts.getSelectedFeatures().clear();
-         specifInteracts.getSelectInteraction().setActive(enable);
+    this.activeSpecificTool = function (enable){
+        if(enable === false) {
+            specifInteracts.getSelectedFeatures().clear();
+        }
+        specifInteracts.getSelectInteraction().setActive(enable);
     };
 
      /**
@@ -78,7 +80,10 @@ function Interaction(layerEdit, fieldParameters){
      * activeEditorTool enable or disable editor interaction
      */
     this.activeEditorTool = function(value, enable){
-         editorTools.setActiveInteraction(value, enable);
+        if(enable === false) {
+            editorTools.getSelectEditInteract().getFeatures().clear();
+        }
+        editorTools.setActiveInteraction(value, enable);
     };
 
     /**
