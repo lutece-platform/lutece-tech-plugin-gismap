@@ -35,7 +35,7 @@
     		$('#GeomCentroidX').val(ui.item.x);
     		$('#GeomCentroidY').val(ui.item.y);
     		$('#addAddress').val(getAdditionalAdd(ui.item.label));
-    		
+    		zoom.zoomSuggestPoi(ui.item.x, ui.item.y);
         }
 	}).focus();
 	function getResult(result) 
@@ -86,7 +86,7 @@
 		}
 		return additionalAddress;
     };
-    	
+    
 </script>
 </div>
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 5px;">
