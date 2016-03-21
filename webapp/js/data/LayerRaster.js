@@ -9,11 +9,6 @@ function LayerRaster() {
      * @type {Array}
      */
     this.ListRasters = [];
-    /**
-     * currentRaster define the current raster
-     * @type {null}
-     */
-    this.currentRaster = null;
 
     /**
      * LayerRaster Method
@@ -29,7 +24,7 @@ function LayerRaster() {
                 title: name,
                 type: 'base',
                 source: new ol.source.OSM(),
-                visible:true
+                visible:false
             });
         }else if (name === 'MapQuest'){
             this.ListRasters[name] = new ol.layer.Tile({
@@ -112,42 +107,8 @@ function LayerRaster() {
             });
         }
     };
-
-    /**
-     * LayerRaster Method
-     * setRasterVisibility enable or disable the display of the raster on the map
-     * @param raster
-     * @param act
-     */
     this.setRasterVisibility = function(raster, act){
         this.getRasterByName(raster).setVisible(act);
-    };
-
-    /**
-     * LayerRaster Method
-     * getCurrentRaster is the getter to access at the current raster
-     * @returns {null}
-     */
-    this.getCurrentRaster = function(){
-        return this.currentRaster;
-    };
-
-    /**
-     * LayerRaster Method
-     * setCurrentRaster is the setter to define the current raster
-     * @param newCurrentRaster
-     */
-    this.setCurrentRaster = function(newCurrentRaster){
-        this.currentRaster = newCurrentRaster;
-    };
-
-    /**
-     * LayerRaster Method
-     * getRasterLayers is the getter to access at the list of rasters
-     * @returns {Array}
-     */
-    this.getRasterLayers = function(){
-        return this.ListRasters;
     };
 
     /**

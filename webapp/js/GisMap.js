@@ -1,5 +1,5 @@
 /*global ol, Manager, Control, Projection, Interaction, Layer, LayerRaster, Feature, SuggestPoiLocator,
-View, Measure, Zoom, DrawTools, InterfaceElements, SpecificInteracts, GeoPoint, Print, Filter*/
+View, Measure, Zoom, DrawTools, InterfaceElements, SpecificInteracts, GeoPoint, Print, Popup, Filter*/
 
 /**
  * File to manage the Gis Component with all parameters
@@ -24,6 +24,7 @@ var interfaceElements;
 var GlobalMap;
 var geoPoint;
 var printer;
+var popup;
 var suggestPoiLocator;
 var filter;
 var zoom;
@@ -138,6 +139,11 @@ var GisMap = function (idMapInit) {
             }
         }
         filter = new Filter();
+        if(parameters['Popup'] !== '' && parameters['Popup'] !== undefined){
+            popup = new Popup();
+            popup.initOverlayPopupElements(parameters['Popup']);
+            GlobalMap.addOverlay(popup.getPopup());
+        }
     }
 
     /**
@@ -160,9 +166,8 @@ var GisMap = function (idMapInit) {
         for (var k = 0; k < ListLayer.length; k++){
             GlobalMap.addLayer(ListLayer[k]);
         }
-        //GlobalMap.addOverlay(popup.getPopup());
-        GlobalMap.addControl(control.getLayerSwitcher());
         addAnnexeComponent(parameters);
+        GlobalMap.addControl(control.getLayerSwitcher());
     }
 
     /**

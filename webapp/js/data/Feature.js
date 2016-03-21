@@ -43,13 +43,15 @@ function Feature() {
      * @param dataFormat
      */
     this.addLayerFeature = function(data, dataFormat){
-        var dataName = data[0];
-        var dataProj = data[1];
+        var dataOrder = data[0];
+        var dataName = data[1];
+        var dataProj = data[2];
+        var dataUrl = data[3];
         var vectorSource;
         var features = [];
         if(dataFormat === 'WKT'){
             for(var i = 2; i < data.length; i++){
-                features.push(wktFormat.readFeature(data[i], {
+                features.push(wktFormat.readFeatures(dataUrl, {
                     dataProjection: dataProj,
                     featureProjection: projection.getProjection().getCode()
                 }));
@@ -61,7 +63,7 @@ function Feature() {
             vectorSource = new ol.source.Vector({
                 loader: function () {
                     $.ajax({
-                        url : data[2],
+                        url : dataUrl,
                         dataType: 'jsonp',
                         jsonpCallback: 'callback',
                         success: function (response) {
@@ -92,12 +94,13 @@ function Feature() {
     /**
      * Feature Method
      * createWFSLayer initialize the layer of the map to specific WFS data
+     * @param order
+     * @param layerName
      * @param server
      * @param url
-     * @param layerName
      * @param query
      */
-    this.createWFSLayer = function(server, url, layerName, query) {
+    this.createWFSLayer = function(order, layerName,server, url, query) {
         if (server === 'AGS') {
             if(query === '') {
                 var vectorSource = new ol.source.Vector({
@@ -207,6 +210,46 @@ function Feature() {
             });
         }
         return layerName;
+    };
+
+
+
+     /**
+     * LayerRaster Method
+     * createWMSQueryLayer initialize the layer of the map to specific WMS data
+     * @param order
+     * @param layerName
+     * @param server
+     * @param url
+     */
+    this.createWMSQueryLayer = function(order, layerName, server, url){
+        if(server === 'AGS-IMS'){
+            this.ListFeatures[layerName] = new ol.layer.Tile({
+                title: layerName,
+                source: new ol.source.TileArcGISRest({
+                    url: url+layerName+'/ImageServer'
+                }),
+                visible:false
+            });
+        }else if(server === 'AGS-MPS'){
+            this.ListFeatures[layerName] = new ol.layer.Tile({
+                title: layerName,
+                source: new ol.source.TileArcGISRest({
+                    url: url+layerName+'/MapServer'
+                }),
+                visible:false
+            });
+        }else if (server === 'GeoServer'){
+            this.ListFeatures[layerName] = new ol.layer.Tile({
+                title: layerName,
+                source: new ol.source.TileWMS({
+                    url: url,
+                    params: {'LAYERS': layerName},
+                    serverType:'geoserver'
+                }),
+                visible:false
+            });
+        }
     };
 
     /**

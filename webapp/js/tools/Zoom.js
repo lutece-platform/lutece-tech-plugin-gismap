@@ -14,7 +14,7 @@ var Zoom = function() {
     var zoomSuggestPoi = function (x, y) {
         var pointPoi = new ol.geom.Point([x,y]);
         view.getView().fit(pointPoi, GlobalMap.getSize(),{
-            maxZoom: view.getZoomInit()
+            maxZoom: view.getZoomSelect()
         });
         if(editorTools!== null && editorTools.getSuggestPoiEdit()){
             editorTools.addPoint(pointPoi);
@@ -32,7 +32,7 @@ var Zoom = function() {
         }
         if (selectFeatures.length === 1) {
             view.getView().fit(selectFeatures[0].getGeometry(), GlobalMap.getSize(),{
-                maxZoom: view.getZoomInit()
+                maxZoom: view.getZoomSelect()
             });
         } else if (selectFeatures.length > 1) {
             var arrayGeom = [];
@@ -55,7 +55,7 @@ var Zoom = function() {
             dataProjection: editorTools.getEditProj()
         });
         view.getView().fit(feature.getGeometry(), GlobalMap.getSize(),{
-            maxZoom: view.getZoomInit()
+            maxZoom: view.getZoomSelect()
         });
     };
 

@@ -29,7 +29,8 @@ var Manager = function() {
         var controls = [];
         var interacts = [];
         var background = [];
-        var wms = [];
+        var wmsBase = [];
+        var wmsLayer = [];
         var wfs = [];
         var wmts = [];
         if (startParameters['Projection'] !== '') {
@@ -41,8 +42,11 @@ var Manager = function() {
         if (startParameters['Zoom'] !== '') {
             parameters['Zoom'] = startParameters['Zoom'];
         }
-        if (startParameters['ZoomStart'] !== '') {
-            parameters['ZoomStart'] = startParameters['ZoomStart'];
+        if (startParameters['ZoomSelect'] !== '') {
+            parameters['ZoomSelect'] = startParameters['ZoomSelect'];
+        }
+        if (startParameters['DefaultBackGround'] !== '') {
+            parameters['DefaultBackGround'] = startParameters['DefaultBackGround'];
         }
         if (startParameters['Overview'] !== false) {
             controls.push('Overview');
@@ -101,8 +105,11 @@ var Manager = function() {
             if (startParameters['BackGround'+n] !== '' && startParameters['BackGround'+n] !== undefined ) {
                 background.push(startParameters['BackGround'+n]);
             }
-            if (startParameters['WMS'+n] !== '' && startParameters['WMS'+n] !== undefined ) {
-                wms.push(startParameters['WMS'+n]);
+            if (startParameters['WMS-Base'+n] !== '' && startParameters['WMS-Base'+n] !== undefined ) {
+                wmsBase.push(startParameters['WMS-Base'+n]);
+            }
+            if (startParameters['WMS-Layer'+n] !== '' && startParameters['WMS-Layer'+n] !== undefined ) {
+                wmsLayer.push(startParameters['WMS-Layer'+n]);
             }
             if (startParameters['WMTS'+n] !== '' && startParameters['WMTS'+n] !== undefined ) {
                 wmts.push(startParameters['WMTS'+n]);
@@ -112,7 +119,8 @@ var Manager = function() {
             }
         }
         parameters['BackGround'] = background;
-        parameters['WMS'] = wms;
+        parameters['WMS-Base'] = wmsBase;
+        parameters['WMS-Layer'] = wmsLayer;
         parameters['WFS'] = wfs;
         parameters['WMTS'] = wmts;
         parameters['Controles'] = controls;
@@ -120,6 +128,8 @@ var Manager = function() {
         parameters['WKT'] = startParameters['WKT'];
         parameters['LayerEdit'] = startParameters['LayerEdit'];
         parameters['GeoJSON'] = startParameters['GeoJSON'];
+        parameters['GeoJSON'].push(fieldParameters['UrlGeoJSON']);
+        parameters['Popup'] = startParameters['Popup'];
         return parameters;
     };
 
@@ -143,8 +153,8 @@ var Manager = function() {
             this.extentDefine = false;
             this.specificExtent = false;
         }
-        if (parameters['ZoomStart'] !== '' && parameters['ZoomStart'] !== undefined) {
-            view.setZoomInit(parameters['ZoomStart']);
+        if (parameters['ZoomSelect'] !== '' && parameters['ZoomSelect'] !== undefined) {
+            view.setZoomSelect(parameters['ZoomSelect']);
         }
         if (parameters['Zoom'] !== '' && parameters['Zoom'] !== undefined) {
             view.setZoom(parameters['Zoom'][0], parameters['Zoom'][1]);
@@ -163,9 +173,14 @@ var Manager = function() {
                 layer.addLayerRaster(parameters['BackGround'][background]);
             }
         }
-        if(parameters['WMS'] !== '' && parameters['WMS'] !== undefined){
-            for(var wms  = 0; wms < parameters['WMS'].length; wms++){
-                layer.addWMSLayerRaster(parameters['WMS'][wms]);
+        if(parameters['WMS-Base'] !== '' && parameters['WMS-Base'] !== undefined){
+            for(var wmsBase  = 0; wmsBase < parameters['WMS-Base'].length; wmsBase++){
+                layer.addWMSLayerRaster(parameters['WMS-Base'][wmsBase]);
+            }
+        }
+        if(parameters['WMS-Layer'] !== '' && parameters['WMS-Layer'] !== undefined){
+            for(var wms  = 0; wms < parameters['WMS-Layer'].length; wms++){
+                layer.addWMSQueryLayerRaster(parameters['WMS-Layer'][wms]);
             }
         }
         if(parameters['WFS'] !== '' && parameters['WFS'] !== undefined){
@@ -184,6 +199,7 @@ var Manager = function() {
         if(parameters['GeoJSON'] !== '' && parameters['GeoJSON'] !== undefined){
             layer.addLayerVector(parameters['GeoJSON'], 'GeoJSON');
         }
+        layer.setDefaultBackGround(parameters['DefaultBackGround']);
     };
 
     /**

@@ -24,7 +24,7 @@ function View() {
      * zoomInit define the initial zoom of the view
      * @type {number}
      */
-    this.zoomInit = 6;
+    this.zoomSelect = 6;
     /**
      * view is the ol.View used in the map
      * @type {null}
@@ -55,20 +55,20 @@ function View() {
 
     /**
      * View Method
-     * getZoomInit is a getter to access at the initial zoom of the view
+     * getZoomSelect is a getter to access at the zoom of the view
      * @returns {number[]|*}
      */
-    this.getZoomInit = function (){
-        return this.zoomInit;
+    this.getZoomSelect = function (){
+        return this.zoomSelect;
     };
 
     /**
      * View Method
-     * setZoomInit is a setter to define the initial zoom of the view
-     * @param newZoomInit
+     * setZoomSelect is a setter to define the zoom of the view
+     * @param newZoom
      */
-    this.setZoomInit = function (newZoomInit){
-        this.zoomInit = parseInt(newZoomInit);
+    this.setZoomSelect = function (newZoom){
+        this.zoomSelect = parseInt(newZoom);
     };
 
     /**
@@ -100,7 +100,7 @@ function View() {
              projection: projection.getProjection().getCode(),
              extent: projection.getExtent(),
              center: this.centerUser,
-             zoom: this.zoomInit,
+             zoom: this.zoomSelect,
              minZoom: this.zoomMin,
              maxZoom: this.zoomMax
 
