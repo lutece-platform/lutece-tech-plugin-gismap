@@ -40,8 +40,8 @@ var SuggestPoiLocator = function(suggestPoiParams) {
     /**
      * SuggestPoiLocator Method
      * getResult construct the result array of the suggest poi query
-     * @param result
-     * @returns {Array}
+     * @param result is an array contains all results of the request
+     * @returns {Array} a formated array of the results
      */
     function getResult(result) {
         var resultArray = [];

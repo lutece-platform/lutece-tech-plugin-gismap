@@ -13,8 +13,8 @@ function LayerRaster() {
     /**
      * LayerRaster Method
      * createRasterLayer initialize the background of the map
-     * @param data
-     * @returns {*}
+     * @param data contains the name of the layer and the specific layer
+     * @returns {String} is the name of the layer
      */
     this.createRasterLayer = function(data){
         var name = data[0];
@@ -40,9 +40,9 @@ function LayerRaster() {
     /**
      * LayerRaster Method
      * createWMSLayer initialize the background of the map to specific WMS data
-     * @param server
-     * @param url
-     * @param layerName
+     * @param server is the type of the server
+     * @param url is the url to access at the service
+     * @param layerName is the name of the layer
      */
     this.createWMSLayer = function(server, url, layerName){
         if(server === 'AGS-IMS'){
@@ -80,12 +80,12 @@ function LayerRaster() {
     /**
      * LayerRaster Method
      * createWMTSLayer initialize the background of the map to specific WMTS data
-     * @param server
-     * @param url
-     * @param layerName
-     * @param proj
-     * @param resolutions
-     * @param origin
+     * @param server is the type of the server
+     * @param url is the url to access at the service
+     * @param layerName is the name of the layer
+     * @param proj is the projection of the data
+     * @param resolutions is the table of the
+     * @param origin is the coordinate of the left upper point of the data
      */
 
     this.createWMTSLayer = function(server, url, layerName, proj, resolutions, origin){
@@ -114,8 +114,8 @@ function LayerRaster() {
     /**
      * LayerRaster Method
      * getRasterByName is the getter to access at specific raster with this name
-     * @param name
-     * @returns {*}
+     * @param name is the name of the layer to search
+     * @returns {ol.layer.Layer} is the layer of the name
      */
     this.getRasterByName = function(name){
         return this.ListRasters[name];

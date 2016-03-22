@@ -16,7 +16,7 @@ function Layer() {
     /**
      * Layer Method
      * addLayerRaster add a background map at the ListLayer
-     * @param backGround
+     * @param backGround is an array with all parameters to define a background
      */
     this.addLayerRaster = function(backGround){
         var name = rasterLayer.createRasterLayer(backGround);
@@ -26,7 +26,7 @@ function Layer() {
     /**
      * Layer Method
      * addWMSLayerRaster add a background map at the ListLayer to a WMS
-     * @param wms
+     * @param wms is an array with all parameters to define a wms layer
      */
     this.addWMSLayerRaster = function(wms){
         var wmsServer = wms[0];
@@ -39,7 +39,7 @@ function Layer() {
     /**
      * Layer Method
      * addWMTSLayerRaster add a background map at the ListLayer to a WMTS
-     * @param wmts
+     * @param wmts is an array with all parameters to define a wmts layer
      */
     this.addWMTSLayerRaster = function(wmts){
         var wmtsServer = wmts[0];
@@ -55,21 +55,21 @@ function Layer() {
     /**
      * Layer Method
      * addWMSQueryLayerRaster add a background map at the ListLayer to a WMS
-     * @param wms
+     * @param wms is an array with all parameters to define a wms layer
      */
     this.addWMSQueryLayerRaster = function(wms){
         var wmsOrder = wms[0];
         var wmsLayer = wms[1];
         var wmsServer = wms[2];
         var wmsUrl = wms[3];
-        featureLayer.createWMSQueryLayer(wmsOrder, wmsLayer, wmsServer, wmsUrl);
+        featureLayer.createWMSQueryLayer(wmsLayer, wmsServer, wmsUrl);
         this.ListLayers.push(wmsOrder+wmsLayer);
     };
 
     /**
      * Layer Method
      * addWFSLayer add a layer map at the ListLayer to a WFS
-     * @param wfs
+     * @param wfs is an array with all parameters to define a wfs layer
      */
     this.addWFSLayer = function(wfs){
         var wfsOrder = wfs[0];
@@ -78,13 +78,15 @@ function Layer() {
         var wfsUrl = wfs[3];
         var wfsProj = wfs[4];
         var wfsQuery = wfs[5];
-        featureLayer.createWFSLayer(wfsOrder, wfsLayer, wfsServer, wfsUrl, wfsProj, wfsQuery);
+        featureLayer.createWFSLayer(wfsLayer, wfsServer, wfsUrl, wfsProj, wfsQuery);
         this.ListLayers.push(wfsOrder+wfsLayer);
     };
 
     /**
      * Layer Method
      * addLayerVector add a layer map at the ListLayer
+     * @param data is an array with all parameters to define a specific layer
+     * @param format is the type of data
      */
     this.addLayerVector = function(data, format){
         var name = featureLayer.addLayerFeature(data, format);
@@ -95,7 +97,7 @@ function Layer() {
     /**
      * Layer Method
      * getLayers is a getter to all Layers
-     * @returns {Array}
+     * @returns {Array} is an array with all data layers of the map
      */
     this.getLayers = function(){
         return this.ListLayers;
@@ -104,7 +106,7 @@ function Layer() {
     /**
      * Layer Method
      * setDefaultBackGround active the default background to initiate the map
-     * @param defaultBackground
+     * @param defaultBackground is the name of a layer
      */
     this.setDefaultBackGround = function(defaultBackground){
         for (var layerMap = 0; layerMap < this.ListLayers.length; layerMap++){
@@ -117,7 +119,7 @@ function Layer() {
     /**
      * Layer Method
      * getSelectedLayers is a getter to all selectable Layers
-     * @returns {Array}
+     * @returns {Array} is an array with all selectable layers of the map
      */
     this.getSelectableLayers = function(){
         return this.selectableLayers;
@@ -126,7 +128,7 @@ function Layer() {
     /**
      * Layer Method
      * getLayersRasterMap is a getter to all Rasters Layers
-     * @returns {Array}
+     * @returns {Array} is an array with all raster layers of the map
      */
     this.getLayersRasterMap = function(){
         var ListLayersRasterMap = [];
@@ -141,7 +143,7 @@ function Layer() {
     /**
      * Layer Method
      * getLayersFeatureMap is a getter to all Features Layers
-     * @returns {Array}
+     * @returns {Array} is an array with all feature layers of the map
      */
     this.getLayersFeatureMap = function(){
         var ListLayersFeatureMap = [];
@@ -156,7 +158,7 @@ function Layer() {
     /**
      * Layer Method
      * getLayersMap is a getter to all Layers in groups
-     * @returns {Array}
+     * @returns {Array} is an array with all data layers in groups
      */
      this.getLayersMap = function(){
          var ListLayersMap = [];

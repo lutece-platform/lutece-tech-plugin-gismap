@@ -51,7 +51,7 @@ function Interaction(layerEdit, fieldParameters){
     /**
      * Interaction Private METHOD
      * activeSpecificTool enable or disable specific interaction
-     * @param enable
+     * @param enable is the marker to indicate activation
      */
     this.activeSpecificTool = function (enable){
         if(enable === false) {
@@ -63,8 +63,8 @@ function Interaction(layerEdit, fieldParameters){
      /**
      * Interaction Private METHOD
      * activeMeasureTool enable or disable draw interaction
-     * @param value
-     * @param enable
+     * @param value is the type of draw mode
+     * @param enable is the marker to indicate activation
      */
     this.activeDrawTool = function(value, enable){
          drawTools.setActiveInteraction(value, enable);
@@ -73,8 +73,8 @@ function Interaction(layerEdit, fieldParameters){
      /**
      * Interaction Private METHOD
      * activeMeasureTool enable or disable measure interaction
-     * @param value
-     * @param enable
+     * @param value is the type of measure mode
+     * @param enable is the marker to indicate activation
      */
     this.activeMeasureTool = function(value, enable){
          measureTools.setActiveInteraction(value, enable);
@@ -83,8 +83,8 @@ function Interaction(layerEdit, fieldParameters){
      /**
      * Interaction Private METHOD
      * activeEditorTool enable or disable editor interaction
-     * @param value
-     * @param enable
+     * @param value is the type of editor mode
+     * @param enable is the marker to indicate activation
      */
     this.activeEditorTool = function(value, enable){
         if(enable === false) {
@@ -96,7 +96,7 @@ function Interaction(layerEdit, fieldParameters){
     /**
      * Interaction Public METHOD
      * initInteractions initialize interaction on the map
-     * @param activeInteracts
+     * @param activeInteracts is the list of parameters to initiate interacts
      */
     this.initInteractions = function(activeInteracts){
         var editorInteracts = null;
@@ -197,7 +197,7 @@ function Interaction(layerEdit, fieldParameters){
     /**
      * Interaction Public METHOD
      * setDrawInteraction define the current draw interaction
-     * @param value
+     * @param value is the type of geometry drawn
      */
     this.setDrawInteraction = function(value){
         this.disablePopup();
@@ -210,7 +210,7 @@ function Interaction(layerEdit, fieldParameters){
     /**
      * Interaction Public METHOD
      * setMeasureInteraction define the current measure interaction
-     * @param value
+     * @param value is the type of measure
      */
     this.setMeasureInteraction = function(value){
         this.disablePopup();
@@ -234,7 +234,7 @@ function Interaction(layerEdit, fieldParameters){
     /**
      * Interaction Public METHOD
      * getInteracts get the list of all interactions enable on the map
-     * @returns {Array}
+     * @returns {Array} an array of all interactions
      */
     this.getInteracts = function(){
         return this.ListInteracts;
@@ -243,7 +243,7 @@ function Interaction(layerEdit, fieldParameters){
      /**
      * Interaction Method
      * deleteFeatures is a method to call an action to delete all selected elements
-     * @param value
+     * @param value is a marker to indicate a specific process
      */
     this.deleteFeatures = function (value) {
         var selectFeatures = specifInteracts.getSelectedFeatures().getArray();

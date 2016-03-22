@@ -8,8 +8,8 @@ var Zoom = function() {
     /**
      * Zoom Method
      * zoomSuggestPoi is a method to call an action to go on a specific area in function of selected elements
-     * @param x
-     * @param y
+     * @param x is the x coordinate
+     * @param y is the y coordinate
      */
     var zoomSuggestPoi = function (x, y) {
         var pointPoi = new ol.geom.Point([x,y]);
@@ -47,7 +47,7 @@ var Zoom = function() {
     /**
      * Zoom Method
      * initialZoom is a method to call an action to go on a specific area at the initialization of the map
-     * @param fieldGeom
+     * @param fieldGeom is the field where is stock geometry
      */
     var initialZoom = function (fieldGeom) {
         var feature = new ol.format.GeoJSON().readFeature(editorTools.getTransformStringToGeoJSON(document.getElementById(fieldGeom).value), {

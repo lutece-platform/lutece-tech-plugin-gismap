@@ -23,7 +23,7 @@ function Filter() {
      */
     this.filterData = function(name, query, data){
 
-    }
+    };
 
     /**
      * Filter Method

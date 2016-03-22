@@ -34,7 +34,7 @@ function View() {
     /**
      * View Method
      * setCenter is a setter to define the center of the view
-     * @param newCenter
+     * @param newCenter is the new coordinates of the center of the view
      */
     this.setCenter = function (newCenter){
         if(newCenter === null){
@@ -47,7 +47,7 @@ function View() {
     /**
      * View Method
      * getCenter is a getter to access at the center of the view
-     * @returns {number[]|*}
+     * @returns {number[]} the coordinates of the center of the view
      */
     this.getCenter = function (){
         return this.centerUser;
@@ -56,7 +56,7 @@ function View() {
     /**
      * View Method
      * getZoomSelect is a getter to access at the zoom of the view
-     * @returns {number[]|*}
+     * @returns {number} the level of zoom
      */
     this.getZoomSelect = function (){
         return this.zoomSelect;
@@ -65,7 +65,7 @@ function View() {
     /**
      * View Method
      * setZoomSelect is a setter to define the zoom of the view
-     * @param newZoom
+     * @param newZoom is the level of zoom
      */
     this.setZoomSelect = function (newZoom){
         this.zoomSelect = parseInt(newZoom);
@@ -74,8 +74,8 @@ function View() {
     /**
      * View Method
      * setZoom is a setter to define the maximal and minimal zoom of the view
-     * @param min
-     * @param max
+     * @param min the minimal zoom level
+     * @param max the maximal zoom level
      */
     this.setZoom = function (min, max){
         this.zoomMin = parseInt(min);
@@ -85,7 +85,7 @@ function View() {
     /**
      * View Method
      * getView is a getter to access to the view
-     * @returns {map.view|{center, zoom}|*|null|ol.View|WindowProxy}
+     * @returns {ol.View} the view of the map
      */
     this.getView = function (){
         return this.view;

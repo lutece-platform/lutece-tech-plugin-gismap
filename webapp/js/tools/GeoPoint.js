@@ -25,6 +25,7 @@ function GeoPoint(currentMap) {
      * @type {Kw.http://www.opengis.net/wfs.Feature}
      */
     var geolocFeature = new ol.Feature();
+
     /**
      * geolocFeature style definition
      */
@@ -42,6 +43,7 @@ function GeoPoint(currentMap) {
             })
         })
     );
+
     /**
      * Handler to set the geometry of the geolocation
      */
@@ -53,11 +55,13 @@ function GeoPoint(currentMap) {
         });
         currentMap.render();
     });
+
     /**
      * accuracyFeature contains all geoloc features about accuracy
      * @type {Kw.http://www.opengis.net/wfs.Feature}
      */
     var accuracyFeature = new ol.Feature();
+
     /**
      * Handler to set the geometry of the accuracy geolocation
      */

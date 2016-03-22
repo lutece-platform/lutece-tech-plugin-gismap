@@ -44,15 +44,14 @@ var GisMap = function (idMapInit) {
     /**
      * GisMap Private Method
      * initGis initialize all components of the map
-     * @param globalParameters
-     * @param startParameters
-     * @param fieldParameters
+     * @param startParameters is the array of parameters of properties file
+     * @param fieldParameters is the array of parameters
      */
-    function initGis(globalParameters, startParameters, fieldParameters) {
+    function initGis(startParameters, fieldParameters) {
         var parameters = manager.readAndManageParameters(startParameters, fieldParameters);
-        globalInitialize(globalParameters,parameters);
-        dataInitialize(globalParameters,parameters);
-        controlInitialize(globalParameters,parameters, fieldParameters);
+        globalInitialize(parameters);
+        dataInitialize(parameters);
+        controlInitialize(parameters, fieldParameters);
         mapInitialize(parameters);
         if(manager.getSpecificExtent() !== []){
             view.getView().fit(manager.extentDefine, GlobalMap.getSize());
@@ -69,7 +68,7 @@ var GisMap = function (idMapInit) {
     /**
      * GisMap Private Method
      * initInterfaces initiate the interfaces elements of the map
-     * @param parameters
+     * @param parameters is the array of parameters of properties file
      */
     function initInterfaces(parameters) {
         interfaceElements = new InterfaceElements(parameters);
@@ -82,37 +81,34 @@ var GisMap = function (idMapInit) {
     /**
      * GisMap Private Method
      * globalInitialize initiate the general parameters of the map
-     * @param globalParameters
-     * @param parameters
+     * @param parameters is the array of parameters of properties file
      */
-    function globalInitialize(globalParameters, parameters){
+    function globalInitialize(parameters){
         view = new View();
         zoom = new Zoom();
         projection = new Projection();
-        manager.readAndInitGeneralParams(globalParameters, parameters);
+        manager.readAndInitGeneralParams(parameters);
     }
 
     /**
      * GisMap Private Method
      * dataInitialize initiate the layers of the map
-     * @param globalParameters
-     * @param parameters
+     * @param parameters is the array of parameters of properties file
      */
-    function dataInitialize(globalParameters, parameters){
+    function dataInitialize(parameters){
         layer = new Layer();
         featureLayer = new Feature();
         rasterLayer = new LayerRaster();
-        manager.readAndInitDataParams(globalParameters, parameters);
+        manager.readAndInitDataParams(parameters);
     }
 
     /**
      * GisMap Private Method
      * controlInitialize initiate the controls and interactions components of the map
-     * @param globalParameters
-     * @param parameters
-     * @param fieldParameters
+     * @param parameters is the array of parameters of properties file
+     * @param fieldParameters is the array of parameters
      */
-    function controlInitialize(globalParameters, parameters, fieldParameters) {
+    function controlInitialize(parameters, fieldParameters) {
         interact = new Interaction(parameters['LayerEdit'], fieldParameters);
         control = new Control();
         drawTools = new DrawTools();
@@ -124,7 +120,7 @@ var GisMap = function (idMapInit) {
     /**
      * GisMap Private Method
      * addAnnexeComponent initiate the others components of the map
-     * @param parameters
+     * @param parameters is the array of parameters of properties file
      */
     function addAnnexeComponent(parameters){
         for (var i = 0; i < parameters['Interacts'].length; i++) {
@@ -147,7 +143,7 @@ var GisMap = function (idMapInit) {
     /**
      * GisMap Private Method
      * mapInitialize initiate the map and integrate all components
-     * @param parameters
+     * @param parameters is the array of parameters of properties file
      */
     function mapInitialize(parameters){
         view.createView();
@@ -165,19 +161,21 @@ var GisMap = function (idMapInit) {
             GlobalMap.addLayer(ListLayer[k]);
         }
         addAnnexeComponent(parameters);
-        GlobalMap.addControl(control.getLayerSwitcher());
+        if(parameters['LayerControl'] !== false) {
+            GlobalMap.addControl(control.getLayerSwitcher());
+        }
     }
 
     /**
      * GisMap Method
      * initGisMap is the enter point of the GisMap plugin
-     * @param globalParameters
-     * @param parameters
-     * @param fieldParameters
-     * @returns {*}
+     * @param globalParameters is an array of Lutece Parameters
+     * @param parameters is the array of parameters of properties file
+     * @param fieldParameters is the array of parameters
+     * @returns {*} the map with all elements
      */
     var initGisMap = function(globalParameters, parameters, fieldParameters) {
-        initGis(globalParameters, parameters, fieldParameters);
+        initGis(parameters, fieldParameters);
         return GlobalMap;
     };
 

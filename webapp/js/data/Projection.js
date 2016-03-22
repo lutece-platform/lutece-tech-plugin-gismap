@@ -19,7 +19,7 @@ var Projection = function() {
     /**
      * Projection Method
      * getProjection is a getter to access at the projection of the view
-     * @returns {string|*}
+     * @returns {string|*} is the information of the projection
      */
     this.getProjection = function (){
         return this.projEspg;
@@ -28,7 +28,7 @@ var Projection = function() {
     /**
      * Projection Method
      * getExtent is a setter to access at the extent of the view
-     * @returns {Array|*}
+     * @returns {Array|*} is an array of the extent of the projection
      */
     this.getExtent = function (){
         return this.extentUser;
@@ -37,9 +37,9 @@ var Projection = function() {
     /**
      * Projection Method
      * defineProjection set all value and define projection and extent of the map
-     * @param code
-     * @param proj4def
-     * @param bbox
+     * @param code is the code of the projection
+     * @param proj4def is the definition of the projection
+     * @param bbox is the extent of the projection
      */
     this.defineProjection = function(code, proj4def, bbox) {
         var newProjCode = 'EPSG:' + code;
@@ -53,9 +53,9 @@ var Projection = function() {
     /**
      * Projection Method
      * getProjectionInformation return all value of projection
-     * @param code
-     * @param proj4def
-     * @param bbox
+     * @param code is the code of the projection
+     * @param proj4def is the definition of the projection
+     * @param bbox is the extent of the projection
      */
     this.getProjectionInformation = function(code, proj4def, bbox) {
         var newProjCode = 'EPSG:' + code;
@@ -68,8 +68,8 @@ var Projection = function() {
     /**
      * Projection Method
      * getEpsgData load the EPSG.json and search the active projection to define the projection
-     * @param projValue
-     * @param view
+     * @param projValue is the code of the projection
+     * @param view is a marker to indicate is the projection is for the view or not
      */
     this.getEpsgData = function(projValue, view) {
         projValue = projValue.split(':')[1];

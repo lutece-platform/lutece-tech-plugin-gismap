@@ -4,7 +4,18 @@
  */
 var InterfaceElements = function(parameters) {
     'use strict';
+    /**
+     * ListElements is a list of all graphics components of the map
+     * @type {Array}
+     */
     this.ListElements = [];
+    /**
+     * InterfaceElement Method
+     * This function initialise all graphics components of the map
+     * @param parameters is an array of all parameters of the map
+     * @param opt_options
+     * @constructor
+     */
     app.CmdControl = function(parameters, opt_options) {
         var options = opt_options || {};
         var element = document.createElement('div');
@@ -137,6 +148,11 @@ var InterfaceElements = function(parameters) {
     };
     ol.inherits(app.CmdControl, ol.control.Control);
 
+    /**
+     * InterfaceElement Method
+     * getElements is the getter to access at the list of graphics components
+     * @returns {Array} the list of graphics components
+     */
     this.getElements = function(){
         this.ListElements.push(new app.CmdControl(parameters));
         return this.ListElements;

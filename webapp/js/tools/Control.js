@@ -14,11 +14,10 @@ function Control() {
     /**
      * Control METHOD
      * initControls initialize all control of the map and add it in ListControl
-     *
-     * @param activeControls
-     * @param extentDefine
-     * @param projectionChanged
-     * @param specificExtent
+     * @param activeControls is an array of parameters to defin controls
+     * @param projectionChanged is a marker to indicate if the projection change
+     * @param specificExtent is a marker to indicate if the extent change
+     * @param extentDefine is the new array of specific extent
      */
     this.initControls = function(activeControls, projectionChanged, specificExtent, extentDefine){
         for(var ctrl = 0; ctrl < activeControls.length; ctrl++){
@@ -53,6 +52,11 @@ function Control() {
         }
     };
 
+    /**
+     * Control METHOD
+     * getLayerSwitcher is a getter to access at LayerSwitcher
+     * @returns {ol.control.LayerSwitcher} the LayerSwitcher control
+     */
     this.getLayerSwitcher = function(){
         return new ol.control.LayerSwitcher();
     };
@@ -60,7 +64,7 @@ function Control() {
     /**
      * Control METHOD
      * getControls is a getter to access at ListControl
-     * @returns {Array}
+     * @returns {Array} is an array of all controls
      */
     this.getControls = function(){
         return this.ListControl;

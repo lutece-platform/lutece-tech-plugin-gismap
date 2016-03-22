@@ -30,7 +30,7 @@ function Feature() {
     /**
      * Feature Method
      * getListFeatures return an array of layer Source
-     * @returns {Array}
+     * @returns {Array} List of all features
      */
     this.getListFeatures = function(){
         return this.ListFeatures;
@@ -39,11 +39,10 @@ function Feature() {
     /**
      * Feature Method
      * addLayerFeature create the layer with decode data with specific format
-     * @param data
-     * @param dataFormat
+     * @param data contains an array with the name, the projection and data
+     * @param dataFormat define the type of data
      */
     this.addLayerFeature = function(data, dataFormat){
-        var dataOrder = data[0];
         var dataName = data[1];
         var dataProj = data[2];
         var dataUrl = data[3];
@@ -94,14 +93,13 @@ function Feature() {
     /**
      * Feature Method
      * createWFSLayer initialize the layer of the map to specific WFS data
-     * @param order
-     * @param layerName
-     * @param server
-     * @param url
-     * @param dataProj
-     * @param query
+     * @param layerName is the name of the layer
+     * @param server is the type of the server
+     * @param url is the url to access at the service
+     * @param dataProj is the projection of the data
+     * @param query is the initial query to apply on the layer
      */
-    this.createWFSLayer = function(order, layerName,server, url, dataProj, query) {
+    this.createWFSLayer = function(layerName,server, url, dataProj, query) {
         if (server === 'AGS') {
             if(query === '') {
                 var vectorSource = new ol.source.Vector({
@@ -218,12 +216,11 @@ function Feature() {
      /**
      * LayerRaster Method
      * createWMSQueryLayer initialize the layer of the map to specific WMS data
-     * @param order
-     * @param layerName
-     * @param server
-     * @param url
+     * @param layerName is the name of the layer
+     * @param server is the type of the server
+     * @param url is the url to access at the service
      */
-    this.createWMSQueryLayer = function(order, layerName, server, url){
+    this.createWMSQueryLayer = function(layerName, server, url){
         if(server === 'AGS-IMS'){
             this.ListFeatures[layerName] = new ol.layer.Tile({
                 title: layerName,
@@ -256,8 +253,8 @@ function Feature() {
     /**
      * Feature Method
      * getFeatureByName is the getter to access at specific feature with this name
-     * @param name
-     * @returns {*}
+     * @param name is the name of the layer to search
+     * @returns {ol.layer.Layer} is the layer of the name
      */
     this.getFeatureByName = function(name){
         return this.ListFeatures[name];

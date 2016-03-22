@@ -128,16 +128,8 @@ function Editor(layerEdit, fieldName) {
     });
     /**
      * Editor Method
-     * getLevel is a getter to know the editor interaction use
-     * @returns {boolean}
-     */
-    this.getLevel = function(){
-        return true;
-    };
-    /**
-     * Editor Method
      * getEditProj is a getter to know the projection of editor data
-     * @returns {String}
+     * @returns {String} the edit projection code
      */
     this.getEditProj = function(){
         return this.editProj;
@@ -145,7 +137,7 @@ function Editor(layerEdit, fieldName) {
     /**
      * Editor Method
      * getSelectInteract is a getter to access at select editor interaction
-     * @returns {*}
+     * @returns {ol.interaction.Select} the select interaction
      */
     this.getSelectEditInteract = function () {
         return this.selectInteract;
@@ -153,7 +145,7 @@ function Editor(layerEdit, fieldName) {
     /**
      * Editor Method
      * getSelectedEditFeatures is a getter to access at all features selected
-     * @returns {*}
+     * @returns {*} all selected features of edit layer
      */
     this.getSelectedEditFeatures = function () {
         return this.selectInteract.getFeatures();
@@ -161,15 +153,15 @@ function Editor(layerEdit, fieldName) {
     /**
      * Editor Method
      * getModifyInteract is a getter to access at modify editor interaction
-     * @returns {*}
+     * @returns {ol.interaction.Modify} the modify interaction
      */
     this.getModifyEditInteract = function () {
         return this.modifyInteract;
     };
     /**
      * Editor Method
-     * getDrawInteract is a getter to access at draw editor interaction
-     * @returns {*}
+     * getDrawEditInteraction is a getter to access at draw editor interaction
+     * @returns {ol.interaction.Draw} the draw interaction
      */
     this.getDrawEditInteraction = function () {
         return this.drawEditInteract;
@@ -177,15 +169,15 @@ function Editor(layerEdit, fieldName) {
     /**
      * Editor Method
      * getSuggestPoiEdit is a getter to access at suggest poi editor interaction
-     * @returns {*}
+     * @returns {*} the marker to indicate the suggestPoiEdit activation
      */
     this.getSuggestPoiEdit = function(){
         return this.suggestPoiEdit;
     };
     /**
      * Editor Method
-     * getDrawInteract is a getter to access at draw editor interaction
-     * @returns {*}
+     * getEditLayer is a getter to access at draw editor interaction
+     * @returns {ol.layer.Layer} the edit layer
      */
     this.getEditLayer = function () {
         return this.editLayer;
@@ -194,6 +186,8 @@ function Editor(layerEdit, fieldName) {
     /**
      * Editor Method
      * initEditInteraction initialize the List of interacts to edit data
+     * @param mode is the marker to indicate the edit mode
+     * @returns {Map}a map with all editor interaction
      */
     this.initEditInteraction = function (mode) {
         if(this.editAvailable !== true) {
@@ -218,8 +212,8 @@ function Editor(layerEdit, fieldName) {
     /**
      * Editor METHOD
      * setActiveInteraction enable or disable editor interaction
-     * @param value
-     * @param active
+     * @param value is the type of editor mode
+     * @param active is the marker to indicate activation
      */
     this.setActiveInteraction = function (value, active) {
         if (value === null) {
@@ -236,9 +230,8 @@ function Editor(layerEdit, fieldName) {
 
     /**
      * Editor METHOD
-     * getDrawTools is a getter to access at the draw interaction
-     * @param value
-     * @returns {Array}
+     * getEditorTools is a getter to access at the draw interaction
+     * @returns {Map} a map with all editor interaction
      */
     this.getEditorTools = function () {
         var listEditor = [];
@@ -254,7 +247,7 @@ function Editor(layerEdit, fieldName) {
     /**
      * Editor METHOD
      * writeGeoJSON send all information at Lutece to insert data in the database
-     * @returns {*[]}
+     * @param feature is the new feature
      */
      this.writeGeoJSON = function(feature) {
          this.fieldData.value = this.getTransformGeoJSONToString(this.geoJSONFormat.writeFeature(feature, {
@@ -274,7 +267,7 @@ function Editor(layerEdit, fieldName) {
     /**
      * Editor METHOD
      * managePoint manage all information about the centroid of the current geometry
-     * @param feature
+     * @param feature is the new feature
      */
     this.managePoint = function(feature){
         /*Lambert 93*/
@@ -292,8 +285,8 @@ function Editor(layerEdit, fieldName) {
     /**
      * Editor METHOD
      * getCentroid calculate the centroid of the current geometry
-     * @param geom
-     * @returns {*}
+     * @param geom is the origin geometry
+     * @returns {ol.geom.Point}
      */
     function getCentroid(geom) {
         return new ol.geom.Point(ol.extent.getCenter(geom.getExtent()));
@@ -302,8 +295,8 @@ function Editor(layerEdit, fieldName) {
     /**
      * Editor METHOD
      * getTransformGeoJSONToString to formate the geoJson for Lutece
-     * @param st
-     * @returns {*}
+     * @param st is the initial string to formate
+     * @returns {string} is the formated string
      */
     this.getTransformGeoJSONToString = function(st){
         var l = st.length;
@@ -319,8 +312,8 @@ function Editor(layerEdit, fieldName) {
      /**
      * Editor METHOD
      * getTransformStringToGeoJSON to formate the geoJson for OpenLayers
-     * @param st
-     * @returns {*}
+     * @param st is the initial string to formate
+     * @returns {string} is the formated string
      */
     this.getTransformStringToGeoJSON = function(st){
         var l = st.length;
@@ -372,7 +365,7 @@ function Editor(layerEdit, fieldName) {
      /**
      * Editor METHOD
      * validateEdition is the manager to run the method to actualise database
-     * @returns {*}
+     * @param point is the geometry of the new feature
      */
     this.addPoint = function(point) {
         if(editType === 'Point'){
@@ -400,6 +393,7 @@ function Editor(layerEdit, fieldName) {
     /**
      * Editor METHOD
      * deleteFeature delete the data of the current edition
+     * @param value is a marker to indicate the process
      */
     this.deleteFeature = function (value) {
         this.getEditLayer().getSource().clear();

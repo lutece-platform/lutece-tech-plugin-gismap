@@ -4,14 +4,26 @@
  */
 var Manager = function() {
     'use strict';
+    /**
+     * projectedChanged is a marker to indicate if the default projection is apply or not
+     * @type {boolean}
+     */
     this.projectionChanged = false;
+    /**
+     * specificExtent is a marker to indicate if a specific extent is define or not
+     * @type {boolean}
+     */
     this.specificExtent = false;
+    /**
+     * extentDefine is an array to stock the specific extent
+     * @type {Array}
+     */
     this.extentDefine = [];
 
     /**
      * Manager Method
      * getSpecificExtent is a getter to check if a specific extent is define
-     * @returns {Array}
+     * @returns {Array} is an array with the specific extent
      */
     var getSpecificExtent = function(){
         return this.extentDefine;
@@ -20,9 +32,9 @@ var Manager = function() {
     /**
      * Manager Method
      * readAndManageParameters is a function to read the properties map
-     * @param startParameters
-     * @param fieldParameters
-     * @returns {Array}
+     * @param startParameters is the array of parameters of properties file
+     * @param fieldParameters is the array of parameters
+     * @returns {Array} an array of parameters analysed
      */
     var readAndManageParameters = function (startParameters, fieldParameters) {
         var parameters = [];
@@ -33,6 +45,7 @@ var Manager = function() {
         var wmsLayer = [];
         var wfs = [];
         var wmts = [];
+        var geoJson = [];
         var popup = [];
         if (startParameters['Projection'] !== '') {
             parameters['Projection'] = startParameters['Projection'];
@@ -118,6 +131,19 @@ var Manager = function() {
             if (startParameters['WFS'+n] !== '' && startParameters['WFS'+n] !== undefined ) {
                 wfs.push(startParameters['WFS'+n]);
             }
+            if (startParameters['GeoJSON'+n] !== '' && startParameters['GeoJSON'+n] !== undefined ) {
+                var tempGeoJson = startParameters['GeoJSON'+n];
+                for(var j = 0; j < 10; j++){
+                    if(fieldParameters['UrlGeoJSON'+j] !== '' && fieldParameters['UrlGeoJSON'+j]!== undefined ) {
+                        if (startParameters['GeoJSON' + n][1] === fieldParameters['UrlGeoJSON' + j][0]) {
+                            tempGeoJson.push(fieldParameters['UrlGeoJSON' + j][1]);
+                        }
+                    }
+                }
+                if(tempGeoJson.length === 4) {
+                    geoJson.push(tempGeoJson);
+                }
+            }
             if (startParameters['Popup'+n] !== '' && startParameters['Popup'+n] !== undefined ) {
                 popup.push(startParameters['Popup'+n]);
             }
@@ -127,23 +153,22 @@ var Manager = function() {
         parameters['WMS-Layer'] = wmsLayer;
         parameters['WFS'] = wfs;
         parameters['WMTS'] = wmts;
+        parameters['GeoJSON'] = geoJson;
         parameters['Popup'] = popup;
         parameters['Controles'] = controls;
         parameters['Interacts'] = interacts;
         parameters['WKT'] = startParameters['WKT'];
         parameters['LayerEdit'] = startParameters['LayerEdit'];
-        parameters['GeoJSON'] = startParameters['GeoJSON'];
-        parameters['GeoJSON'].push(fieldParameters['UrlGeoJSON']);
+        parameters['LayerControl'] = startParameters['LayerControl'];
         return parameters;
     };
 
     /**
      * Manager Method
      * readAndInitGeneralParams initiate generals properties of the map
-     * @param globalParameters
-     * @param parameters
+     * @param parameters is the array of general parameters
      */
-    var readAndInitGeneralParams = function (globalParameters, parameters) {
+    var readAndInitGeneralParams = function (parameters) {
         if (parameters['Projection'] !== '' && parameters['Projection'] !== undefined) {
             projection.getEpsgData(parameters['Projection'], true);
             if (parameters['Projection'] !== 'EPSG:3857') {
@@ -168,10 +193,9 @@ var Manager = function() {
     /**
      * Manager Method
      * readAndInitDataParams initiate data properties of the map
-     * @param globalParameters
-     * @param parameters
+     * @param parameters is the array of data parameters
      */
-    var readAndInitDataParams = function (globalParameters, parameters) {
+    var readAndInitDataParams = function (parameters) {
         if(parameters['BackGround'] !== '' && parameters['BackGround'] !== undefined){
             for(var background = 0; background < parameters['BackGround'].length; background++){
                 layer.addLayerRaster(parameters['BackGround'][background]);
@@ -197,11 +221,13 @@ var Manager = function() {
                 layer.addWMTSLayerRaster(parameters['WMTS'][wmts]);
             }
         }
+        if(parameters['GeoJSON'] !== '' && parameters['GeoJSON'] !== undefined){
+            for(var geoJson = 0; geoJson < parameters['GeoJSON'].length; geoJson++){
+                layer.addLayerVector(parameters['GeoJSON'][geoJson], 'GeoJSON');
+            }
+        }
         if(parameters['WKT'] !== '' && parameters['WKT'] !== undefined){
             layer.addLayerVector(parameters['WKT'], 'WKT');
-        }
-        if(parameters['GeoJSON'] !== '' && parameters['GeoJSON'] !== undefined){
-            layer.addLayerVector(parameters['GeoJSON'], 'GeoJSON');
         }
         layer.setDefaultBackGround(parameters['DefaultBackGround']);
     };
@@ -209,10 +235,9 @@ var Manager = function() {
     /**
      * Manager Method
      * readAndInitActionParams initiate actions properties of the map
-     * @param globalParameters
-     * @param parameters
+     * @param parameters is the array of actions parameters
      */
-    var readAndInitActionParams = function (globalParameters, parameters) {
+    var readAndInitActionParams = function (parameters) {
         if(parameters['Controles'] !== '' && parameters['Controles'] !== undefined){
             control.initControls(parameters['Controles'], this.projectionChanged, this.specificExtent, this.extentDefine);
         }

@@ -75,8 +75,8 @@ function Measure() {
     /**
      * Measure Private Method
      * formatArea define the format to area measure
-     * @param polygon
-     * @param map
+     * @param polygon is the measure geometry
+     * @param map is the globalMap
      * @returns {*}
      */
     function formatArea(polygon, map) {
@@ -101,8 +101,8 @@ function Measure() {
     /**
      * Measure Private Method
      * formatLength define the format to linear measure
-     * @param line
-     * @param map
+     * @param line is the measure geometry
+     * @param map is the globalMap
      * @returns {*}
      */
     function formatLength(line, map) {
@@ -131,7 +131,7 @@ function Measure() {
     /**
      * Measure Private Method
      * createMeasureTooltip instanciate a new tooltip for each measure
-     * @param map
+     * @param map is the globalMap
      */
     this.createMeasureTooltip = function(map) {
         if (measureTooltipElement) {
@@ -150,7 +150,7 @@ function Measure() {
     /**
      * Measure Public Method
      * getMeasureLayer is the getter to access at the measure layer
-     * @returns {ol.layer.Vector}
+     * @returns {ol.layer.Vector} the measure layer
      */
     this.getMeasureLayer = function(){
         return this.measureLayer;
@@ -159,7 +159,8 @@ function Measure() {
     /**
      * Measure Public Method
      * getMeasureInteracts is an accessor to activate the measure tools and draw a feature on the map
-     * @param map
+     * @param map is the globalMap
+     * @param value is the type of measure
      * @returns {ol.interaction.Draw}
      */
     this.getMeasureInteracts = function(map, value) {
@@ -222,8 +223,8 @@ function Measure() {
     /**
      * Measure Public Method
      * setActiveInteraction enable or disable measure interaction
-     * @param value
-     * @param active
+     * @param value is the type of measure
+     * @param active is the marker to activate data
      */
     this.setActiveInteraction = function(value, active){
         if (value === null){
@@ -238,7 +239,8 @@ function Measure() {
     /**
      * Measure Public Method
      * initMeasureTools initialize all measure interaction on the map
-     * @returns {Map}
+     * @param map is the globalMap
+     * @returns {Map} the list of measure interaction
      */
     this.initMeasureTools = function(map){
         this.listMeasureInteraction.set('Length',this.getMeasureInteracts(map, 'Length'));
@@ -250,8 +252,8 @@ function Measure() {
     /**
      * Measure Public Method
      * getMeasureTools is a getter to access at the measure interaction
-     * @param value
-     * @returns {*}
+     * @param value is the type of geometry measure
+     * @returns {Array} the list of measure interaction
      */
     this.getMeasureTools = function(value){
         return this.listMeasureInteraction.get(value);
@@ -260,7 +262,7 @@ function Measure() {
     /**
      * Measure Public Method
      * cleanMeasureLayer is a function to delete all feature and overlay of the measure Layer
-     * @param map
+     * @param map is the globalMap
      */
     this.cleanMeasureLayer = function(map){
         for(var measureTooltipElem = 0; measureTooltipElem < this.measureTooltipArray.length; measureTooltipElem++){

@@ -28,8 +28,8 @@ var Popup = function(parameters) {
     /**
      * Popup Method
      * initOverlayPopupElements initialise the reference of the data popup
-     * @param parameters
-     * @returns {Array}
+     * @param parameters is the array of parameters to define popups informations
+     * @returns {Array} is the array with key value of all popups
      */
     function initOverlayPopupElements(parameters){
         var queryDataInit = [];
@@ -42,7 +42,7 @@ var Popup = function(parameters) {
     /**
      * Popup Method
      * displaySimplePopup display the simple popup with all this data
-     * @param id
+     * @param id is the identifiant of the selected elements
      */
     this.displaySimplePopup = function(id){
         overlay.hide();
@@ -55,7 +55,11 @@ var Popup = function(parameters) {
         for (var j = 0; j < keys.length; j++) {
             for (var k = 0; k < keysQuery.length; k++) {
                 if (keysQuery[k] === keys[j]) {
-                    data = data + '<p>' + keysQuery[k] + " : " + feature.get(keys[j]) + '</p>';
+                    if(keysQuery[k] === 'link'){
+                        data = data + '<p>Lien : <a href="'+ feature.get(keys[j]) +'">La Fiche</a></p>';
+                    }else {
+                        data = data + '<p>' + keysQuery[k] + " : " + feature.get(keys[j]) + '</p>';
+                    }
                 }
             }
         }
@@ -65,12 +69,12 @@ var Popup = function(parameters) {
     /**
      * Popup Method
      * definePopup create the popup in function of the data select
-     * @param evt
-     * @param layerInfo
-     * @param features
-     * @param wmsLayers
-     * @param count
-     * @param id
+     * @param evt is the event catch by the listener
+     * @param layerInfo is an array to contains all names of layers catch
+     * @param features is an array to contains all features catch
+     * @param wmsLayers is an array to contains all wms layers catch
+     * @param count is the count of the features
+     * @param id is the max of element into the queries array
      */
     this.definePopup = function(evt, layerInfo, features, wmsLayers, count, id){
         var data = '';
@@ -81,7 +85,7 @@ var Popup = function(parameters) {
             }else{
                 for(var i = 0; i < count; i++){
                     queries[id] = [evt.coordinate, layerInfo, features[layerInfo+i]];
-                    data = data + '<p><a href="#" onclick="popup.displaySimplePopup('+id+')">' + layerInfo + " : " +
+                    data = data + '<p>' + layerInfo + ' : <a href="#" onclick="popup.displaySimplePopup('+id+')">' +
                         features[layerInfo+i].get(queryData[layerInfo][1]) + '</a></p>';
                     id++;
                 }
@@ -91,7 +95,7 @@ var Popup = function(parameters) {
             for (var l = 0; l < layerInfo.length; l++) {
                 if(wmsLayers[layerInfo[l]] !== null && wmsLayers[layerInfo[l]] !== undefined){
                     queries[id] = [evt.coordinate, layerInfo[l], wmsLayers[layerInfo[l]]];
-                    data = data + '<p><a href="#" onclick="popup.displaySimplePopup('+id+')">' + layerInfo[l] + " : " +
+                    data = data + '<p>' + layerInfo[l] + ' : <a href="#" onclick="popup.displaySimplePopup('+id+')">' +
                         wmsLayers[layerInfo[l]].get(queryData[layerInfo[l]][1]) + '</a></p>';
                     id++;
                 }else{
@@ -99,7 +103,7 @@ var Popup = function(parameters) {
                         if(features[layerInfo[l]+m] !== null && features[layerInfo[l]+m] !== undefined){
                             var queryFeature = features[layerInfo[l]+m];
                             queries[id] = [evt.coordinate, layerInfo[l], queryFeature];
-                            data = data + '<p><a href="#" onclick="popup.displaySimplePopup('+id+')">' + layerInfo[l] + " : " +
+                            data = data + '<p>' + layerInfo[l] + ' : <a href="#" onclick="popup.displaySimplePopup('+id+')">' +
                                 queryFeature.get(queryData[layerInfo[l]][1]) + '</a></p>';
                             id++;
                         }
@@ -113,7 +117,7 @@ var Popup = function(parameters) {
     /**
      * Popup Method$
      * initiatePopup catch the data and analyze it to create the popup
-     * @param evt
+     * @param evt is the event catch by the listener
      */
     this.initiatePopup = function(evt){
         overlay.hide();
@@ -158,10 +162,11 @@ var Popup = function(parameters) {
     /**
      * Popup Method
      * managePopup add or remove the overlay of the map and the listener
-     * @param value
+     * @param value is a marker to enable or disable the popup overlay and his listener
      */
     this.managePopup = function(value){
         if(value === 'off'){
+            overlay.hide();
             GlobalMap.removeOverlay(overlay);
             GlobalMap.unByKey(popupKey);
         }else if(value === 'on'){

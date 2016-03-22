@@ -14,7 +14,7 @@ function SpecificInteracts(){
     /**
      * SpecificInteracts Method
      * getSelectInteraction is a getter to access at the Selector
-     * @returns {ol.interaction.Select}
+     * @returns {ol.interaction.Select} the select interaction
      */
     this.getSelectInteraction = function(){
         return this.selectInteract;
@@ -23,7 +23,7 @@ function SpecificInteracts(){
     /**
      * SpecificInteracts Method
      * getSelectedFeatures is a getter to access at all features selected
-     * @returns {*}
+     * @returns {*} an array of all selected features
      */
     this.getSelectedFeatures = function(){
         return this.selectInteract.getFeatures();
@@ -32,7 +32,7 @@ function SpecificInteracts(){
     /**
      * SpecificInteracts Method
      * getSpecificSelectedFeatures is a getter to send all features selected to another plugin
-     * @returns {*}
+     * @returns {*} an array of the Ids
      */
     this.getSpecificSelectedFeatures = function(){
         var selectedElementId = [];
@@ -51,7 +51,7 @@ function SpecificInteracts(){
     /**
      * SpecificInteracts Method
      * setSelectedFeatures is a setter to select features by another plugin
-     * @param idFeature
+     * @param idFeature is an array of the Ids
      */
     this.setSelectedFeatures = function(idFeatures){
         var features = this.selectInteract.getFeatures();
@@ -66,8 +66,8 @@ function SpecificInteracts(){
     /**
      * SpecificInteracts Method
      * getSelectedLayer is a getter to access at the layer to contains selected features
-     * @param feature
-     * @returns {*}
+     * @param feature is the selected feature
+     * @returns {*} the layer
      */
     this.getSelectedLayer = function(feature){
         return this.selectInteract.getLayer(feature);

@@ -57,7 +57,7 @@ function DrawTools (){
     /**
      * DrawTools METHOD
      * getModifyInteract is a getter to access at modify interaction to draw elements
-     * @returns {ol.interaction.Modify}
+     * @returns {ol.interaction.Modify} the modify draw interaction
      */
     this.getModifyDrawInteract= function (){
          return this.modifyInteract;
@@ -66,7 +66,7 @@ function DrawTools (){
     /**
      * DrawTools METHOD
      * getDrawLayer is an accessor to get the draw layer
-     * @returns {ol.layer.Vector}
+     * @returns {ol.layer.Vector} the draw layer
      */
     this.getDrawLayer = function(){
         return this.drawLayer;
@@ -75,7 +75,8 @@ function DrawTools (){
     /**
      * DrawTools METHOD
      * getDrawInteraction is an accessor to activate a specific draw interaction on the map
-     * @returns {ol.interaction.Draw}
+     * @param value is the type of geometry drawn
+     * @returns {ol.interaction.Draw} the draw interaction
      */
     this.getDrawInteraction = function(value) {
         var geometryFunction, maxPoints;
@@ -109,8 +110,8 @@ function DrawTools (){
     /**
      * DrawTools METHOD
      * setActiveInteraction enable or disable draw interaction
-     * @param value
-     * @param active
+     * @param value is the type of geometry drawn
+     * @param active is the marker to activate data
      */
     this.setActiveInteraction = function(value, active){
         if (value === null){
@@ -126,7 +127,7 @@ function DrawTools (){
     /**
      * DrawTools METHOD
      * initDrawTools initialize all draw interaction on the map
-     * @returns {Map}
+     * @returns {Map} the list of draw interaction
      */
     this.initDrawTools = function(){
         this.listDrawInteraction.set('Modify',this.getModifyDrawInteract());
@@ -140,8 +141,8 @@ function DrawTools (){
     /**
      * DrawTools METHOD
      * getDrawTools is a getter to access at the draw interaction
-     * @param value
-     * @returns {Array}
+     * @param value is the type of geometry drawn
+     * @returns {Array} the list of draw interaction
      */
     this.getDrawTools = function(value){
         var listDraw = [];
