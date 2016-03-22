@@ -69,8 +69,10 @@ var Projection = function() {
      * Projection Method
      * getEpsgData load the EPSG.json and search the active projection to define the projection
      * @param projValue
+     * @param view
      */
     this.getEpsgData = function(projValue, view) {
+        projValue = projValue.split(':')[1];
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open("GET", 'js/lib/EPSG.json', false);
         xmlHttp.send(null);

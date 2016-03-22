@@ -48,9 +48,11 @@ function GeoPoint(currentMap) {
     this.geoloc.on('change:position', function() {
         var coordinates = this.getPosition();
         geolocFeature.setGeometry(coordinates ? new ol.geom.Point(coordinates) : null);
+        view.getView().fit(geolocFeature.getGeometry(), currentMap.getSize(),{
+            maxZoom: view.getZoomSelect()
+        });
         currentMap.render();
     });
-
     /**
      * accuracyFeature contains all geoloc features about accuracy
      * @type {Kw.http://www.opengis.net/wfs.Feature}
@@ -65,7 +67,7 @@ function GeoPoint(currentMap) {
     });
 
     /**
-     * geolocLayer is the
+     * geolocLayer is the layer of the point of the geolocation
      * @type {ol.layer.Vector}
      */
     this.geolocLayer =  new ol.layer.Vector({

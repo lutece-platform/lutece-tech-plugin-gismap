@@ -6,12 +6,12 @@ var Manager = function() {
     'use strict';
     this.projectionChanged = false;
     this.specificExtent = false;
-    this.extentDefine = false;
+    this.extentDefine = [];
 
     /**
      * Manager Method
      * getSpecificExtent is a getter to check if a specific extent is define
-     * @returns {boolean}
+     * @returns {Array}
      */
     var getSpecificExtent = function(){
         return this.extentDefine;
@@ -33,6 +33,7 @@ var Manager = function() {
         var wmsLayer = [];
         var wfs = [];
         var wmts = [];
+        var popup = [];
         if (startParameters['Projection'] !== '') {
             parameters['Projection'] = startParameters['Projection'];
         }
@@ -117,19 +118,22 @@ var Manager = function() {
             if (startParameters['WFS'+n] !== '' && startParameters['WFS'+n] !== undefined ) {
                 wfs.push(startParameters['WFS'+n]);
             }
+            if (startParameters['Popup'+n] !== '' && startParameters['Popup'+n] !== undefined ) {
+                popup.push(startParameters['Popup'+n]);
+            }
         }
         parameters['BackGround'] = background;
         parameters['WMS-Base'] = wmsBase;
         parameters['WMS-Layer'] = wmsLayer;
         parameters['WFS'] = wfs;
         parameters['WMTS'] = wmts;
+        parameters['Popup'] = popup;
         parameters['Controles'] = controls;
         parameters['Interacts'] = interacts;
         parameters['WKT'] = startParameters['WKT'];
         parameters['LayerEdit'] = startParameters['LayerEdit'];
         parameters['GeoJSON'] = startParameters['GeoJSON'];
         parameters['GeoJSON'].push(fieldParameters['UrlGeoJSON']);
-        parameters['Popup'] = startParameters['Popup'];
         return parameters;
     };
 
@@ -142,7 +146,7 @@ var Manager = function() {
     var readAndInitGeneralParams = function (globalParameters, parameters) {
         if (parameters['Projection'] !== '' && parameters['Projection'] !== undefined) {
             projection.getEpsgData(parameters['Projection'], true);
-            if (parameters['Projection'] !== '3857') {
+            if (parameters['Projection'] !== 'EPSG:3857') {
                 this.projectionChanged = true;
             }
         }
@@ -150,7 +154,7 @@ var Manager = function() {
             this.extentDefine = parameters['Extent'];
             this.specificExtent = true;
         }else{
-            this.extentDefine = false;
+            this.extentDefine = [];
             this.specificExtent = false;
         }
         if (parameters['ZoomSelect'] !== '' && parameters['ZoomSelect'] !== undefined) {
@@ -210,7 +214,7 @@ var Manager = function() {
      */
     var readAndInitActionParams = function (globalParameters, parameters) {
         if(parameters['Controles'] !== '' && parameters['Controles'] !== undefined){
-            control.initControls(parameters['Controles'], this.extentDefine, this.projectionChanged, this.specificExtent);
+            control.initControls(parameters['Controles'], this.projectionChanged, this.specificExtent, this.extentDefine);
         }
         if(parameters['Interacts'] !== '' && parameters['Interacts'] !== undefined) {
             interact.initInteractions(parameters['Interacts']);

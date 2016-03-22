@@ -54,7 +54,7 @@ var GisMap = function (idMapInit) {
         dataInitialize(globalParameters,parameters);
         controlInitialize(globalParameters,parameters, fieldParameters);
         mapInitialize(parameters);
-        if(manager.getSpecificExtent() !== false){
+        if(manager.getSpecificExtent() !== []){
             view.getView().fit(manager.extentDefine, GlobalMap.getSize());
         }else {
             view.getView().fit(projection.getExtent(), GlobalMap.getSize());
@@ -138,12 +138,10 @@ var GisMap = function (idMapInit) {
                 printer = new Print();
             }
         }
-        filter = new Filter();
         if(parameters['Popup'] !== '' && parameters['Popup'] !== undefined){
-            popup = new Popup();
-            popup.initOverlayPopupElements(parameters['Popup']);
-            GlobalMap.addOverlay(popup.getPopup());
+            popup = new Popup(parameters['Popup']);
         }
+        filter = new Filter();
     }
 
     /**

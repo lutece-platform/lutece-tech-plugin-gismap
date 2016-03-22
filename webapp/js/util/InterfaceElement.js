@@ -1,4 +1,4 @@
-/*global geoPoint, interact, zoom, suggestPoiLocator, ol, app*/
+/*global geoPoint, interact, zoom, suggestPoiLocator, popup, ol, app*/
 /**
  * InterfaceElements Class manage all elements included in the map
  */
@@ -119,6 +119,16 @@ var InterfaceElements = function(parameters) {
                     rulerActive = true;
                 }
             }
+        }
+        if (parameters['Popup'] !== '' && parameters['Popup'] !== undefined) {
+            var buttonInfo = document.createElement('button');
+            buttonInfo.setAttribute('type','button');
+            buttonInfo.innerHTML = 'I';
+            var handlePopup = function (e) {
+                popup.managePopup('on');
+            };
+            buttonInfo.addEventListener('click', handlePopup, false);
+            element.appendChild(buttonInfo);
         }
         ol.control.Control.call(this, {
             element: element,

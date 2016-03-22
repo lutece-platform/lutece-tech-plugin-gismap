@@ -1,4 +1,4 @@
-/*global ol, drawTools, measureTools, specifInteracts, Editor, GlobalMap, alert*/
+/*global ol, drawTools, measureTools, specifInteracts, Editor, GlobalMap, popup, alert*/
 
 /**
  * Interaction Class manage interactions on the map
@@ -11,7 +11,7 @@ function Interaction(layerEdit, fieldParameters){
      * editorTools is the manager of edition tools
      * @type {Editor}
      */
-    if(fieldParameters['TypeEdit'] !== '' && fieldParameters['TypeEdit'] !== undefined && layerEdit !== '' && layerEdit.length === 1) {
+    if(fieldParameters['TypeEdit'] !== '' && fieldParameters['TypeEdit'] !== undefined && layerEdit !== '' && layerEdit !== undefined) {
         editorTools = new Editor(layerEdit, fieldParameters);
     }
     /**
@@ -30,8 +30,9 @@ function Interaction(layerEdit, fieldParameters){
      */
     this.currentInteract = "None";
 
-    /**
-     *
+     /**
+     * Interaction Private METHOD
+     * manageActiveInteraction disable all interactions of the map
      */
     this.manageActiveInteraction = function(){
         if(this.currentInteract === 'Select'){
@@ -62,6 +63,8 @@ function Interaction(layerEdit, fieldParameters){
      /**
      * Interaction Private METHOD
      * activeMeasureTool enable or disable draw interaction
+     * @param value
+     * @param enable
      */
     this.activeDrawTool = function(value, enable){
          drawTools.setActiveInteraction(value, enable);
@@ -70,6 +73,8 @@ function Interaction(layerEdit, fieldParameters){
      /**
      * Interaction Private METHOD
      * activeMeasureTool enable or disable measure interaction
+     * @param value
+     * @param enable
      */
     this.activeMeasureTool = function(value, enable){
          measureTools.setActiveInteraction(value, enable);
@@ -78,6 +83,8 @@ function Interaction(layerEdit, fieldParameters){
      /**
      * Interaction Private METHOD
      * activeEditorTool enable or disable editor interaction
+     * @param value
+     * @param enable
      */
     this.activeEditorTool = function(value, enable){
         if(enable === false) {
@@ -89,6 +96,7 @@ function Interaction(layerEdit, fieldParameters){
     /**
      * Interaction Public METHOD
      * initInteractions initialize interaction on the map
+     * @param activeInteracts
      */
     this.initInteractions = function(activeInteracts){
         var editorInteracts = null;
@@ -156,6 +164,7 @@ function Interaction(layerEdit, fieldParameters){
      * setDrawInteraction define the current draw interaction
      */
     this.setSelectInteraction = function(){
+        this.disablePopup();
         this.manageActiveInteraction();
         this.activeSpecificTool(true);
         this.currentInteract = "Select";
@@ -166,6 +175,7 @@ function Interaction(layerEdit, fieldParameters){
      * setDrawInteraction define the current draw interaction
      */
     this.setEditInteraction = function(){
+        this.disablePopup();
         this.manageActiveInteraction();
         editorTools.getEditorTools();
         this.activeEditorTool("Act", true);
@@ -177,6 +187,7 @@ function Interaction(layerEdit, fieldParameters){
      * setDrawInteraction define the current draw interaction
      */
     this.setSuggestEditInteraction = function(){
+        this.disablePopup();
         this.manageActiveInteraction();
         editorTools.getEditorTools();
         this.activeEditorTool("Suggest", true);
@@ -186,9 +197,10 @@ function Interaction(layerEdit, fieldParameters){
     /**
      * Interaction Public METHOD
      * setDrawInteraction define the current draw interaction
-     * @param map
+     * @param value
      */
     this.setDrawInteraction = function(value){
+        this.disablePopup();
         this.manageActiveInteraction();
         drawTools.getDrawTools(value);
         this.activeDrawTool(value, true);
@@ -198,13 +210,25 @@ function Interaction(layerEdit, fieldParameters){
     /**
      * Interaction Public METHOD
      * setMeasureInteraction define the current measure interaction
-     * @param map
+     * @param value
      */
     this.setMeasureInteraction = function(value){
+        this.disablePopup();
         this.manageActiveInteraction();
         measureTools.getMeasureTools(value);
         this.activeMeasureTool(value, true);
         this.currentInteract = "Measure";
+    };
+
+
+    /**
+     * Interaction Public METHOD
+     * setMeasureInteraction define the current measure interaction
+     */
+    this.disablePopup= function(){
+        if(popup !== null && popup !== undefined){
+            popup.managePopup('off');
+        }
     };
 
     /**
@@ -219,6 +243,7 @@ function Interaction(layerEdit, fieldParameters){
      /**
      * Interaction Method
      * deleteFeatures is a method to call an action to delete all selected elements
+     * @param value
      */
     this.deleteFeatures = function (value) {
         var selectFeatures = specifInteracts.getSelectedFeatures().getArray();

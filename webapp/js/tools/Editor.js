@@ -95,7 +95,7 @@ function Editor(layerEdit, fieldName) {
      * editProj is the projection of the data can be edit
      * @type {String}
      */
-    this.editProj = layerEdit[0];
+    this.editProj = layerEdit;
     /**
      * editType is the type of the data can be edit
      * @type {String}

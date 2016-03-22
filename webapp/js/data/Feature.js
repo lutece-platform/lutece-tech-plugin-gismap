@@ -98,9 +98,10 @@ function Feature() {
      * @param layerName
      * @param server
      * @param url
+     * @param dataProj
      * @param query
      */
-    this.createWFSLayer = function(order, layerName,server, url, query) {
+    this.createWFSLayer = function(order, layerName,server, url, dataProj, query) {
         if (server === 'AGS') {
             if(query === '') {
                 var vectorSource = new ol.source.Vector({
@@ -176,7 +177,7 @@ function Feature() {
                 });
             }
         }else if (server === 'GeoServer'){
-            var projectionData =  projection.getEpsgData(query, false)[0];
+            var projectionData =  projection.getEpsgData(dataProj, false)[0];
             var vectorLoader= function(extent) {
                 if(extent[0] === -Infinity){
                     extent = projection.getExtent();
