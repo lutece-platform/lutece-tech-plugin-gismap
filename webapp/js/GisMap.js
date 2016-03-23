@@ -114,7 +114,7 @@ var GisMap = function (idMapInit) {
         drawTools = new DrawTools();
         measureTools = new Measure();
         specifInteracts = new SpecificInteracts();
-        manager.readAndInitActionParams(globalParameters, parameters);
+        manager.readAndInitActionParams(parameters);
     }
 
     /**

@@ -70,16 +70,22 @@ function Layer() {
      * Layer Method
      * addWFSLayer add a layer map at the ListLayer to a WFS
      * @param wfs is an array with all parameters to define a wfs layer
+     * @param heatmap define the heatmap parameters
+     * @param thematic define the thematic parameters
+     * @param cluster define the cluster parameters
+     * @param ideation define the ideation parameters
      */
-    this.addWFSLayer = function(wfs){
+    this.addWFSLayer = function(wfs, heatmap, thematic, cluster, ideation){
         var wfsOrder = wfs[0];
         var wfsLayer = wfs[1];
         var wfsServer = wfs[2];
         var wfsUrl = wfs[3];
         var wfsProj = wfs[4];
         var wfsQuery = wfs[5];
-        featureLayer.createWFSLayer(wfsLayer, wfsServer, wfsUrl, wfsProj, wfsQuery);
-        this.ListLayers.push(wfsOrder+wfsLayer);
+        var wfsLayers = featureLayer.createWFSLayer(wfsLayer, wfsServer, wfsUrl, wfsProj, wfsQuery, heatmap, thematic, cluster, ideation);
+        for(var i = 0; i < wfsLayers.length; i++) {
+            this.ListLayers.push(wfsOrder + wfsLayers[i]);
+        }
     };
 
     /**
@@ -87,11 +93,17 @@ function Layer() {
      * addLayerVector add a layer map at the ListLayer
      * @param data is an array with all parameters to define a specific layer
      * @param format is the type of data
+     * @param heatmap define the heatmap parameters
+     * @param thematic define the thematic parameters
+     * @param cluster define the cluster parameters
+     * @param ideation define the ideation parameters
      */
-    this.addLayerVector = function(data, format){
-        var name = featureLayer.addLayerFeature(data, format);
-        this.ListLayers.push(data[0]+name);
-        this.selectableLayers.push(name);
+    this.addLayerVector = function(data, format, heatmap, thematic, cluster, ideation){
+        var names = featureLayer.addLayerFeature(data, format, heatmap, thematic, cluster, ideation);
+        for(var i = 0; i < names.length; i++) {
+            this.ListLayers.push(data[0] + names[i]);
+            this.selectableLayers.push(names[i]);
+        }
     };
 
     /**
@@ -174,9 +186,7 @@ function Layer() {
          ListLayersMap.push(drawTools.getDrawLayer());
          ListLayersMap.push(measureTools.getMeasureLayer());
          if(editorTools !== null){
-             if(editorTools.getLevel()){
-                 ListLayersMap.push(editorTools.getEditLayer());
-             }
+             ListLayersMap.push(editorTools.getEditLayer());
          }
          return ListLayersMap;
     };

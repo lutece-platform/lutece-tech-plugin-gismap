@@ -41,9 +41,15 @@ function Feature() {
      * addLayerFeature create the layer with decode data with specific format
      * @param data contains an array with the name, the projection and data
      * @param dataFormat define the type of data
+     * @param heatmap define the heatmap parameters
+     * @param thematic define the thematic parameters
+     * @param cluster define the cluster parameters
+     * @param ideation define the ideation parameters
+     * @returns {Array} an array with the names of the layers
      */
-    this.addLayerFeature = function(data, dataFormat){
-        var dataName = data[1];
+    this.addLayerFeature = function(data, dataFormat, heatmap, thematic, cluster, ideation){
+        var dataNames = [];
+        var layerName = data[1];
         var dataProj = data[2];
         var dataUrl = data[3];
         var vectorSource;
@@ -58,6 +64,11 @@ function Feature() {
             vectorSource = new ol.source.Vector({
                 features: features
             });
+            this.ListFeatures[layerName] = new ol.layer.Vector({
+                title: layerName,
+                source: vectorSource
+            });
+            dataNames.push(layerName);
         }else if(dataFormat === 'GeoJSON'){
             vectorSource = new ol.source.Vector({
                 loader: function () {
@@ -81,13 +92,36 @@ function Feature() {
                     });
                 }
             });
-        }
-        this.ListFeatures[dataName]= new ol.layer.Vector({
-                title: dataName,
-                source: vectorSource
+            var unknown = true;
+            var heatMapLayer = this.createHeatMapLayer(layerName, vectorSource, heatmap);
+            if(heatMapLayer !== null){
+                dataNames.push(heatMapLayer);
+                unknown = false;
             }
-        );
-        return dataName;
+            var thematicLayer = this.createThematicLayer(layerName, vectorSource, thematic);
+            if(thematicLayer !== null){
+                dataNames.push(thematicLayer);
+                unknown = false;
+            }
+            var clusterLayer = this.createClusterLayer(layerName, vectorSource, cluster);
+            if(clusterLayer !== null){
+                dataNames.push(clusterLayer);
+                unknown = false;
+            }
+            var ideationLayer = this.createIdeationLayer(layerName, vectorSource, ideation);
+            if(ideationLayer !== null) {
+                dataNames.push(ideationLayer);
+                unknown = false;
+            }
+            if(unknown){
+                this.ListFeatures[layerName] = new ol.layer.Vector({
+                    title: layerName,
+                    source: vectorSource
+                });
+                dataNames.push(layerName);
+            }
+        }
+        return dataNames;
     };
 
     /**
@@ -98,11 +132,17 @@ function Feature() {
      * @param url is the url to access at the service
      * @param dataProj is the projection of the data
      * @param query is the initial query to apply on the layer
+     * @param heatmap define the heatmap parameters
+     * @param thematic define the thematic parameters
+     * @param cluster define the cluster parameters
+     * @param ideation define the ideation parameters
+     * @returns {Array} an array with the names of the layers
      */
-    this.createWFSLayer = function(layerName,server, url, dataProj, query) {
+    this.createWFSLayer = function(layerName,server, url, dataProj, query, heatmap, thematic, cluster, ideation) {
+        var vectorSource = null;
         if (server === 'AGS') {
             if(query === '') {
-                var vectorSource = new ol.source.Vector({
+                vectorSource = new ol.source.Vector({
                     loader: function (extent) {
                         if(extent[0] === -Infinity){
                             extent = projection.getExtent();
@@ -128,17 +168,13 @@ function Feature() {
                                 }
                             }
                         });
-                    }
-                });
-                this.ListFeatures[layerName] = new ol.layer.Vector({
-                    title: layerName,
-                    source: vectorSource,
+                    },
                     strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
                         tileSize: 512
                     }))
                 });
             }else {
-                var vectorSourceQuery = new ol.source.Vector({
+                vectorSource = new ol.source.Vector({
                     loader: function (extent) {
                         if(extent[0] === -Infinity){
                             extent = projection.getExtent();
@@ -159,16 +195,12 @@ function Feature() {
                                         featureProjection: projection.getProjection().getCode()
                                     });
                                     if (features.length > 0) {
-                                        vectorSourceQuery.addFeatures(features);
+                                        vectorSource.addFeatures(features);
                                     }
                                 }
                             }
                         });
-                    }
-                });
-                this.ListFeatures[layerName] = new ol.layer.Vector({
-                    title: layerName,
-                    source: vectorSourceQuery,
+                    },
                     strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
                         tileSize: 512
                     }))
@@ -194,21 +226,46 @@ function Feature() {
                     dataProjection: projectionData.getCode(),
                     featureProjection: projection.getProjection().getCode()
                 });
-                vectorSourceGeo.addFeatures(features);
+                vectorSource.addFeatures(features);
             };
 
-            var vectorSourceGeo = new ol.source.Vector({
+            vectorSource = new ol.source.Vector({
                 loader: vectorLoader,
                 strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
                   tileSize: 512
                 }))
             });
+        }
+        var dataNames = [];
+        var unknown = true;
+        var heatMapLayer = this.createHeatMapLayer(layerName, vectorSource, heatmap);
+        if(heatMapLayer !== null){
+            dataNames.push(heatMapLayer);
+            unknown = false;
+        }
+        var thematicLayer = this.createThematicLayer(layerName, vectorSource, thematic);
+        if(thematicLayer !== null){
+            dataNames.push(thematicLayer);
+            unknown = false;
+        }
+        var clusterLayer = this.createClusterLayer(layerName, vectorSource, cluster);
+        if(clusterLayer !== null){
+            dataNames.push(clusterLayer);
+            unknown = false;
+        }
+        var ideationLayer = this.createIdeationLayer(layerName, vectorSource, ideation);
+        if(ideationLayer !== null) {
+            dataNames.push(ideationLayer);
+            unknown = false;
+        }
+        if(unknown){
             this.ListFeatures[layerName] = new ol.layer.Vector({
                 title: layerName,
-                source: vectorSourceGeo
+                source: vectorSource
             });
+            dataNames.push(layerName);
         }
-        return layerName;
+        return dataNames;
     };
 
 
@@ -258,6 +315,93 @@ function Feature() {
      */
     this.getFeatureByName = function(name){
         return this.ListFeatures[name];
+    };
+
+    /**
+     * Feature Method
+     * createHeatMapLayer generate heatmap layer
+     * @param layerName is the name of the source layer
+     * @param vectorSource is the source of the data layer
+     * @param heatmap is the parameter of the style layer
+     */
+    this.createHeatMapLayer = function(layerName, vectorSource, heatmap){
+        for(var heatmapNb = 0; heatmapNb < heatmap.length; heatmapNb++) {
+            if (heatmap[heatmapNb][0] === layerName) {
+                console.log(heatmap[heatmapNb]);
+                var labelLayer = heatmap[heatmapNb][1];
+                var attributeLayer = heatmap[heatmapNb][2];
+                var radiusValue = heatmap[heatmapNb][3];
+                var blurValue = heatmap[heatmapNb][4];
+
+                vectorSource.on('addfeature', function(event) {
+                    var value = event.feature.get(attributeLayer);
+                    event.feature.set('weight', parseFloat(value));
+                });
+
+                this.ListFeatures[labelLayer] = new ol.layer.Heatmap({
+                    title: labelLayer,
+                    source: vectorSource,
+                    blur: parseInt(blurValue, 10),
+                    radius: parseInt(radiusValue, 10)
+                });
+                return labelLayer;
+            }
+        }
+        return null;
+    };
+
+    /**
+     * Feature Method
+     * createThematicLayer generate thematic layer
+     * @param layerName is the name of the source layer
+     * @param vectorSource is the source of the data layer
+     * @param thematic is the parameter of the style layer
+     */
+    this.createThematicLayer = function(layerName, vectorSource, thematic){
+        for(var thematicNb = 0; thematicNb < thematic.length; thematicNb++) {
+            if (thematic[thematicNb][1] === layerName) {
+                this.ListFeatures[layerName] = new ol.layer.Heatmap(
+
+                );
+            }
+        }
+        return null;
+    };
+
+    /**
+     * Feature Method
+     * createClusterLayer generate cluster layer
+     * @param layerName is the name of the source layer
+     * @param vectorSource is the source of the data layer
+     * @param cluster is the parameter of the style layer
+     */
+    this.createClusterLayer = function(layerName, vectorSource, cluster){
+        for(var clusterNb = 0; clusterNb < cluster.length; clusterNb++) {
+            if (cluster[clusterNb][1] === layerName) {
+                this.ListFeatures[layerName] = new ol.layer.Heatmap(
+
+                );
+            }
+        }
+        return null;
+    };
+
+    /**
+     * Feature Method
+     * createIdeationLayer generate ideation layer
+     * @param layerName is the name of the source layer
+     * @param vectorSource is the source of the data layer
+     * @param ideation is the parameter of the style layer
+     */
+    this.createIdeationLayer = function(layerName, vectorSource, ideation){
+        for(var ideationNb = 0; ideationNb < ideation.length; ideationNb++) {
+            if (ideation[ideationNb][1] === layerName) {
+                this.ListFeatures[layerName] = new ol.layer.Heatmap(
+
+                );
+            }
+        }
+        return null;
     };
 }
 

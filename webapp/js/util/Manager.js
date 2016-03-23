@@ -47,6 +47,10 @@ var Manager = function() {
         var wmts = [];
         var geoJson = [];
         var popup = [];
+        var heatmap = [];
+        var cluster = [];
+        var thematic = [];
+        var ideation = [];
         if (startParameters['Projection'] !== '') {
             parameters['Projection'] = startParameters['Projection'];
         }
@@ -131,6 +135,18 @@ var Manager = function() {
             if (startParameters['WFS'+n] !== '' && startParameters['WFS'+n] !== undefined ) {
                 wfs.push(startParameters['WFS'+n]);
             }
+            if (startParameters['HeatMap'+n] !== '' && startParameters['HeatMap'+n] !== undefined ) {
+                heatmap.push(startParameters['HeatMap'+n]);
+            }
+            if (startParameters['Cluster'+n] !== '' && startParameters['Cluster'+n] !== undefined ) {
+                cluster.push(startParameters['Cluster'+n]);
+            }
+            if (startParameters['Thematic'+n] !== '' && startParameters['Thematic'+n] !== undefined ) {
+                thematic.push(startParameters['Thematic'+n]);
+            }
+            if (startParameters['Ideation'+n] !== '' && startParameters['Ideation'+n] !== undefined ) {
+                ideation.push(startParameters['Ideation'+n]);
+            }
             if (startParameters['GeoJSON'+n] !== '' && startParameters['GeoJSON'+n] !== undefined ) {
                 var tempGeoJson = startParameters['GeoJSON'+n];
                 for(var j = 0; j < 10; j++){
@@ -152,6 +168,10 @@ var Manager = function() {
         parameters['WMS-Base'] = wmsBase;
         parameters['WMS-Layer'] = wmsLayer;
         parameters['WFS'] = wfs;
+        parameters['HeatMap'] = heatmap;
+        parameters['Cluster'] = cluster;
+        parameters['Thematic'] = thematic;
+        parameters['Ideation'] = ideation;
         parameters['WMTS'] = wmts;
         parameters['GeoJSON'] = geoJson;
         parameters['Popup'] = popup;
@@ -206,6 +226,11 @@ var Manager = function() {
                 layer.addWMSLayerRaster(parameters['WMS-Base'][wmsBase]);
             }
         }
+        if(parameters['WMTS'] !== '' && parameters['WMTS'] !== undefined){
+            for(var wmts = 0; wmts < parameters['WMTS'].length; wmts++){
+                layer.addWMTSLayerRaster(parameters['WMTS'][wmts]);
+            }
+        }
         if(parameters['WMS-Layer'] !== '' && parameters['WMS-Layer'] !== undefined){
             for(var wms  = 0; wms < parameters['WMS-Layer'].length; wms++){
                 layer.addWMSQueryLayerRaster(parameters['WMS-Layer'][wms]);
@@ -213,17 +238,14 @@ var Manager = function() {
         }
         if(parameters['WFS'] !== '' && parameters['WFS'] !== undefined){
             for(var wfs  = 0; wfs < parameters['WFS'].length; wfs++){
-                layer.addWFSLayer(parameters['WFS'][wfs]);
-            }
-        }
-        if(parameters['WMTS'] !== '' && parameters['WMTS'] !== undefined){
-            for(var wmts = 0; wmts < parameters['WMTS'].length; wmts++){
-                layer.addWMTSLayerRaster(parameters['WMTS'][wmts]);
+                layer.addWFSLayer(parameters['WFS'][wfs], parameters['HeatMap'], parameters['Thematic'],
+                    parameters['Cluster'], parameters['Ideation']);
             }
         }
         if(parameters['GeoJSON'] !== '' && parameters['GeoJSON'] !== undefined){
             for(var geoJson = 0; geoJson < parameters['GeoJSON'].length; geoJson++){
-                layer.addLayerVector(parameters['GeoJSON'][geoJson], 'GeoJSON');
+                layer.addLayerVector(parameters['GeoJSON'][geoJson], 'GeoJSON', parameters['HeatMap'],
+                    parameters['Thematic'], parameters['Cluster'], parameters['Ideation']);
             }
         }
         if(parameters['WKT'] !== '' && parameters['WKT'] !== undefined){
