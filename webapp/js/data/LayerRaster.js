@@ -40,17 +40,18 @@ function LayerRaster() {
     /**
      * LayerRaster Method
      * createWMSLayer initialize the background of the map to specific WMS data
+     * @param layerName is the name of the layer in the application
      * @param server is the type of the server
      * @param url is the url to access at the service
-     * @param layerName is the name of the layer
+     * @param dataName is the name of the data on the server
      */
-    this.createWMSLayer = function(server, url, layerName){
+    this.createWMSLayer = function(layerName, server, url, dataName){
         if(server === 'AGS-IMS'){
             this.ListRasters[layerName] = new ol.layer.Tile({
                 title: layerName,
                 type: 'base',
                 source: new ol.source.TileArcGISRest({
-                    url: url+layerName+'/ImageServer'
+                    url: url+dataName+'/ImageServer'
                 }),
                 visible:false
             });
@@ -59,7 +60,7 @@ function LayerRaster() {
                 title: layerName,
                 type: 'base',
                 source: new ol.source.TileArcGISRest({
-                    url: url+layerName+'/MapServer'
+                    url: url+dataName+'/MapServer'
                 }),
                 visible:false
             });
@@ -69,7 +70,7 @@ function LayerRaster() {
                 type: 'base',
                 source: new ol.source.TileWMS({
                     url: url,
-                    params: {'LAYERS': layerName},
+                    params: {'LAYERS': dataName},
                     serverType:'geoserver'
                 }),
                 visible:false
@@ -80,15 +81,15 @@ function LayerRaster() {
     /**
      * LayerRaster Method
      * createWMTSLayer initialize the background of the map to specific WMTS data
+     * @param layerName is the name of the layer in the application
      * @param server is the type of the server
      * @param url is the url to access at the service
-     * @param layerName is the name of the layer
      * @param proj is the projection of the data
      * @param resolutions is the table of the
      * @param origin is the coordinate of the left upper point of the data
      */
 
-    this.createWMTSLayer = function(server, url, layerName, proj, resolutions, origin){
+    this.createWMTSLayer = function(layerName, server, url, proj, resolutions, origin){
         if(server === 'AGS') {
             var infoProjData = projection.getEpsgData(proj, false);
             var projData = infoProjData[0];
@@ -107,6 +108,13 @@ function LayerRaster() {
             });
         }
     };
+
+    /**
+     * LayerRaster Method
+     * setRasterVisibility enable or disable the visibility of the layer
+     * @param raster the name of the layer
+     * @param act the marker to active or not the layer
+     */
     this.setRasterVisibility = function(raster, act){
         this.getRasterByName(raster).setVisible(act);
     };

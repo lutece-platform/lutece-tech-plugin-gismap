@@ -29,11 +29,12 @@ function Layer() {
      * @param wms is an array with all parameters to define a wms layer
      */
     this.addWMSLayerRaster = function(wms){
-        var wmsServer = wms[0];
-        var wmsUrl = wms[1];
-        var wmsLayer = wms[2];
-        rasterLayer.createWMSLayer(wmsServer, wmsUrl, wmsLayer);
-        this.ListLayers.push(wmsLayer);
+        var wmsLibelle = wms[0];
+        var wmsServer = wms[1];
+        var wmsUrl = wms[2];
+        var wmsLayer = wms[3];
+        rasterLayer.createWMSLayer(wmsLibelle, wmsServer, wmsUrl, wmsLayer);
+        this.ListLayers.push(wmsLibelle);
     };
 
     /**
@@ -42,14 +43,14 @@ function Layer() {
      * @param wmts is an array with all parameters to define a wmts layer
      */
     this.addWMTSLayerRaster = function(wmts){
-        var wmtsServer = wmts[0];
-        var wmtsUrl = wmts[1];
-        var wmtsLayer = wmts[2];
+        var wmtsLibelle = wmts[0];
+        var wmtsServer = wmts[1];
+        var wmtsUrl = wmts[2];
         var wmtsProj = wmts[3];
         var wmtsReso = wmts[4];
         var wmtsOrigin = wmts[5];
-        rasterLayer.createWMTSLayer(wmtsServer, wmtsUrl, wmtsLayer, wmtsProj, wmtsReso, wmtsOrigin);
-        this.ListLayers.push(wmtsLayer);
+        rasterLayer.createWMTSLayer(wmtsLibelle, wmtsServer, wmtsUrl, wmtsProj, wmtsReso, wmtsOrigin);
+        this.ListLayers.push(wmtsLibelle);
     };
 
     /**
@@ -59,11 +60,13 @@ function Layer() {
      */
     this.addWMSQueryLayerRaster = function(wms){
         var wmsOrder = wms[0];
-        var wmsLayer = wms[1];
+        var wmsName = wms[1];
         var wmsServer = wms[2];
         var wmsUrl = wms[3];
-        featureLayer.createWMSQueryLayer(wmsLayer, wmsServer, wmsUrl);
-        this.ListLayers.push(wmsOrder+wmsLayer);
+        var wmsLayer = wms[4];
+        var wmsVisbility = wms[5];
+        featureLayer.createWMSQueryLayer(wmsName, wmsServer, wmsUrl, wmsLayer, wmsVisbility);
+        this.ListLayers.push(wmsOrder +'-'+ wmsName);
     };
 
     /**
@@ -73,18 +76,17 @@ function Layer() {
      * @param heatmap define the heatmap parameters
      * @param thematic define the thematic parameters
      * @param cluster define the cluster parameters
-     * @param ideation define the ideation parameters
+     * @param thematicComplex define the thematic complex parameters
      */
-    this.addWFSLayer = function(wfs, heatmap, thematic, cluster, ideation){
-        var wfsOrder = wfs[0];
-        var wfsLayer = wfs[1];
-        var wfsServer = wfs[2];
-        var wfsUrl = wfs[3];
-        var wfsProj = wfs[4];
-        var wfsQuery = wfs[5];
-        var wfsLayers = featureLayer.createWFSLayer(wfsLayer, wfsServer, wfsUrl, wfsProj, wfsQuery, heatmap, thematic, cluster, ideation);
+    this.addWFSLayer = function(wfs, heatmap, thematic, cluster, thematicComplex){
+        var wfsIdLayer = wfs[0];
+        var wfsServer = wfs[1];
+        var wfsUrl = wfs[2];
+        var wfsProj = wfs[3];
+        var wfsQuery = wfs[4];
+        var wfsLayers = featureLayer.createWFSLayer(wfsIdLayer, wfsServer, wfsUrl, wfsProj, wfsQuery, heatmap, thematic, cluster, thematicComplex);
         for(var i = 0; i < wfsLayers.length; i++) {
-            this.ListLayers.push(wfsOrder + wfsLayers[i]);
+            this.ListLayers.push(wfsLayers[i]);
         }
     };
 
@@ -96,12 +98,12 @@ function Layer() {
      * @param heatmap define the heatmap parameters
      * @param thematic define the thematic parameters
      * @param cluster define the cluster parameters
-     * @param ideation define the ideation parameters
+     * @param thematicComplex define the thematic complex parameters
      */
-    this.addLayerVector = function(data, format, heatmap, thematic, cluster, ideation){
-        var names = featureLayer.addLayerFeature(data, format, heatmap, thematic, cluster, ideation);
+    this.addLayerVector = function(data, format, heatmap, thematic, cluster, thematicComplex){
+        var names = featureLayer.addLayerFeature(data, format, heatmap, thematic, cluster, thematicComplex);
         for(var i = 0; i < names.length; i++) {
-            this.ListLayers.push(data[0] + names[i]);
+            this.ListLayers.push(names[i]);
             this.selectableLayers.push(names[i]);
         }
     };
@@ -160,8 +162,9 @@ function Layer() {
     this.getLayersFeatureMap = function(){
         var ListLayersFeatureMap = [];
         for (var layerMap = this.ListLayers.length-1; layerMap >= 0; layerMap--){
-            if(featureLayer.getFeatureByName(this.ListLayers[layerMap].substring(1,this.ListLayers[layerMap].length))!== undefined) {
-                ListLayersFeatureMap.push(featureLayer.getFeatureByName(this.ListLayers[layerMap].substring(1,this.ListLayers[layerMap].length)));
+            var layerMapName = this.ListLayers[layerMap].split('-')[1];
+            if(featureLayer.getFeatureByName(layerMapName)!== undefined) {
+                ListLayersFeatureMap.push(featureLayer.getFeatureByName(layerMapName));
             }
         }
         return ListLayersFeatureMap;

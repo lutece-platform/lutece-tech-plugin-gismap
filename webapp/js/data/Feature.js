@@ -1,4 +1,4 @@
-/*global ol, projection, console*/
+/*global ol, projection, console, SpecificStyle*/
 
 /**
  * Feature Class manage all features layers in the map
@@ -6,6 +6,11 @@
 
 function Feature() {
     'use strict';
+    /**
+     * style define the specific style several representation of the layer
+     * @type {SpecificStyle}
+     */
+    this.style = new SpecificStyle();
     /**
      * ListFeatures contains all Features layers of the map
      * @type {Array}
@@ -38,20 +43,29 @@ function Feature() {
 
     /**
      * Feature Method
+     * getSpecificStyle return an the style manager
+     * @returns {SpecificStyle} the style manager
+     */
+    this.getSpecificStyle = function(){
+        return this.style;
+    };
+
+    /**
+     * Feature Method
      * addLayerFeature create the layer with decode data with specific format
      * @param data contains an array with the name, the projection and data
      * @param dataFormat define the type of data
      * @param heatmap define the heatmap parameters
      * @param thematic define the thematic parameters
      * @param cluster define the cluster parameters
-     * @param ideation define the ideation parameters
+     * @param thematicComplex define the thematic complex parameters
      * @returns {Array} an array with the names of the layers
      */
-    this.addLayerFeature = function(data, dataFormat, heatmap, thematic, cluster, ideation){
+    this.addLayerFeature = function(data, dataFormat, heatmap, thematic, cluster, thematicComplex){
         var dataNames = [];
-        var layerName = data[1];
-        var dataProj = data[2];
-        var dataUrl = data[3];
+        var idLayer = data[0];
+        var dataProj = data[1];
+        var dataUrl = data[2];
         var vectorSource;
         var features = [];
         if(dataFormat === 'WKT'){
@@ -64,11 +78,11 @@ function Feature() {
             vectorSource = new ol.source.Vector({
                 features: features
             });
-            this.ListFeatures[layerName] = new ol.layer.Vector({
-                title: layerName,
+            this.ListFeatures[idLayer] = new ol.layer.Vector({
+                title: idLayer,
                 source: vectorSource
             });
-            dataNames.push(layerName);
+            dataNames.push( '-'+ idLayer);
         }else if(dataFormat === 'GeoJSON'){
             vectorSource = new ol.source.Vector({
                 loader: function () {
@@ -93,32 +107,33 @@ function Feature() {
                 }
             });
             var unknown = true;
-            var heatMapLayer = this.createHeatMapLayer(layerName, vectorSource, heatmap);
+            var heatMapLayer = this.createHeatMapLayer(idLayer, vectorSource, heatmap);
             if(heatMapLayer !== null){
                 dataNames.push(heatMapLayer);
                 unknown = false;
             }
-            var thematicLayer = this.createThematicLayer(layerName, vectorSource, thematic);
+            var thematicLayer = this.createThematicLayer(idLayer, vectorSource, thematic);
             if(thematicLayer !== null){
                 dataNames.push(thematicLayer);
                 unknown = false;
             }
-            var clusterLayer = this.createClusterLayer(layerName, vectorSource, cluster);
+            var clusterLayer = this.createClusterLayer(idLayer, vectorSource, cluster);
             if(clusterLayer !== null){
                 dataNames.push(clusterLayer);
                 unknown = false;
             }
-            var ideationLayer = this.createIdeationLayer(layerName, vectorSource, ideation);
-            if(ideationLayer !== null) {
-                dataNames.push(ideationLayer);
+            var thematicComplexLayer = this.createThematicComplexLayer(idLayer, vectorSource, thematicComplex);
+            if(thematicComplexLayer !== null) {
+                dataNames.push(thematicComplexLayer);
                 unknown = false;
             }
             if(unknown){
-                this.ListFeatures[layerName] = new ol.layer.Vector({
-                    title: layerName,
-                    source: vectorSource
+                this.ListFeatures[idLayer] = new ol.layer.Vector({
+                    title: idLayer,
+                    source: vectorSource,
+                    visible: true
                 });
-                dataNames.push(layerName);
+                dataNames.push( '-'+ idLayer);
             }
         }
         return dataNames;
@@ -127,7 +142,7 @@ function Feature() {
     /**
      * Feature Method
      * createWFSLayer initialize the layer of the map to specific WFS data
-     * @param layerName is the name of the layer
+     * @param idLayer is the id to identify the layer
      * @param server is the type of the server
      * @param url is the url to access at the service
      * @param dataProj is the projection of the data
@@ -135,10 +150,10 @@ function Feature() {
      * @param heatmap define the heatmap parameters
      * @param thematic define the thematic parameters
      * @param cluster define the cluster parameters
-     * @param ideation define the ideation parameters
+     * @param thematicComplex define the thematic complex parameters
      * @returns {Array} an array with the names of the layers
      */
-    this.createWFSLayer = function(layerName,server, url, dataProj, query, heatmap, thematic, cluster, ideation) {
+    this.createWFSLayer = function(idLayer, server, url, dataProj, query, heatmap, thematic, cluster, thematicComplex) {
         var vectorSource = null;
         if (server === 'AGS') {
             if(query === '') {
@@ -232,38 +247,38 @@ function Feature() {
             vectorSource = new ol.source.Vector({
                 loader: vectorLoader,
                 strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-                  tileSize: 512
+                    tileSize: 512
                 }))
             });
         }
         var dataNames = [];
         var unknown = true;
-        var heatMapLayer = this.createHeatMapLayer(layerName, vectorSource, heatmap);
+        var heatMapLayer = this.createHeatMapLayer(idLayer, vectorSource, heatmap);
         if(heatMapLayer !== null){
             dataNames.push(heatMapLayer);
             unknown = false;
         }
-        var thematicLayer = this.createThematicLayer(layerName, vectorSource, thematic);
+        var thematicLayer = this.createThematicLayer(idLayer, vectorSource, thematic);
         if(thematicLayer !== null){
             dataNames.push(thematicLayer);
             unknown = false;
         }
-        var clusterLayer = this.createClusterLayer(layerName, vectorSource, cluster);
+        var clusterLayer = this.createClusterLayer(idLayer, vectorSource, cluster);
         if(clusterLayer !== null){
             dataNames.push(clusterLayer);
             unknown = false;
         }
-        var ideationLayer = this.createIdeationLayer(layerName, vectorSource, ideation);
-        if(ideationLayer !== null) {
-            dataNames.push(ideationLayer);
+        var thematicComplexLayer = this.createThematicComplexLayer(idLayer, vectorSource, thematicComplex);
+        if(thematicComplexLayer !== null) {
+            dataNames.push(thematicComplexLayer);
             unknown = false;
         }
         if(unknown){
-            this.ListFeatures[layerName] = new ol.layer.Vector({
-                title: layerName,
+            this.ListFeatures[idLayer] = new ol.layer.Vector({
+                title: idLayer,
                 source: vectorSource
             });
-            dataNames.push(layerName);
+            dataNames.push( '-'+ idLayer);
         }
         return dataNames;
     };
@@ -276,33 +291,35 @@ function Feature() {
      * @param layerName is the name of the layer
      * @param server is the type of the server
      * @param url is the url to access at the service
+     * @param dataName is the name of the data on the server
+     * @param visibility is the indicator to display or not at the start
      */
-    this.createWMSQueryLayer = function(layerName, server, url){
+    this.createWMSQueryLayer = function(layerName, server, url, dataName, visibility){
         if(server === 'AGS-IMS'){
             this.ListFeatures[layerName] = new ol.layer.Tile({
                 title: layerName,
                 source: new ol.source.TileArcGISRest({
-                    url: url+layerName+'/ImageServer'
+                    url: url+dataName+'/ImageServer'
                 }),
-                visible:false
+                visible: visibility
             });
         }else if(server === 'AGS-MPS'){
             this.ListFeatures[layerName] = new ol.layer.Tile({
                 title: layerName,
                 source: new ol.source.TileArcGISRest({
-                    url: url+layerName+'/MapServer'
+                    url: url+dataName+'/MapServer'
                 }),
-                visible:false
+                visible: visibility
             });
         }else if (server === 'GeoServer'){
             this.ListFeatures[layerName] = new ol.layer.Tile({
                 title: layerName,
                 source: new ol.source.TileWMS({
                     url: url,
-                    params: {'LAYERS': layerName},
+                    params: {'LAYERS': dataName},
                     serverType:'geoserver'
                 }),
-                visible:false
+                visible: visibility
             });
         }
     };
@@ -320,49 +337,35 @@ function Feature() {
     /**
      * Feature Method
      * createHeatMapLayer generate heatmap layer
-     * @param layerName is the name of the source layer
+     * @param idLayer is the name of the source layer
      * @param vectorSource is the source of the data layer
      * @param heatmap is the parameter of the style layer
+     * @returns {*} the name of the layer
      */
-    this.createHeatMapLayer = function(layerName, vectorSource, heatmap){
+    this.createHeatMapLayer = function(idLayer, vectorSource, heatmap){
         for(var heatmapNb = 0; heatmapNb < heatmap.length; heatmapNb++) {
-            if (heatmap[heatmapNb][0] === layerName) {
-                console.log(heatmap[heatmapNb]);
-                var labelLayer = heatmap[heatmapNb][1];
-                var attributeLayer = heatmap[heatmapNb][2];
-                var radiusValue = heatmap[heatmapNb][3];
-                var blurValue = heatmap[heatmapNb][4];
+            if (heatmap[heatmapNb][2] === idLayer) {
+                var labelLayer = heatmap[heatmapNb][0];
+                var orderLayer = heatmap[heatmapNb][1];
+                var visibility = heatmap[heatmapNb][3];
+                var attributeLayer = heatmap[heatmapNb][4];
+                var radiusValue = parseInt(heatmap[heatmapNb][5]);
+                var blurValue = parseInt(heatmap[heatmapNb][6]);
+                var maxValue = parseFloat(heatmap[heatmapNb][7]);
 
                 vectorSource.on('addfeature', function(event) {
                     var value = event.feature.get(attributeLayer);
-                    event.feature.set('weight', parseFloat(value));
+                    event.feature.set('weight', parseFloat(value)/maxValue);
                 });
 
                 this.ListFeatures[labelLayer] = new ol.layer.Heatmap({
                     title: labelLayer,
                     source: vectorSource,
-                    blur: parseInt(blurValue, 10),
-                    radius: parseInt(radiusValue, 10)
+                    blur: blurValue,
+                    radius: radiusValue,
+                    visible: visibility
                 });
-                return labelLayer;
-            }
-        }
-        return null;
-    };
-
-    /**
-     * Feature Method
-     * createThematicLayer generate thematic layer
-     * @param layerName is the name of the source layer
-     * @param vectorSource is the source of the data layer
-     * @param thematic is the parameter of the style layer
-     */
-    this.createThematicLayer = function(layerName, vectorSource, thematic){
-        for(var thematicNb = 0; thematicNb < thematic.length; thematicNb++) {
-            if (thematic[thematicNb][1] === layerName) {
-                this.ListFeatures[layerName] = new ol.layer.Heatmap(
-
-                );
+                return orderLayer +'-'+ labelLayer;
             }
         }
         return null;
@@ -371,16 +374,31 @@ function Feature() {
     /**
      * Feature Method
      * createClusterLayer generate cluster layer
-     * @param layerName is the name of the source layer
+     * @param idLayer is the name of the source layer
      * @param vectorSource is the source of the data layer
      * @param cluster is the parameter of the style layer
+     * @returns {*} the name of the layer
      */
-    this.createClusterLayer = function(layerName, vectorSource, cluster){
+    this.createClusterLayer = function(idLayer, vectorSource, cluster){
         for(var clusterNb = 0; clusterNb < cluster.length; clusterNb++) {
-            if (cluster[clusterNb][1] === layerName) {
-                this.ListFeatures[layerName] = new ol.layer.Heatmap(
+            if (cluster[clusterNb][2] === idLayer) {
+                var labelLayer = cluster[clusterNb][0];
+                var orderLayer = cluster[clusterNb][1];
+                var visibility = cluster[clusterNb][3];
+                var distCluster = parseInt(cluster[clusterNb][4]);
+                this.style.initClusterValue(cluster[clusterNb][5]);
 
-                );
+                this.ListFeatures[labelLayer] = new ol.layer.Vector({
+                    title: labelLayer,
+                    source: new ol.source.Cluster({
+                        source: vectorSource,
+                        distance: distCluster
+
+                    }),
+                    style: this.style.styleCluster,
+                    visible: visibility
+                });
+                return orderLayer +'-'+ labelLayer;
             }
         }
         return null;
@@ -388,18 +406,59 @@ function Feature() {
 
     /**
      * Feature Method
-     * createIdeationLayer generate ideation layer
-     * @param layerName is the name of the source layer
+     * createThematicLayer generate thematic layer
+     * @param idLayer is the name of the source layer
      * @param vectorSource is the source of the data layer
-     * @param ideation is the parameter of the style layer
+     * @param thematic is the parameter of the style layer
+     * @returns {*} the name of the layer
      */
-    this.createIdeationLayer = function(layerName, vectorSource, ideation){
-        for(var ideationNb = 0; ideationNb < ideation.length; ideationNb++) {
-            if (ideation[ideationNb][1] === layerName) {
-                this.ListFeatures[layerName] = new ol.layer.Heatmap(
+    this.createThematicLayer = function(idLayer, vectorSource, thematic){
+        for(var thematicNb = 0; thematicNb < thematic.length; thematicNb++) {
+            if (thematic[thematicNb][2] === idLayer) {
+                var labelLayer = thematic[thematicNb][0];
+                var orderLayer = thematic[thematicNb][1];
+                var visibility = thematic[thematicNb][3];
+                this.style.initThematicValue(thematic[thematicNb][4], thematic[thematicNb][5], thematic[thematicNb][6]);
 
-                );
+                this.ListFeatures[labelLayer] = new ol.layer.Vector({
+                    title: labelLayer,
+                    source: vectorSource,
+                    style: this.style.styleThematicApply,
+                    visible: visibility
+                });
+                return orderLayer +'-'+ labelLayer;
             }
+        }
+        return null;
+    };
+
+    /**
+     * Feature Method
+     * createThematicComplexLayer generate thematic complex layer
+     * @param idLayer is the name of the source layer
+     * @param vectorSource is the source of the data layer
+     * @param thematicComplex is the parameter of the style layer
+     * @returns {*} the name of the layer
+     */
+    this.createThematicComplexLayer = function(idLayer, vectorSource, thematicComplex){
+        for(var thematicComplexNb = 0; thematicComplexNb < thematicComplex.length; thematicComplexNb++) {
+             if (thematicComplex[thematicComplexNb][2] === idLayer) {
+                 var labelLayer = thematicComplex[thematicComplexNb][0];
+                 var orderLayer = thematicComplex[thematicComplexNb][1];
+                 var visibility = thematicComplex[thematicComplexNb][3];
+                this.style.initThematicComplexValue(thematicComplex[thematicComplexNb][4],
+                    thematicComplex[thematicComplexNb][5], thematicComplex[thematicComplexNb][6],
+                    thematicComplex[thematicComplexNb][7], thematicComplex[thematicComplexNb][8],
+                    thematicComplex[thematicComplexNb][9]);
+
+                 this.ListFeatures[labelLayer] = new ol.layer.Vector({
+                     title: labelLayer,
+                    source: vectorSource,
+                    style: this.style.styleThematicComplexApply,
+                    visible: visibility
+                 });
+                 return orderLayer +'-'+ labelLayer;
+             }
         }
         return null;
     };
