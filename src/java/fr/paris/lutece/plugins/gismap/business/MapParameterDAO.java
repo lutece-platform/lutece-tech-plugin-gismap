@@ -46,9 +46,15 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String POPUP3 = "Popup3";
     public static final String WFS1 = "WFS1";
     public static final String WFS2 = "WFS2";
+    public static final String WFS3 = "WFS3";
     public static final String WMTS1 = "WMTS1";
     public static final String GEOJSON1 = "GeoJSON1";
     public static final String LAYERCONTROL = "LayerControl";
+    
+    public static final String HEATMAP1 = "HeatMap1";
+    public static final String THEMATICSIMPLE1 = "ThematicSimple1";
+    public static final String THEMATICCOMPLEX1 = "ThematicComplex1";
+    public static final String CLUSTER1 = "Cluster1";
     
     
 	@Override
@@ -161,6 +167,24 @@ public class MapParameterDAO implements IMapParameterDAO
 		
 		String strLayerControlProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + LAYERCONTROL );
 		mapParameter.setParameters(LAYERCONTROL, getStringByPoint(strLayerControlProperty));
+		
+		String strWFS3Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WFS3 );
+		mapParameter.setParameters(WFS3, getStringByPoint(strWFS3Property));
+		
+		String strHEATMAP1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + HEATMAP1 );
+		mapParameter.setParameters(HEATMAP1, getStringByPoint(strHEATMAP1Property));
+		
+		String strTHEMATICSIMPLE1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + THEMATICSIMPLE1 );
+		mapParameter.setParameters(THEMATICSIMPLE1, getStringByPoint(strTHEMATICSIMPLE1Property));
+		
+		String strTHEMATICCOMPLEX1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + THEMATICCOMPLEX1 );
+		mapParameter.setParameters(THEMATICCOMPLEX1, getStringByPoint(strTHEMATICCOMPLEX1Property));
+		
+		String strCLUSTER1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + CLUSTER1 );
+		mapParameter.setParameters(CLUSTER1, getStringByPoint(strCLUSTER1Property));
+		
+		String strPOPUPSHOWLINKProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + POPUPSHOWLINK );
+		mapParameter.setParameters(POPUPSHOWLINK, getStringByPoint(strPOPUPSHOWLINKProperty));
 		
 		return mapParameter;
 	}
