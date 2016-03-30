@@ -74,7 +74,7 @@ var Projection = function() {
     this.getEpsgData = function(projValue, view) {
         projValue = projValue.split(':')[1];
         var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", 'js/lib/EPSG.json', false);
+        xmlHttp.open("GET", 'js/gismap/lib/EPSG.json', false);
         xmlHttp.send(null);
         var json = JSON.parse(xmlHttp.responseText);
         var results = json[projValue]['results'];

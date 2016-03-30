@@ -24,6 +24,11 @@ var Popup = function(parameters) {
      * @type {Array}
      */
     var queryData = initOverlayPopupElements(parameters);
+    /**
+     * queryLayers contains the reference of the data can be integrate in the popup
+     * @type {Array}
+     */
+    var queryLayers = initOverlayPopupLayers(parameters);
 
     /**
      * Popup Method
@@ -35,6 +40,20 @@ var Popup = function(parameters) {
         var queryDataInit = [];
         for(var i = 0; i < parameters.length; i++){
             queryDataInit[parameters[i][0]] = parameters[i][1];
+        }
+        return queryDataInit;
+    }
+
+     /**
+     * Popup Method
+     * initOverlayPopupElements initialise the reference of the data popup
+     * @param parameters is the array of parameters to define popups informations
+     * @returns {Array} is the array with key value of all popups
+     */
+    function initOverlayPopupLayers(parameters){
+        var queryDataInit = [];
+        for(var i = 0; i < parameters.length; i++){
+            queryDataInit.push(parameters[i][0]);
         }
         return queryDataInit;
     }
@@ -143,6 +162,7 @@ var Popup = function(parameters) {
             }
         });
         /*GlobalMap.forEachLayerAtPixel(evt.pixel, function (layer) {
+            console.log(layer.getSource().getGetFeatureInfo())
             if(queryData[layer.get('title')] !== null && queryData[layer.get('title')] !== undefined) {
                 var unknown = true;
                 for (var i = 0; i < layerInfo.length; i++) {

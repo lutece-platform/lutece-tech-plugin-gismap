@@ -17,6 +17,16 @@ function Feature() {
      */
     this.ListFeatures = [];
     /**
+     * ListFilterFeatures contains all Features layers who can apply a filter of the map
+     * @type {Array}
+     */
+    this.ListFilterFeatures = [];
+    /**
+     * clusterLayer contains all cluster layers of the map
+     * @type {Array}
+     */
+    this.clusterLayer = [];
+    /**
      * wktFormat define the format WKT
      * @type {ol.format.WKT}
      */
@@ -43,11 +53,33 @@ function Feature() {
 
     /**
      * Feature Method
+     * getListFilterFeatures return an array of layer Source
+     * @returns {Array} List of all features
+     */
+    this.getListFilterFeatures = function(){
+        return this.ListFilterFeatures;
+    };
+
+    /**
+     * Feature Method
      * getSpecificStyle return an the style manager
      * @returns {SpecificStyle} the style manager
      */
     this.getSpecificStyle = function(){
         return this.style;
+    };
+
+    /**
+     * Feature Method
+     * getClusterLayers return a list of all cluster layers
+     * @returns {Array} the list of cluster layers
+     */
+    this.getClusterLayers = function(){
+        var clusterLayersList = [];
+        for(var i = 0; i < this.clusterLayer.length; i++){
+            clusterLayersList.push(this.ListFeatures[this.clusterLayer[i]]);
+        }
+        return clusterLayersList;
     };
 
     /**
@@ -155,6 +187,7 @@ function Feature() {
      */
     this.createWFSLayer = function(idLayer, server, url, dataProj, query, heatmap, thematic, cluster, thematicComplex) {
         var vectorSource = null;
+        var dataFilter = [server, url, dataProj, query];
         if (server === 'AGS') {
             if(query === '') {
                 vectorSource = new ol.source.Vector({
@@ -223,13 +256,21 @@ function Feature() {
             }
         }else if (server === 'GeoServer'){
             var projectionData =  projection.getEpsgData(dataProj, false)[0];
+            if(query !== ''){
+                query = "&CQL_FILTER=" + query;
+            }
             var vectorLoader= function(extent) {
-                if(extent[0] === -Infinity){
-                    extent = projection.getExtent();
+                var webService = '';
+                if(query !== '') {
+                    webService = url + query + '&outputFormat=text/javascript&srsname=' + projectionData.getCode() + '&format_options=callback:loadFeatures';
+                }else{
+                    if(extent[0] === -Infinity){
+                        extent = projection.getExtent();
+                    }
+                    var extentCapture = ol.extent.applyTransform(extent, ol.proj.getTransform(projection.getProjection().getCode(), projectionData.getCode()));
+                    webService = url + '&outputFormat=text/javascript&format_options=callback:loadFeatures&' +
+                        'srsname=' + projectionData.getCode() + '&bbox=' + extentCapture.join(',') + ',' + projectionData.getCode();
                 }
-                var extentCapture = ol.extent.applyTransform(extent, ol.proj.getTransform(projection.getProjection().getCode(), projectionData.getCode()));
-                var webService = url + '&outputFormat=text/javascript&format_options=callback:loadFeatures&' +
-                    'srsname=' + projectionData.getCode() + '&bbox=' + extentCapture.join(',') + ',' + projectionData.getCode();
                 $.ajax({
                     url: webService,
                     dataType: 'jsonp'
@@ -253,22 +294,22 @@ function Feature() {
         }
         var dataNames = [];
         var unknown = true;
-        var heatMapLayer = this.createHeatMapLayer(idLayer, vectorSource, heatmap);
+        var heatMapLayer = this.createHeatMapLayer(idLayer, vectorSource, heatmap, dataFilter);
         if(heatMapLayer !== null){
             dataNames.push(heatMapLayer);
             unknown = false;
         }
-        var thematicLayer = this.createThematicLayer(idLayer, vectorSource, thematic);
+        var thematicLayer = this.createThematicLayer(idLayer, vectorSource, thematic, dataFilter);
         if(thematicLayer !== null){
             dataNames.push(thematicLayer);
             unknown = false;
         }
-        var clusterLayer = this.createClusterLayer(idLayer, vectorSource, cluster);
+        var clusterLayer = this.createClusterLayer(idLayer, vectorSource, cluster, dataFilter);
         if(clusterLayer !== null){
             dataNames.push(clusterLayer);
             unknown = false;
         }
-        var thematicComplexLayer = this.createThematicComplexLayer(idLayer, vectorSource, thematicComplex);
+        var thematicComplexLayer = this.createThematicComplexLayer(idLayer, vectorSource, thematicComplex, dataFilter);
         if(thematicComplexLayer !== null) {
             dataNames.push(thematicComplexLayer);
             unknown = false;
@@ -278,6 +319,7 @@ function Feature() {
                 title: idLayer,
                 source: vectorSource
             });
+            this.ListFilterFeatures[idLayer] = dataFilter;
             dataNames.push( '-'+ idLayer);
         }
         return dataNames;
@@ -340,9 +382,10 @@ function Feature() {
      * @param idLayer is the name of the source layer
      * @param vectorSource is the source of the data layer
      * @param heatmap is the parameter of the style layer
+     * @param dataFilter is the parameter to stock all information of the layer
      * @returns {*} the name of the layer
      */
-    this.createHeatMapLayer = function(idLayer, vectorSource, heatmap){
+    this.createHeatMapLayer = function(idLayer, vectorSource, heatmap, dataFilter){
         for(var heatmapNb = 0; heatmapNb < heatmap.length; heatmapNb++) {
             if (heatmap[heatmapNb][2] === idLayer) {
                 var labelLayer = heatmap[heatmapNb][0];
@@ -365,6 +408,7 @@ function Feature() {
                     radius: radiusValue,
                     visible: visibility
                 });
+                this.ListFilterFeatures[labelLayer] = dataFilter;
                 return orderLayer +'-'+ labelLayer;
             }
         }
@@ -377,9 +421,10 @@ function Feature() {
      * @param idLayer is the name of the source layer
      * @param vectorSource is the source of the data layer
      * @param cluster is the parameter of the style layer
+     * @param dataFilter is the parameter to stock all information of the layer
      * @returns {*} the name of the layer
      */
-    this.createClusterLayer = function(idLayer, vectorSource, cluster){
+    this.createClusterLayer = function(idLayer, vectorSource, cluster, dataFilter){
         for(var clusterNb = 0; clusterNb < cluster.length; clusterNb++) {
             if (cluster[clusterNb][2] === idLayer) {
                 var labelLayer = cluster[clusterNb][0];
@@ -393,11 +438,12 @@ function Feature() {
                     source: new ol.source.Cluster({
                         source: vectorSource,
                         distance: distCluster
-
                     }),
                     style: this.style.styleCluster,
                     visible: visibility
                 });
+                this.clusterLayer.push(labelLayer);
+                this.ListFilterFeatures[labelLayer] = dataFilter;
                 return orderLayer +'-'+ labelLayer;
             }
         }
@@ -410,9 +456,10 @@ function Feature() {
      * @param idLayer is the name of the source layer
      * @param vectorSource is the source of the data layer
      * @param thematic is the parameter of the style layer
+     * @param dataFilter is the parameter to stock all information of the layer
      * @returns {*} the name of the layer
      */
-    this.createThematicLayer = function(idLayer, vectorSource, thematic){
+    this.createThematicLayer = function(idLayer, vectorSource, thematic, dataFilter){
         for(var thematicNb = 0; thematicNb < thematic.length; thematicNb++) {
             if (thematic[thematicNb][2] === idLayer) {
                 var labelLayer = thematic[thematicNb][0];
@@ -426,6 +473,7 @@ function Feature() {
                     style: this.style.styleThematicApply,
                     visible: visibility
                 });
+                this.ListFilterFeatures[labelLayer] = dataFilter;
                 return orderLayer +'-'+ labelLayer;
             }
         }
@@ -438,9 +486,10 @@ function Feature() {
      * @param idLayer is the name of the source layer
      * @param vectorSource is the source of the data layer
      * @param thematicComplex is the parameter of the style layer
+     * @param dataFilter is the parameter to stock all information of the layer
      * @returns {*} the name of the layer
      */
-    this.createThematicComplexLayer = function(idLayer, vectorSource, thematicComplex){
+    this.createThematicComplexLayer = function(idLayer, vectorSource, thematicComplex, dataFilter){
         for(var thematicComplexNb = 0; thematicComplexNb < thematicComplex.length; thematicComplexNb++) {
              if (thematicComplex[thematicComplexNb][2] === idLayer) {
                  var labelLayer = thematicComplex[thematicComplexNb][0];
@@ -457,6 +506,7 @@ function Feature() {
                     style: this.style.styleThematicComplexApply,
                     visible: visibility
                  });
+                 this.ListFilterFeatures[labelLayer] = dataFilter;
                  return orderLayer +'-'+ labelLayer;
              }
         }

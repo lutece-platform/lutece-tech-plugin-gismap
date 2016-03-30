@@ -12,6 +12,26 @@ function SpecificInteracts(){
     this.selectInteract = new ol.interaction.Select();
 
     /**
+     * selectClusterInteract is the interaction to manipulate the style of clustering features on the map
+     * @type {ol.interaction.Select}
+     */
+    this.selectClusterInteract = new ol.interaction.Select({
+        condition: function(evt) {
+            return evt.originalEvent.type === 'mousemove';
+        },
+        layers: function(layer) {
+            var layers = featureLayer.getClusterLayers();
+            for(var i = 0; i < layers.length; i++){
+                if(layers[i] === layer){
+                    return true;
+                }
+            }
+            return false;
+        },
+        style: featureLayer.getSpecificStyle().selectStyleCluster
+    });
+
+    /**
      * SpecificInteracts Method
      * getSelectInteraction is a getter to access at the Selector
      * @returns {ol.interaction.Select} the select interaction
@@ -19,6 +39,16 @@ function SpecificInteracts(){
     this.getSelectInteraction = function(){
         return this.selectInteract;
     };
+
+    /**
+     * SpecificInteracts Method
+     * getSelectClusterInteraction is a getter to access at the Selector for cluster layer
+     * @returns {ol.interaction.Select} the select cluster interaction
+     */
+    this.getSelectClusterInteraction = function(){
+        return this.selectClusterInteract;
+    };
+
 
     /**
      * SpecificInteracts Method

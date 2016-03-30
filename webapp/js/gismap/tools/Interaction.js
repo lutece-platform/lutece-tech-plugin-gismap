@@ -1,4 +1,4 @@
-/*global ol, drawTools, measureTools, specifInteracts, Editor, GlobalMap, popup, alert*/
+/*global ol, popup, alert, featureLayer, drawTools, measureTools, specifInteracts, Editor, GlobalMap*/
 
 /**
  * Interaction Class manage interactions on the map
@@ -100,6 +100,9 @@ function Interaction(layerEdit, fieldParameters){
      */
     this.initInteractions = function(activeInteracts){
         var editorInteracts = null;
+        if(featureLayer.getClusterLayers() !== null || featureLayer.getClusterLayers() !== undefined){
+            this.ListInteracts.push(specifInteracts.getSelectClusterInteraction());
+        }
         for(var ctrl = 0; ctrl < activeInteracts.length; ctrl++) {
             if(activeInteracts[ctrl] === "Select") {
                 this.ListInteracts.push(specifInteracts.getSelectInteraction());

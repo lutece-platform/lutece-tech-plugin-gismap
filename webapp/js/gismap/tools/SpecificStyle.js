@@ -51,9 +51,13 @@ function SpecificStyle() {
         color: 'rgba(0, 0, 0, 1)',
         width: 3
     });
-    /*var invisibleFill = new ol.style.Fill({
+    /**
+     *
+     * @type {ol.style.Fill}
+     */
+    var invisibleClusterFill = new ol.style.Fill({
         color: 'rgba(255, 255, 255, 0.01)'
-    });*/
+    });
 
 
     /**
@@ -137,6 +141,7 @@ function SpecificStyle() {
      * @returns {*} the cluster style
      */
     this.styleCluster = function(feature){
+        //console.log(feature)
         var style;
         var size = feature.get('features').length;
         if (size > 1) {
@@ -162,6 +167,28 @@ function SpecificStyle() {
             });
         }
         return style;
+    };
+
+    this.selectStyleCluster = function(feature){
+        var size = feature.get('features').length;
+        var styles = [new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: Math.max(15 ,size * clusterCoef),
+                fill: invisibleClusterFill
+            })
+        })];
+        var originalFeatures = feature.get('features');
+        for (var i = originalFeatures.length - 1; i >= 0; --i) {
+            styles.push(new ol.style.Style({
+                geometry: originalFeatures[i].getGeometry(),
+                image: new ol.style.Circle({
+                    radius: 5,
+                    fill: clusterFill,
+                    stroke: clusterStroke
+                })
+            }));
+        }
+        return styles;
     };
 
     /**
