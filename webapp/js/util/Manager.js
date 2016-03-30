@@ -50,7 +50,7 @@ var Manager = function() {
         var heatmap = [];
         var cluster = [];
         var thematic = [];
-        var ideation = [];
+        var thematicComplex = [];
         if (startParameters['Projection'] !== '') {
             parameters['Projection'] = startParameters['Projection'];
         }
@@ -141,22 +141,22 @@ var Manager = function() {
             if (startParameters['Cluster'+n] !== '' && startParameters['Cluster'+n] !== undefined ) {
                 cluster.push(startParameters['Cluster'+n]);
             }
-            if (startParameters['Thematic'+n] !== '' && startParameters['Thematic'+n] !== undefined ) {
-                thematic.push(startParameters['Thematic'+n]);
+            if (startParameters['ThematicSimple'+n] !== '' && startParameters['ThematicSimple'+n] !== undefined ) {
+                thematic.push(startParameters['ThematicSimple'+n]);
             }
-            if (startParameters['Ideation'+n] !== '' && startParameters['Ideation'+n] !== undefined ) {
-                ideation.push(startParameters['Ideation'+n]);
+            if (startParameters['ThematicComplex'+n] !== '' && startParameters['ThematicComplex'+n] !== undefined ) {
+                thematicComplex.push(startParameters['ThematicComplex'+n]);
             }
             if (startParameters['GeoJSON'+n] !== '' && startParameters['GeoJSON'+n] !== undefined ) {
                 var tempGeoJson = startParameters['GeoJSON'+n];
                 for(var j = 0; j < 10; j++){
                     if(fieldParameters['UrlGeoJSON'+j] !== '' && fieldParameters['UrlGeoJSON'+j]!== undefined ) {
-                        if (startParameters['GeoJSON' + n][1] === fieldParameters['UrlGeoJSON' + j][0]) {
+                        if (startParameters['GeoJSON' + n][0] === fieldParameters['UrlGeoJSON' + j][0]) {
                             tempGeoJson.push(fieldParameters['UrlGeoJSON' + j][1]);
                         }
                     }
                 }
-                if(tempGeoJson.length === 4) {
+                if(tempGeoJson.length === 3) {
                     geoJson.push(tempGeoJson);
                 }
             }
@@ -170,8 +170,8 @@ var Manager = function() {
         parameters['WFS'] = wfs;
         parameters['HeatMap'] = heatmap;
         parameters['Cluster'] = cluster;
-        parameters['Thematic'] = thematic;
-        parameters['Ideation'] = ideation;
+        parameters['ThematicSimple'] = thematic;
+        parameters['ThematicComplex'] = thematicComplex;
         parameters['WMTS'] = wmts;
         parameters['GeoJSON'] = geoJson;
         parameters['Popup'] = popup;
@@ -238,14 +238,14 @@ var Manager = function() {
         }
         if(parameters['WFS'] !== '' && parameters['WFS'] !== undefined){
             for(var wfs  = 0; wfs < parameters['WFS'].length; wfs++){
-                layer.addWFSLayer(parameters['WFS'][wfs], parameters['HeatMap'], parameters['Thematic'],
-                    parameters['Cluster'], parameters['Ideation']);
+                layer.addWFSLayer(parameters['WFS'][wfs], parameters['HeatMap'], parameters['ThematicSimple'],
+                    parameters['Cluster'], parameters['ThematicComplex']);
             }
         }
         if(parameters['GeoJSON'] !== '' && parameters['GeoJSON'] !== undefined){
             for(var geoJson = 0; geoJson < parameters['GeoJSON'].length; geoJson++){
                 layer.addLayerVector(parameters['GeoJSON'][geoJson], 'GeoJSON', parameters['HeatMap'],
-                    parameters['Thematic'], parameters['Cluster'], parameters['Ideation']);
+                    parameters['ThematicSimple'], parameters['Cluster'], parameters['ThematicComplex']);
             }
         }
         if(parameters['WKT'] !== '' && parameters['WKT'] !== undefined){

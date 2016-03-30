@@ -56,7 +56,7 @@ var Popup = function(parameters) {
             for (var k = 0; k < keysQuery.length; k++) {
                 if (keysQuery[k] === keys[j]) {
                     if(keysQuery[k] === 'link'){
-                        data = data + '<p>Lien : <a href="'+ feature.get(keys[j]) +'">La Fiche</a></p>';
+                        data = data + '<p>Lien : <a href="'+ feature.get(keys[j]) +'">Détails</a></p>';
                     }else {
                         data = data + '<p>' + keysQuery[k] + " : " + feature.get(keys[j]) + '</p>';
                     }
@@ -85,17 +85,17 @@ var Popup = function(parameters) {
             }else{
                 for(var i = 0; i < count; i++){
                     queries[id] = [evt.coordinate, layerInfo, features[layerInfo+i]];
-                    data = data + '<p>' + layerInfo + ' : <a href="#" onclick="popup.displaySimplePopup('+id+')">' +
+                    data = data + '<p>' + layerInfo + ' : <a type="button" href="#" onclick="popup.displaySimplePopup('+id+')">' +
                         features[layerInfo+i].get(queryData[layerInfo][1]) + '</a></p>';
                     id++;
                 }
-                overlay.show(evt.coordinate, '<div><h3>Multi-Selection:</h3><p>' + data + '</p></div>');
+                overlay.show(evt.coordinate, '<div><h3>Informations:</h3><p>' + data + '</p></div>');
             }
         }else if(layerInfo.length > 1){
             for (var l = 0; l < layerInfo.length; l++) {
                 if(wmsLayers[layerInfo[l]] !== null && wmsLayers[layerInfo[l]] !== undefined){
                     queries[id] = [evt.coordinate, layerInfo[l], wmsLayers[layerInfo[l]]];
-                    data = data + '<p>' + layerInfo[l] + ' : <a href="#" onclick="popup.displaySimplePopup('+id+')">' +
+                    data = data + '<p>' + layerInfo[l] + ' : <a type="button" href="#" onclick="popup.displaySimplePopup('+id+')">' +
                         wmsLayers[layerInfo[l]].get(queryData[layerInfo[l]][1]) + '</a></p>';
                     id++;
                 }else{
@@ -103,7 +103,7 @@ var Popup = function(parameters) {
                         if(features[layerInfo[l]+m] !== null && features[layerInfo[l]+m] !== undefined){
                             var queryFeature = features[layerInfo[l]+m];
                             queries[id] = [evt.coordinate, layerInfo[l], queryFeature];
-                            data = data + '<p>' + layerInfo[l] + ' : <a href="#" onclick="popup.displaySimplePopup('+id+')">' +
+                            data = data + '<p>' + layerInfo[l] + ' : <a type="button" href="#" onclick="popup.displaySimplePopup('+id+')">' +
                                 queryFeature.get(queryData[layerInfo[l]][1]) + '</a></p>';
                             id++;
                         }
