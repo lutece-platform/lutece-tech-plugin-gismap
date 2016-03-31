@@ -101,7 +101,7 @@ function Editor(layerEdit, fieldName) {
      * @type {String}
      */
     var editType = fieldName['TypeEdit'] === 'SuggestPOI'  ? 'Point' : fieldName['TypeEdit'] === 'ReadOnly' ?
-        JSON.parse(this.fieldData.value)['geometry']['type'] : fieldName['TypeEdit'];
+        JSON.parse(getTransformStringToGeoJSON(editData))['geometry']['type'] : fieldName['TypeEdit'];
     /**
      * suggestPoiEdit is the marker to know the mode of edition on the map
      * @type {ol.interaction.Draw}
@@ -192,7 +192,7 @@ function Editor(layerEdit, fieldName) {
      */
     this.initEditInteraction = function (mode) {
         if(this.editAvailable !== true) {
-            this.editLayer.getSource().addFeature(this.geoJSONFormat.readFeature(this.getTransformStringToGeoJSON(editData), {
+            this.editLayer.getSource().addFeature(this.geoJSONFormat.readFeature(getTransformStringToGeoJSON(editData), {
                 featureProjection: projection.getProjection().getCode(),
                 dataProjection: this.editProj
             }));
@@ -251,7 +251,7 @@ function Editor(layerEdit, fieldName) {
      * @param feature is the new feature
      */
      this.writeGeoJSON = function(feature) {
-         this.fieldData.value = this.getTransformGeoJSONToString(this.geoJSONFormat.writeFeature(feature, {
+         this.fieldData.value = getTransformGeoJSONToString(this.geoJSONFormat.writeFeature(feature, {
              featureProjection: projection.getProjection().getCode(),
              dataProjection: this.editProj
          }));
@@ -299,7 +299,7 @@ function Editor(layerEdit, fieldName) {
      * @param st is the initial string to formate
      * @returns {string} is the formated string
      */
-    this.getTransformGeoJSONToString = function(st){
+    function getTransformGeoJSONToString(st){
         var l = st.length;
         var i;
         for(i = 0; i<l; i++){
@@ -308,7 +308,7 @@ function Editor(layerEdit, fieldName) {
             }
         }
         return st;
-    };
+    }
 
      /**
      * Editor METHOD
@@ -316,7 +316,7 @@ function Editor(layerEdit, fieldName) {
      * @param st is the initial string to formate
      * @returns {string} is the formated string
      */
-    this.getTransformStringToGeoJSON = function(st){
+    function getTransformStringToGeoJSON(st){
         var l = st.length;
         var i;
         for(i = 0; i<l; i++){
@@ -325,7 +325,7 @@ function Editor(layerEdit, fieldName) {
             }
         }
         return st;
-    };
+    }
 
     /**
      * Editor METHOD

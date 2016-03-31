@@ -61,6 +61,16 @@ function Filter() {
                 });
             }
         });
+        var clusterLayer = featureLayer.getClusterLayers();
+        for(var i = 0; i < clusterLayer.length; i++) {
+            if (clusterLayer[i].get('title') === name) {
+                var sourceCluster = vectorSource;
+                vectorSource = new ol.source.Cluster({
+                    source: sourceCluster,
+                    distance: this.ListLayers[name].getSource().distance_
+                });
+            }
+        }
         this.ListLayers[name].setSource(vectorSource);
     };
 
@@ -196,6 +206,16 @@ function Filter() {
                     tileSize: 512
                 }))
             });
+        }
+        var clusterLayer = featureLayer.getClusterLayers();
+        for(var i = 0; i < clusterLayer.length; i++) {
+            if (clusterLayer[i].get('title') === name) {
+                var sourceCluster = vectorSource;
+                vectorSource = new ol.source.Cluster({
+                    source: sourceCluster,
+                    distance: this.ListLayers[name].getSource().distance_
+                });
+            }
         }
         this.ListLayers[name].setSource(vectorSource);
     };
