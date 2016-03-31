@@ -69,9 +69,6 @@ var Manager = function() {
         if (startParameters['Overview'] !== false) {
             controls.push('Overview');
         }
-        if (startParameters['ZoomExtent'] !== false) {
-            controls.push('ZoomExtent');
-        }
         if (startParameters['ScaleBar'] !== false) {
             controls.push('ScaleBar');
         }
@@ -83,6 +80,9 @@ var Manager = function() {
         }
         if (startParameters['ZoomSlider'] !== false) {
             controls.push('ZoomSlider');
+        }
+        if (startParameters['ZoomExtent'] !== false) {
+            controls.push('ZoomExtent');
         }
         if (startParameters['Rotate'] !== false) {
             interacts.push('Rotate');

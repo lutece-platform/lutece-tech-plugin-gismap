@@ -131,7 +131,7 @@ var InterfaceElements = function(parameters) {
                 }
             }
         }
-        if (parameters['Popup'] !== '' && parameters['Popup'] !== undefined) {
+        if (parameters['Popup'].length !== 0) {
             var buttonInfo = document.createElement('button');
             buttonInfo.setAttribute('type','button');
             buttonInfo.innerHTML = 'I';
