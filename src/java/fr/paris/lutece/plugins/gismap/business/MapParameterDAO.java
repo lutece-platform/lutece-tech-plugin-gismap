@@ -40,10 +40,12 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String WMSBASE1 = "WMS-Base1";
     public static final String WMSBASE2 = "WMS-Base2";
     public static final String WMSLAYER1 = "WMS-Layer1";
+    public static final String WMSLAYER2 = "WMS-Layer2";
     public static final String POPUPSHOWLINK = "Popup_ShowLink";
     public static final String POPUP1 = "Popup1";
     public static final String POPUP2 = "Popup2";
     public static final String POPUP3 = "Popup3";
+    public static final String POPUP4 = "Popup4";
     public static final String WFS1 = "WFS1";
     public static final String WFS2 = "WFS2";
     public static final String WFS3 = "WFS3";
@@ -144,6 +146,9 @@ public class MapParameterDAO implements IMapParameterDAO
 		String strWMSLayer1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WMSLAYER1 );
 		mapParameter.setParameters(WMSLAYER1, getStringByPoint(strWMSLayer1Property));
 		
+		String strWMSLayer2Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WMSLAYER2 );
+		mapParameter.setParameters(WMSLAYER2, getStringByPoint(strWMSLayer2Property));
+		
 		String strPopup1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + POPUP1 );
 		mapParameter.setParameters(POPUP1, getStringByPoint(strPopup1Property));
 		
@@ -152,6 +157,9 @@ public class MapParameterDAO implements IMapParameterDAO
 		
 		String strPopup3Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + POPUP3 );
 		mapParameter.setParameters(POPUP3, getStringByPoint(strPopup3Property));
+		
+		String strPopup4Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + POPUP4 );
+		mapParameter.setParameters(POPUP4, getStringByPoint(strPopup4Property));
 		
 		String strWFS1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WFS1 );
 		mapParameter.setParameters(WFS1, getStringByPoint(strWFS1Property));
