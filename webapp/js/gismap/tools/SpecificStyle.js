@@ -141,7 +141,6 @@ function SpecificStyle() {
      * @returns {*} the cluster style
      */
     this.styleCluster = function(feature){
-        //console.log(feature)
         var style;
         var size = feature.get('features').length;
         if (size > 1) {

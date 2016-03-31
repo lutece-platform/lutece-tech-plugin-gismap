@@ -36,28 +36,31 @@ function Filter() {
     this.filterLayerGEOSJON = function(name, urlGeoJson){
         var dataProj = this.ListLayers[name].getSource().getProjection();
         var vectorSource = new ol.source.Vector({
-                loader: function () {
-                    $.ajax({
-                        url : urlGeoJson,
-                        dataType: 'jsonp',
-                        jsonpCallback: 'callback',
-                        success: function (response) {
-                            if (response.error) {
-                                console.log(response.error.message + '\n' + response.error.details.join('\n'));
-                            }else {
-                                var features = geoJSONFormat.readFeatures(response,{
-                                    dataProjection: dataProj,
-                                    featureProjection: projection.getProjection().getCode()
-                                });
-                                if (features.length > 0) {
+            loader: function () {
+                $.ajax({
+                    url : urlGeoJson,
+                    dataType: 'jsonp',
+                    jsonpCallback: 'callback',
+                    success: function (response) {
+                        if (response.error) {
+                            console.log(response.error.message + '\n' + response.error.details.join('\n'));
+                        }else {
+                            var features = geoJSONFormat.readFeatures(response,{
+                                dataProjection: dataProj,
+                                featureProjection: projection.getProjection().getCode()
+                            });
+                            if (features.length > 0) {
+                                if(vectorSource instanceof ol.source.Cluster) {
+                                    vectorSource.getSource().addFeatures(features);
+                                }else{
                                     vectorSource.addFeatures(features);
                                 }
                             }
                         }
-                    });
-                }
-            });
-        this.ListLayers[name].getSource().clear();
+                    }
+                });
+            }
+        });
         this.ListLayers[name].setSource(vectorSource);
     };
 
@@ -104,7 +107,11 @@ function Filter() {
                                         featureProjection: projection.getProjection().getCode()
                                     });
                                     if (features.length > 0) {
-                                        vectorSource.addFeatures(features);
+                                        if(vectorSource instanceof ol.source.Cluster) {
+                                            vectorSource.getSource().addFeatures(features);
+                                        }else{
+                                            vectorSource.addFeatures(features);
+                                        }
                                     }
                                 }
                             }
@@ -136,7 +143,11 @@ function Filter() {
                                         featureProjection: projection.getProjection().getCode()
                                     });
                                     if (features.length > 0) {
-                                        vectorSource.addFeatures(features);
+                                        if(vectorSource instanceof ol.source.Cluster) {
+                                            vectorSource.getSource().addFeatures(features);
+                                        }else{
+                                            vectorSource.addFeatures(features);
+                                        }
                                     }
                                 }
                             }
@@ -152,49 +163,40 @@ function Filter() {
             if(queryFinal !== ''){
                 queryFinal = "&CQL_FILTER=" + queryFinal;
             }
-            var vectorLoader= function(extent) {
-                var webService = '';
-                if(queryFinal !== '') {
-                    webService = url + queryFinal + '&outputFormat=text/javascript&srsname=' + projectionData.getCode() + '&format_options=callback:loadFeatures';
-                }else{
-                    if(extent[0] === -Infinity){
-                        extent = projection.getExtent();
-                    }
-                    var extentCapture = ol.extent.applyTransform(extent, ol.proj.getTransform(projection.getProjection().getCode(), projectionData.getCode()));
-                    webService = url + '&outputFormat=text/javascript&format_options=callback:loadFeatures&' +
-                        'srsname=' + projectionData.getCode() + '&bbox=' + extentCapture.join(',') + ',' + projectionData.getCode();
-                }
-                $.ajax({
-                    url: webService,
-                    dataType: 'jsonp'
-                });
-            };
-
-            window.loadFeatures = function(response) {
-                var features = geoJSONFormat.readFeatures(response, {
-                    dataProjection: projectionData.getCode(),
-                    featureProjection: projection.getProjection().getCode()
-                });
-                vectorSource.addFeatures(features);
-            };
-
             vectorSource = new ol.source.Vector({
-                loader: vectorLoader,
+                loader: function(extent) {
+                    var webService = '';
+                    if(queryFinal !== '') {
+                        webService = url + queryFinal + '&outputFormat=text/javascript&srsname=' + projectionData.getCode() + '&format_options=callback:loadFeatures';
+                    }else{
+                        if(extent[0] === -Infinity){
+                            extent = projection.getExtent();
+                        }
+                        var extentCapture = ol.extent.applyTransform(extent, ol.proj.getTransform(projection.getProjection().getCode(), projectionData.getCode()));
+                        webService = url + '&outputFormat=text/javascript&format_options=callback:loadFeatures&' +
+                            'srsname=' + projectionData.getCode() + '&bbox=' + extentCapture.join(',') + ',' + projectionData.getCode();
+                    }
+                    $.ajax({
+                        url: webService,
+                        dataType: 'jsonp'
+                    });
+                    window.loadFeatures = function(response) {
+                        var features = geoJSONFormat.readFeatures(response, {
+                            dataProjection: projectionData.getCode(),
+                            featureProjection: projection.getProjection().getCode()
+                        });
+                        if(vectorSource instanceof ol.source.Cluster) {
+                            vectorSource.getSource().addFeatures(features);
+                        }else{
+                            vectorSource.addFeatures(features);
+                        }
+                    };
+                },
                 strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
                     tileSize: 512
                 }))
             });
         }
-        /*var clusterLayer = featureLayer.getClusterLayers();
-        for(var i = 0; i < clusterLayer.length; i++) {
-            if (clusterLayer[i].get('title') === name) {
-                var sourceCluster = vectorSource;
-                vectorSource = new ol.source.Cluster({
-                    source: sourceCluster,
-                    distance: this.ListLayers[name].getSource().distance_
-                });
-            }
-        }*/
         this.ListLayers[name].setSource(vectorSource);
     };
 }

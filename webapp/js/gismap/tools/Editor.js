@@ -100,7 +100,8 @@ function Editor(layerEdit, fieldName) {
      * editType is the type of the data can be edit
      * @type {String}
      */
-    var editType = fieldName['TypeEdit'] === 'SuggestPOI' ? 'Point': fieldName['TypeEdit'];
+    var editType = fieldName['TypeEdit'] === 'SuggestPOI'  ? 'Point' : fieldName['TypeEdit'] === 'ReadOnly' ?
+        JSON.parse(this.fieldData.value)['geometry']['type'] : fieldName['TypeEdit'];
     /**
      * suggestPoiEdit is the marker to know the mode of edition on the map
      * @type {ol.interaction.Draw}

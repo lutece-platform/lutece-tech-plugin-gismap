@@ -259,34 +259,32 @@ function Feature() {
             if(query !== ''){
                 query = "&CQL_FILTER=" + query;
             }
-            var vectorLoader= function(extent) {
-                var webService = '';
-                if(query !== '') {
-                    webService = url + query + '&outputFormat=text/javascript&srsname=' + projectionData.getCode() + '&format_options=callback:loadFeatures';
-                }else{
-                    if(extent[0] === -Infinity){
-                        extent = projection.getExtent();
-                    }
-                    var extentCapture = ol.extent.applyTransform(extent, ol.proj.getTransform(projection.getProjection().getCode(), projectionData.getCode()));
-                    webService = url + '&outputFormat=text/javascript&format_options=callback:loadFeatures&' +
-                        'srsname=' + projectionData.getCode() + '&bbox=' + extentCapture.join(',') + ',' + projectionData.getCode();
-                }
-                $.ajax({
-                    url: webService,
-                    dataType: 'jsonp'
-                });
-            };
-
-            window.loadFeatures = function(response) {
-                var features = geoJSONFormat.readFeatures(response, {
-                    dataProjection: projectionData.getCode(),
-                    featureProjection: projection.getProjection().getCode()
-                });
-                vectorSource.addFeatures(features);
-            };
-
             vectorSource = new ol.source.Vector({
-                loader: vectorLoader,
+                loader: function (extent) {
+                    var webService = '';
+                    if (query !== '') {
+                        webService = url + query + '&outputFormat=text/javascript&srsname=' + projectionData.getCode() + '&format_options=callback:loadFeatures';
+                    } else {
+                        if (extent[0] === -Infinity) {
+                            extent = projection.getExtent();
+                        }
+                        var extentCapture = ol.extent.applyTransform(extent, ol.proj.getTransform(projection.getProjection().getCode(), projectionData.getCode()));
+                        webService = url + '&outputFormat=text/javascript&format_options=callback:loadFeatures&' +
+                            'srsname=' + projectionData.getCode() + '&bbox=' + extentCapture.join(',') + ',' + projectionData.getCode();
+                    }
+                    $.ajax({
+                        url: webService,
+                        dataType: 'jsonp'
+                    });
+
+                    window.loadFeatures = function (response) {
+                        var features = geoJSONFormat.readFeatures(response, {
+                            dataProjection: projectionData.getCode(),
+                            featureProjection: projection.getProjection().getCode()
+                        });
+                        vectorSource.addFeatures(features);
+                    };
+                },
                 strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
                     tileSize: 512
                 }))

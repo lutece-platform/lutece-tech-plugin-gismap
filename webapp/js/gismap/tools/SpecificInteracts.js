@@ -17,7 +17,7 @@ function SpecificInteracts(){
      */
     this.selectClusterInteract = new ol.interaction.Select({
         condition: function(evt) {
-            return evt.originalEvent.type === 'mousemove';
+            return evt.type === 'click';
         },
         layers: function(layer) {
             var layers = featureLayer.getClusterLayers();

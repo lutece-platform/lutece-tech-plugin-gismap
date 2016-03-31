@@ -158,6 +158,9 @@ function Interaction(layerEdit, fieldParameters){
                 this.currentInteract = "SuggestPoiEdit";
                 this.setSuggestEditInteraction();
             }
+            if (activeInteracts[ctrl] === "ReadOnly") {
+                editorInteracts = editorTools.initEditInteraction('ReadOnly');
+            }
         }
     };
 

@@ -109,6 +109,9 @@ var Manager = function() {
         if (fieldParameters['TypeEdit'] === 'SuggestPOI') {
             interacts.push('SuggestPOIEdit');
         }
+        if (fieldParameters['TypeEdit'] === 'ReadOnly') {
+            interacts.push('ReadOnly');
+        }
         if (startParameters['SuggestPOISearch'] !== false) {
             interacts.push('SuggestPOISearch');
             parameters['SuggestPOIParams'] = startParameters['SuggestPOIParams'];
