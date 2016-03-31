@@ -50,13 +50,15 @@ var Zoom = function() {
      * @param fieldGeom is the field where is stock geometry
      */
     var initialZoom = function (fieldGeom) {
-        var feature = new ol.format.GeoJSON().readFeature(editorTools.getTransformStringToGeoJSON(document.getElementById(fieldGeom).value), {
-            featureProjection: projection.getProjection().getCode(),
-            dataProjection: editorTools.getEditProj()
-        });
-        view.getView().fit(feature.getGeometry(), GlobalMap.getSize(),{
-            maxZoom: view.getZoomSelect()
-        });
+        if(editorTools !== null) {
+            var feature = new ol.format.GeoJSON().readFeature(editorTools.getTransformData(document.getElementById(fieldGeom).value), {
+                featureProjection: projection.getProjection().getCode(),
+                dataProjection: editorTools.getEditProj()
+            });
+            view.getView().fit(feature.getGeometry(), GlobalMap.getSize(), {
+                maxZoom: view.getZoomSelect()
+            });
+        }
     };
 
     return{

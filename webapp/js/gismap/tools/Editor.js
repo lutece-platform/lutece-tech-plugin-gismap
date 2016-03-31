@@ -329,6 +329,16 @@ function Editor(layerEdit, fieldName) {
 
     /**
      * Editor METHOD
+     * getTransformData accessor to formate the geoJson for OpenLayers
+     * @param st is the initial string to formate
+     * @returns {string} is the formated string
+     */
+    this.getTransformData = function(st){
+        return getTransformStringToGeoJSON(st);
+    }
+
+    /**
+     * Editor METHOD
      * getSelectedEditFeatures().on is a Listener to affect an ID at the current selection
      */
     this.getSelectedEditFeatures().on('add', function (evt) {
