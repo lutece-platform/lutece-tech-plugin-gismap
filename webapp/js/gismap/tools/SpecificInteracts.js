@@ -80,10 +80,10 @@ function SpecificInteracts(){
 
     /**
      * SpecificInteracts Method
-     * setSelectedFeatures is a setter to select features by another plugin
+     * setSpecificSelectedFeatures is a setter to select features by another plugin
      * @param idFeature is an array of the Ids
      */
-    this.setSelectedFeatures = function(idFeatures){
+    this.setSpecificSelectedFeatures = function(idFeatures){
         var features = this.selectInteract.getFeatures();
         var selectableLayers = layer.getSelectableLayers();
         for(var i = 0; i < idFeatures.length; i++) {

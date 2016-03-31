@@ -104,7 +104,7 @@ function Layer() {
         var names = featureLayer.addLayerFeature(data, format, heatmap, thematic, cluster, thematicComplex);
         for(var i = 0; i < names.length; i++) {
             this.ListLayers.push(names[i]);
-            this.selectableLayers.push(names[i]);
+            this.selectableLayers.push(names[i].split('-')[1]);
         }
     };
 
@@ -192,5 +192,18 @@ function Layer() {
              ListLayersMap.push(editorTools.getEditLayer());
          }
          return ListLayersMap;
+    };
+
+    /**
+     * Layer Method
+     * showLayer enable or disable a visibility of a layer
+     */
+     this.showLayer = function(layerName, visible){
+        if(rasterLayer.getRasterByName(layerName)!== undefined) {
+            rasterLayer.getRasterByName(layerName).setVisible(visible);
+        }
+        if(featureLayer.getFeatureByName(layerName)!== undefined) {
+            featureLayer.getFeatureByName(layerName).setVisible(visible);
+        }
     };
 }
