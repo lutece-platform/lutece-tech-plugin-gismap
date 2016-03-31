@@ -15,5 +15,6 @@
 
     <bean id="viewDAO"  class="fr.paris.lutece.plugins.gismap.business.ViewDAO" />
     <bean id="mapParameterDAO"  class="fr.paris.lutece.plugins.gismap.business.MapParameterDAO" /> 
+    <bean id="gismapReverseGeocoding"  class="fr.paris.lutece.plugins.gismap.business.ReverseGeocoding" /> 
 
 </beans>
