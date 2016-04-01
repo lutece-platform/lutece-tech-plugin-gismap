@@ -44,13 +44,19 @@ function LayerRaster() {
      * @param server is the type of the server
      * @param url is the url to access at the service
      * @param dataName is the name of the data on the server
+     * @param dataAttribution is the information about the data
      */
-    this.createWMSLayer = function(layerName, server, url, dataName){
+    this.createWMSLayer = function(layerName, server, url, dataName, dataAttribution){
         if(server === 'AGS-IMS'){
             this.ListRasters[layerName] = new ol.layer.Tile({
                 title: layerName,
                 type: 'base',
                 source: new ol.source.TileArcGISRest({
+                    attributions: [
+                        new ol.Attribution({
+                            html: dataAttribution
+                        })
+                    ],
                     url: url+dataName+'/ImageServer'
                 }),
                 visible:false
@@ -60,6 +66,11 @@ function LayerRaster() {
                 title: layerName,
                 type: 'base',
                 source: new ol.source.TileArcGISRest({
+                    attributions: [
+                        new ol.Attribution({
+                            html: dataAttribution
+                        })
+                    ],
                     url: url+dataName+'/MapServer'
                 }),
                 visible:false
@@ -69,6 +80,11 @@ function LayerRaster() {
                 title: layerName,
                 type: 'base',
                 source: new ol.source.TileWMS({
+                    attributions: [
+                        new ol.Attribution({
+                            html: dataAttribution
+                        })
+                    ],
                     url: url,
                     params: {'LAYERS': dataName},
                     serverType:'geoserver'
@@ -87,9 +103,10 @@ function LayerRaster() {
      * @param proj is the projection of the data
      * @param resolutions is the table of the
      * @param origin is the coordinate of the left upper point of the data
+     * @param dataAttribution is the information about the data
      */
 
-    this.createWMTSLayer = function(layerName, server, url, proj, resolutions, origin){
+    this.createWMTSLayer = function(layerName, server, url, proj, resolutions, origin, dataAttribution){
         if(server === 'AGS') {
             var infoProjData = projection.getEpsgData(proj, false);
             var projData = infoProjData[0];
@@ -97,6 +114,11 @@ function LayerRaster() {
                 title: layerName,
                 type: 'base',
                 source: new ol.source.XYZ({
+                    attributions: [
+                        new ol.Attribution({
+                            html: dataAttribution
+                        })
+                    ],
                     url: url+'/tile/{z}/{y}/{x}',
                     projection: projData,
                     tileGrid: new ol.tilegrid.TileGrid({

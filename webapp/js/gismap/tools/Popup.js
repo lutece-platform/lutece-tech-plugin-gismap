@@ -104,6 +104,7 @@ var Popup = function(parameters) {
                     data = data + this.popupForm.definePopupMultiForm(layerInfo, id, features[layerInfo+i].get(queryData[layerInfo][1]));
                     id++;
                 }
+                this.popupForm.displayPopupForm(overlay, evt.coordinate, data);
             }
         }else if(layerInfo.length > 1){
             for (var l = 0; l < layerInfo.length; l++) {
@@ -122,8 +123,8 @@ var Popup = function(parameters) {
                     }
                 }
             }
+            this.popupForm.displayPopupForm(overlay, evt.coordinate, data);
         }
-        this.popupForm.displayPopupForm(overlay, evt.coordinate, data);
     };
 
     /**

@@ -61,6 +61,16 @@ function SpecificInteracts(){
 
     /**
      * SpecificInteracts Method
+     * getSelectedLayer is a getter to access at the layer to contains selected features
+     * @param feature is the selected feature
+     * @returns {*} the layer
+     */
+    this.getSelectedLayer = function(feature){
+        return this.selectInteract.getLayer(feature);
+    };
+
+    /**
+     * SpecificInteracts Method
      * getSpecificSelectedFeatures is a getter to send all features selected to another plugin
      * @returns {*} an array of the Ids
      */
@@ -91,15 +101,5 @@ function SpecificInteracts(){
                 features.push(featureLayer.getFeatureByName(selectableLayers[j]).getSource().getFeatureById(idFeatures[i]));
             }
         }
-    };
-
-    /**
-     * SpecificInteracts Method
-     * getSelectedLayer is a getter to access at the layer to contains selected features
-     * @param feature is the selected feature
-     * @returns {*} the layer
-     */
-    this.getSelectedLayer = function(feature){
-        return this.selectInteract.getLayer(feature);
     };
 }

@@ -159,7 +159,7 @@ var Manager = function() {
                         }
                     }
                 }
-                if(tempGeoJson.length === 3) {
+                if(tempGeoJson.length === 4) {
                     geoJson.push(tempGeoJson);
                 }
             }

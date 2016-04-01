@@ -1,4 +1,4 @@
-/*global ol, layer, rasterLayer, featureLayer, drawTools, measureTools, editorTools*/
+/*global ol, layer, rasterLayer, featureLayer, interact*/
 
 /**
  * Layer Class manage all layers in the map
@@ -33,7 +33,8 @@ function Layer() {
         var wmsServer = wms[1];
         var wmsUrl = wms[2];
         var wmsLayer = wms[3];
-        rasterLayer.createWMSLayer(wmsLibelle, wmsServer, wmsUrl, wmsLayer);
+        var wmsAttribution = wms[4];
+        rasterLayer.createWMSLayer(wmsLibelle, wmsServer, wmsUrl, wmsLayer, wmsAttribution);
         this.ListLayers.push(wmsLibelle);
     };
 
@@ -49,7 +50,8 @@ function Layer() {
         var wmtsProj = wmts[3];
         var wmtsReso = wmts[4];
         var wmtsOrigin = wmts[5];
-        rasterLayer.createWMTSLayer(wmtsLibelle, wmtsServer, wmtsUrl, wmtsProj, wmtsReso, wmtsOrigin);
+        var wmtsAttribution = wmts[6];
+        rasterLayer.createWMTSLayer(wmtsLibelle, wmtsServer, wmtsUrl, wmtsProj, wmtsReso, wmtsOrigin, wmtsAttribution);
         this.ListLayers.push(wmtsLibelle);
     };
 
@@ -65,7 +67,8 @@ function Layer() {
         var wmsUrl = wms[3];
         var wmsLayer = wms[4];
         var wmsVisbility = wms[5];
-        featureLayer.createWMSQueryLayer(wmsName, wmsServer, wmsUrl, wmsLayer, wmsVisbility);
+        var wmsAttribution = wms[6];
+        featureLayer.createWMSQueryLayer(wmsName, wmsServer, wmsUrl, wmsLayer, wmsVisbility, wmsAttribution);
         this.ListLayers.push(wmsOrder +'-'+ wmsName);
     };
 
@@ -84,7 +87,8 @@ function Layer() {
         var wfsUrl = wfs[2];
         var wfsProj = wfs[3];
         var wfsQuery = wfs[4];
-        var wfsLayers = featureLayer.createWFSLayer(wfsIdLayer, wfsServer, wfsUrl, wfsProj, wfsQuery, heatmap, thematic, cluster, thematicComplex);
+        var wfsAttribution = wfs[5];
+        var wfsLayers = featureLayer.createWFSLayer(wfsIdLayer, wfsServer, wfsUrl, wfsProj, wfsQuery, wfsAttribution, heatmap, thematic, cluster, thematicComplex);
         for(var i = 0; i < wfsLayers.length; i++) {
             this.ListLayers.push(wfsLayers[i]);
         }
@@ -186,10 +190,10 @@ function Layer() {
              title:'Layers',
              layers: this.getLayersFeatureMap()
          }));
-         ListLayersMap.push(drawTools.getDrawLayer());
-         ListLayersMap.push(measureTools.getMeasureLayer());
-         if(editorTools !== null){
-             ListLayersMap.push(editorTools.getEditLayer());
+         ListLayersMap.push(interact.getDraw().getDrawLayer());
+         ListLayersMap.push(interact.getMeasure().getMeasureLayer());
+         if(interact.getEditor() !== null){
+             ListLayersMap.push(interact.getEditor().getEditLayer());
          }
          return ListLayersMap;
     };

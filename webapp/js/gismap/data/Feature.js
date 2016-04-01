@@ -97,7 +97,8 @@ function Feature() {
         var dataNames = [];
         var idLayer = data[0];
         var dataProj = data[1];
-        var dataUrl = data[2];
+        var dataAttribution = data[2];
+        var dataUrl = data[3];
         var vectorSource;
         var features = [];
         if(dataFormat === 'WKT'){
@@ -108,6 +109,11 @@ function Feature() {
                 }));
             }
             vectorSource = new ol.source.Vector({
+                attributions: [
+                    new ol.Attribution({
+                        html: dataAttribution
+                    })
+                ],
                 features: features
             });
             this.ListFeatures[idLayer] = new ol.layer.Vector({
@@ -117,6 +123,11 @@ function Feature() {
             dataNames.push( '-'+ idLayer);
         }else if(dataFormat === 'GeoJSON'){
             vectorSource = new ol.source.Vector({
+                attributions: [
+                    new ol.Attribution({
+                        html: dataAttribution
+                    })
+                ],
                 loader: function () {
                     $.ajax({
                         url : dataUrl,
@@ -179,18 +190,24 @@ function Feature() {
      * @param url is the url to access at the service
      * @param dataProj is the projection of the data
      * @param query is the initial query to apply on the layer
+     * @param dataAttribution is the information about the data
      * @param heatmap define the heatmap parameters
      * @param thematic define the thematic parameters
      * @param cluster define the cluster parameters
      * @param thematicComplex define the thematic complex parameters
      * @returns {Array} an array with the names of the layers
      */
-    this.createWFSLayer = function(idLayer, server, url, dataProj, query, heatmap, thematic, cluster, thematicComplex) {
+    this.createWFSLayer = function(idLayer, server, url, dataProj, query, dataAttribution, heatmap, thematic, cluster, thematicComplex) {
         var vectorSource = null;
-        var dataFilter = [server, url, dataProj, query];
+        var dataFilter = [server, url, dataProj, query, dataAttribution];
         if (server === 'AGS') {
             if(query === '') {
                 vectorSource = new ol.source.Vector({
+                    attributions: [
+                        new ol.Attribution({
+                            html: dataAttribution
+                        })
+                    ],
                     loader: function (extent) {
                         if(extent[0] === -Infinity){
                             extent = projection.getExtent();
@@ -223,6 +240,11 @@ function Feature() {
                 });
             }else {
                 vectorSource = new ol.source.Vector({
+                    attributions: [
+                        new ol.Attribution({
+                            html: dataAttribution
+                        })
+                    ],
                     loader: function (extent) {
                         if(extent[0] === -Infinity){
                             extent = projection.getExtent();
@@ -260,6 +282,11 @@ function Feature() {
                 query = "&CQL_FILTER=" + query;
             }
             vectorSource = new ol.source.Vector({
+                attributions: [
+                    new ol.Attribution({
+                        html: dataAttribution
+                    })
+                ],
                 loader: function (extent) {
                     var webService = '';
                     if (query !== '') {
@@ -333,13 +360,19 @@ function Feature() {
      * @param url is the url to access at the service
      * @param dataName is the name of the data on the server
      * @param visibility is the indicator to display or not at the start
+     * @param dataAttribution is the information about the data
      */
-    this.createWMSQueryLayer = function(layerName, server, url, dataName, visibility){
+    this.createWMSQueryLayer = function(layerName, server, url, dataName, visibility, dataAttribution){
         if(server === 'AGS-IMS'){
             this.ListFeatures[layerName] = new ol.layer.Tile({
                 title: layerName,
                 source: new ol.source.TileArcGISRest({
-                    url: url+dataName+'/ImageServer'
+                    attributions: [
+                        new ol.Attribution({
+                            html: dataAttribution
+                        })
+                    ],
+                    url: url + dataName + '/ImageServer'
                 }),
                 visible: visibility
             });
@@ -347,7 +380,12 @@ function Feature() {
             this.ListFeatures[layerName] = new ol.layer.Tile({
                 title: layerName,
                 source: new ol.source.TileArcGISRest({
-                    url: url+dataName+'/MapServer'
+                    attributions: [
+                        new ol.Attribution({
+                            html: dataAttribution
+                        })
+                    ],
+                    url: url + dataName + '/MapServer'
                 }),
                 visible: visibility
             });
@@ -355,6 +393,11 @@ function Feature() {
             this.ListFeatures[layerName] = new ol.layer.Tile({
                 title: layerName,
                 source: new ol.source.TileWMS({
+                    attributions: [
+                        new ol.Attribution({
+                            html: dataAttribution
+                        })
+                    ],
                     url: url,
                     params: {'LAYERS': dataName},
                     serverType:'geoserver'
@@ -434,6 +477,7 @@ function Feature() {
                 this.ListFeatures[labelLayer] = new ol.layer.Vector({
                     title: labelLayer,
                     source: new ol.source.Cluster({
+                        attributions: vectorSource.getAttributions(),
                         source: vectorSource,
                         distance: distCluster
                     }),

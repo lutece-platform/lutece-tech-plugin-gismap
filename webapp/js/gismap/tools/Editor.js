@@ -1,4 +1,4 @@
-/*global ol, alert, Map, projection, GlobalMap, interact, editorTools*/
+/*global ol, alert, Map, projection, GlobalMap, interact*/
 
 /**
  * Editor Class manage all Edition of data on the map
@@ -335,7 +335,7 @@ function Editor(layerEdit, fieldName) {
      */
     this.getTransformData = function(st){
         return getTransformStringToGeoJSON(st);
-    }
+    };
 
     /**
      * Editor METHOD
@@ -343,13 +343,13 @@ function Editor(layerEdit, fieldName) {
      */
     this.getSelectedEditFeatures().on('add', function (evt) {
         var feature = evt.element;
-        if (editorTools.selectInteract.getLayer(feature).get('name') === editorTools.editLayer.get('name')){
-            editorTools.fieldEditionStatus.value = true;
+        if (interact.getEditor().selectInteract.getLayer(feature).get('name') === interact.getEditor().editLayer.get('name')){
+            interact.getEditor().fieldEditionStatus.value = true;
             feature.on('change', function (evt) {
                 dirty[evt.target.getId()] = true;
             });
         }else{
-            editorTools.selectInteract.getFeatures().clear();
+            interact.getEditor().selectInteract.getFeatures().clear();
         }
     });
 
@@ -359,8 +359,8 @@ function Editor(layerEdit, fieldName) {
      */
     this.getSelectedEditFeatures().on('remove', function (evt) {
         var feature = evt.element;
-        if (editorTools.selectInteract.getLayer(feature).get('name') === editorTools.editLayer.get('name')){
-            editorTools.writeGeoJSON(feature);
+        if (interact.getEditor().selectInteract.getLayer(feature).get('name') === interact.getEditor().editLayer.get('name')){
+            interact.getEditor().writeGeoJSON(feature);
         }
     });
 
@@ -369,7 +369,7 @@ function Editor(layerEdit, fieldName) {
      * drawEditInteract.on is a Listener to add a feature
      */
     this.drawEditInteract.on('drawend', function (evt) {
-        editorTools.writeGeoJSON(evt.feature);
+        interact.getEditor().writeGeoJSON(evt.feature);
         interact.deleteFeatures("draw");
     });
 

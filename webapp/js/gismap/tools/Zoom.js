@@ -1,4 +1,4 @@
-/*global ol, specifInteracts, view, editorTools, projection, GlobalMap*/
+/*global ol, specifInteracts, view, interact, projection, GlobalMap*/
 /**
  * Zoom Class manage all Zoom action included in the map
  */
@@ -16,8 +16,8 @@ var Zoom = function() {
         view.getView().fit(pointPoi, GlobalMap.getSize(),{
             maxZoom: view.getZoomSelect()
         });
-        if(editorTools!== null && editorTools.getSuggestPoiEdit()){
-            editorTools.addPoint(pointPoi);
+        if(interact.getEditor()!== null && interact.getEditor().getSuggestPoiEdit()){
+            interact.getEditor().addPoint(pointPoi);
         }
     };
 
@@ -28,7 +28,7 @@ var Zoom = function() {
     var zoomSelect = function () {
         var selectFeatures = specifInteracts.getSelectedFeatures().getArray();
         if(selectFeatures < 0 ) {
-            selectFeatures = editorTools.getSelectInteraction().getFeatures().getArray();
+            selectFeatures = interact.getEditor().getSelectInteraction().getFeatures().getArray();
         }
         if (selectFeatures.length === 1) {
             view.getView().fit(selectFeatures[0].getGeometry(), GlobalMap.getSize(),{
@@ -50,10 +50,10 @@ var Zoom = function() {
      * @param fieldGeom is the field where is stock geometry
      */
     var initialZoom = function (fieldGeom) {
-        if(editorTools !== null) {
-            var feature = new ol.format.GeoJSON().readFeature(editorTools.getTransformData(document.getElementById(fieldGeom).value), {
+        if(interact.getEditor() !== null) {
+            var feature = new ol.format.GeoJSON().readFeature(interact.getEditor().getTransformData(document.getElementById(fieldGeom).value), {
                 featureProjection: projection.getProjection().getCode(),
-                dataProjection: editorTools.getEditProj()
+                dataProjection: interact.getEditor().getEditProj()
             });
             view.getView().fit(feature.getGeometry(), GlobalMap.getSize(), {
                 maxZoom: view.getZoomSelect()

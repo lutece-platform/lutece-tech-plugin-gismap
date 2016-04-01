@@ -36,6 +36,7 @@ function Filter() {
     this.filterLayerGEOSJON = function(name, urlGeoJson){
         var dataProj = this.ListLayers[name].getSource().getProjection();
         var vectorSource = new ol.source.Vector({
+            attributions: this.ListLayers[name].getSource().getAttributions(),
             loader: function () {
                 $.ajax({
                     url : urlGeoJson,
@@ -85,6 +86,7 @@ function Filter() {
         var url = this.ListDataLayers[name][1];
         var dataProj = this.ListDataLayers[name][2];
         var queryOrigin = this.ListDataLayers[name][3];
+        var dataAttribution = this.ListDataLayers[name][4];
         var queryFinal = '';
         var vectorSource = null;
         if(queryOrigin !== '' && query !== ''){
@@ -97,6 +99,11 @@ function Filter() {
         if (server === 'AGS') {
             if(queryFinal === '') {
                 vectorSource = new ol.source.Vector({
+                    attributions: [
+                        new ol.Attribution({
+                            html: dataAttribution
+                        })
+                    ],
                     loader: function (extent) {
                         if (extent[0] === -Infinity) {
                             extent = projection.getExtent();
@@ -133,6 +140,11 @@ function Filter() {
                 });
             }else{
                 vectorSource = new ol.source.Vector({
+                    attributions: [
+                        new ol.Attribution({
+                            html: dataAttribution
+                        })
+                    ],
                     loader: function (extent) {
                         if(extent[0] === -Infinity){
                             extent = projection.getExtent();
@@ -174,6 +186,11 @@ function Filter() {
                 queryFinal = "&CQL_FILTER=" + queryFinal;
             }
             vectorSource = new ol.source.Vector({
+                attributions: [
+                    new ol.Attribution({
+                        html: dataAttribution
+                    })
+                ],
                 loader: function(extent) {
                     var webService = '';
                     if(queryFinal !== '') {
@@ -212,6 +229,11 @@ function Filter() {
             if (clusterLayer[i].get('title') === name) {
                 var sourceCluster = vectorSource;
                 vectorSource = new ol.source.Cluster({
+                    attributions: [
+                        new ol.Attribution({
+                            html: dataAttribution
+                        })
+                    ],
                     source: sourceCluster,
                     distance: this.ListLayers[name].getSource().distance_
                 });

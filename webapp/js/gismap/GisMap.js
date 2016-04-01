@@ -1,24 +1,17 @@
 /*global ol, Manager, Control, Projection, Interaction, Layer, LayerRaster, Feature, SuggestPoiLocator,
-View, Measure, Zoom, DrawTools, InterfaceElements, SpecificInteracts, GeoPoint, Print, Popup, Filter*/
+View, Zoom, InterfaceElements, GeoPoint, Print, Popup, Filter*/
 
 /**
  * File to manage the Gis Component with all parameters
  */
 window.app = {};
 var app = window.app;
-
-/**
- * Global Object declaration
- */
 var view;
 var rasterLayer;
 var featureLayer;
 var layer;
 var control;
 var interact;
-var drawTools;
-var measureTools;
-var specifInteracts;
 var projection;
 var interfaceElements;
 var GlobalMap;
@@ -28,7 +21,6 @@ var popup;
 var suggestPoiLocator;
 var filter;
 var zoom;
-
 var GisMap = function (idMapInit) {
     'use strict';
     /**
@@ -111,9 +103,6 @@ var GisMap = function (idMapInit) {
     function controlInitialize(parameters, fieldParameters) {
         interact = new Interaction(parameters['LayerEdit'], fieldParameters);
         control = new Control();
-        drawTools = new DrawTools();
-        measureTools = new Measure();
-        specifInteracts = new SpecificInteracts();
         manager.readAndInitActionParams(parameters);
     }
 

@@ -1,12 +1,15 @@
-/*global ol, popup, alert, featureLayer, drawTools, measureTools, specifInteracts, Editor, GlobalMap*/
+/*global ol, popup, alert, featureLayer, DrawTools, Measure, SpecificInteracts, Editor, GlobalMap*/
 
 /**
  * Interaction Class manage interactions on the map
  */
-var editorTools = null;
 
 function Interaction(layerEdit, fieldParameters){
     'use strict';
+    var editorTools = null;
+    var drawTools = new DrawTools();
+    var measureTools = new Measure();
+    var specifInteracts = new SpecificInteracts();
     /**
      * editorTools is the manager of edition tools
      * @type {Editor}
@@ -276,4 +279,27 @@ function Interaction(layerEdit, fieldParameters){
             }
         }
     };
+
+    this.getEditor = function(){
+        return editorTools;
+    };
+
+    this.getDraw = function(){
+        return drawTools;
+    };
+
+    this.getMeasure = function(){
+        return measureTools;
+    };
+
+    this.getSpecificInteract = function(){
+        return specifInteracts;
+    };
+
+    /*return{
+        getEditor: getEditor,
+        getDraw: getDraw,
+        getMeasure: getMeasure,
+        getSpecificInteract: getSpecificInteract
+    };*/
 }
