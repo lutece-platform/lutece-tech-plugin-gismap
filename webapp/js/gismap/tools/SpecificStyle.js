@@ -168,6 +168,12 @@ function SpecificStyle() {
         return style;
     };
 
+    /**
+     * SpecificStyle Method
+     * styleCluster define the cluster representation of select element
+     * @param feature contains by the layer
+     * @returns {*} the cluster style
+     */
     this.selectStyleCluster = function(feature){
         var size = feature.get('features').length;
         var styles = [new ol.style.Style({

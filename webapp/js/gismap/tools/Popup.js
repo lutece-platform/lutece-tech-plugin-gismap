@@ -4,6 +4,7 @@
  */
 var Popup = function(parameters) {
     'use strict';
+    this.popupForm = new PopupForm();
     /**
      * queries stock the value to display data in the popup
      * @type {Array}
@@ -74,15 +75,11 @@ var Popup = function(parameters) {
         for (var j = 0; j < keys.length; j++) {
             for (var k = 0; k < keysQuery.length; k++) {
                 if (keysQuery[k] === keys[j]) {
-                    if(keysQuery[k] === 'link'){
-                        data = data + '<p>Lien : <a href="'+ feature.get(keys[j]) +'">Détails</a></p>';
-                    }else {
-                        data = data + '<p>' + keysQuery[k] + " : " + feature.get(keys[j]) + '</p>';
-                    }
+                    data = data + this.popupForm.definePopupSimpleForm(keys[j], feature, keysQuery[k]);
                 }
             }
         }
-        overlay.show(coordinates, '<div><h3>Informations:</h3><p>' + data + '</p></div>');
+        this.popupForm.displayPopupForm(overlay, coordinates, data);
     };
 
     /**
@@ -104,33 +101,29 @@ var Popup = function(parameters) {
             }else{
                 for(var i = 0; i < count; i++){
                     queries[id] = [evt.coordinate, layerInfo, features[layerInfo+i]];
-                    data = data + '<p>' + layerInfo + ' : <a type="button" href="#" onclick="popup.displaySimplePopup('+id+')">' +
-                        features[layerInfo+i].get(queryData[layerInfo][1]) + '</a></p>';
+                    data = data + this.popupForm.definePopupMultiForm(layerInfo, id, features[layerInfo+i].get(queryData[layerInfo][1]));
                     id++;
                 }
-                overlay.show(evt.coordinate, '<div><h3>Informations:</h3><p>' + data + '</p></div>');
             }
         }else if(layerInfo.length > 1){
             for (var l = 0; l < layerInfo.length; l++) {
                 if(wmsLayers[layerInfo[l]] !== null && wmsLayers[layerInfo[l]] !== undefined){
                     queries[id] = [evt.coordinate, layerInfo[l], wmsLayers[layerInfo[l]]];
-                    data = data + '<p>' + layerInfo[l] + ' : <a type="button" href="#" onclick="popup.displaySimplePopup('+id+')">' +
-                        wmsLayers[layerInfo[l]].get(queryData[layerInfo[l]][1]) + '</a></p>';
+                    data = data + this.popupForm.definePopupMultiForm(layerInfo[l], id, wmsLayers[layerInfo[l]].get(queryData[layerInfo[l]][1]));
                     id++;
                 }else{
                     for(var m = 0; m < count; m++){
                         if(features[layerInfo[l]+m] !== null && features[layerInfo[l]+m] !== undefined){
                             var queryFeature = features[layerInfo[l]+m];
                             queries[id] = [evt.coordinate, layerInfo[l], queryFeature];
-                            data = data + '<p>' + layerInfo[l] + ' : <a type="button" href="#" onclick="popup.displaySimplePopup('+id+')">' +
-                                queryFeature.get(queryData[layerInfo[l]][1]) + '</a></p>';
+                            data = data + this.popupForm.definePopupMultiForm(layerInfo[l], id, queryFeature[layerInfo[l]].get(queryData[layerInfo[l]][1]));
                             id++;
                         }
                     }
                 }
             }
-            overlay.show(evt.coordinate, '<div><h3>Informations:</h3><p>' + data + '</p></div>');
         }
+        this.popupForm.displayPopupForm(overlay, evt.coordinate, data);
     };
 
     /**

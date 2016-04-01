@@ -197,6 +197,8 @@ function Layer() {
     /**
      * Layer Method
      * showLayer enable or disable a visibility of a layer
+     * @param layerName the name of the layer
+     * @param visible the indicator of visibility
      */
      this.showLayer = function(layerName, visible){
         if(rasterLayer.getRasterByName(layerName)!== undefined) {
