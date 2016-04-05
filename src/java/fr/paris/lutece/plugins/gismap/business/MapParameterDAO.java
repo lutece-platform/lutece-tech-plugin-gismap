@@ -65,134 +65,91 @@ public class MapParameterDAO implements IMapParameterDAO
 		
 		mapParameter.setId(nKey);
 		
-		String strProjectionProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER +  PROJECTION );
-		mapParameter.setParameters(PROJECTION, getStringByPoint(strProjectionProperty));
+		fillMapParameter(nKey, PROJECTION, mapParameter);
 		
-		String strOverviewProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER +  OVERVIEW );
-		mapParameter.setParameters(OVERVIEW, getStringByPoint(strOverviewProperty));
+		fillMapParameter(nKey, OVERVIEW, mapParameter);
 		
-		String strZoomExtentProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + ZOOMEXTENT );
-		mapParameter.setParameters(ZOOMEXTENT, getStringByPoint(strZoomExtentProperty));
+		fillMapParameter(nKey, ZOOMEXTENT, mapParameter);
 		
-		String strScaleBarProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + SCALEBAR );
-		mapParameter.setParameters(SCALEBAR, getStringByPoint(strScaleBarProperty));
+		fillMapParameter(nKey, SCALEBAR, mapParameter);
 		
-		String strMousePositionProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + MOUSEPOSITION );
-		mapParameter.setParameters(MOUSEPOSITION, getStringByPoint(strMousePositionProperty));
+		fillMapParameter(nKey, MOUSEPOSITION, mapParameter);
 		
-		String strFullScreenProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + FULLSCREEN );
-		mapParameter.setParameters(FULLSCREEN, getStringByPoint(strFullScreenProperty));
+		fillMapParameter(nKey, FULLSCREEN, mapParameter);
 		
-		String strZoomSliderProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + ZOOMSLIDER );
-		mapParameter.setParameters(ZOOMSLIDER, getStringByPoint(strZoomSliderProperty));
+		fillMapParameter(nKey, ZOOMSLIDER, mapParameter);
 		
-		String strRotateProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + ROTATE );
-		mapParameter.setParameters(ROTATE, getStringByPoint(strRotateProperty));
+		fillMapParameter(nKey, ROTATE, mapParameter);
 		
-		String strZoomZoneProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + ZOOMZONE );
-		mapParameter.setParameters(ZOOMZONE, getStringByPoint(strZoomZoneProperty));
+		fillMapParameter(nKey, ZOOMZONE, mapParameter);
 		
-		String strSelectProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + SELECT );
-		mapParameter.setParameters(SELECT, getStringByPoint(strSelectProperty));
+		fillMapParameter(nKey, SELECT, mapParameter);
 		
-		String strDrawProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + DRAW );
-		mapParameter.setParameters(DRAW, getStringByPoint(strDrawProperty));
+		fillMapParameter(nKey, DRAW, mapParameter);
 		
-		String strMeasureProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + MEASURE );
-		mapParameter.setParameters(MEASURE, getStringByPoint(strMeasureProperty));
+		fillMapParameter(nKey, MEASURE, mapParameter);
 		
-		String strAutoEditProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + AUTOEDIT );
-		mapParameter.setParameters(AUTOEDIT, getStringByPoint(strAutoEditProperty));
+		fillMapParameter(nKey, AUTOEDIT, mapParameter);
 		
-		String strSuggestPOISearchProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + SUGGESTPOISEARCH );
-		mapParameter.setParameters(SUGGESTPOISEARCH, getStringByPoint(strSuggestPOISearchProperty));
+		fillMapParameter(nKey, SUGGESTPOISEARCH, mapParameter);
 		
-		String strSuggestPOIParamsProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + SUGGESTPOIPARAMS );
-		mapParameter.setParameters(SUGGESTPOIPARAMS, getStringByPoint(strSuggestPOIParamsProperty));
+		fillMapParameter(nKey, SUGGESTPOIPARAMS, mapParameter);
 		
-		String strGPSProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + GPS );
-		mapParameter.setParameters(GPS, getStringByPoint(strGPSProperty));
+		fillMapParameter(nKey, GPS, mapParameter);
 		
-		String strPrintProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + PRINT );
-		mapParameter.setParameters(PRINT, getStringByPoint(strPrintProperty));
+		fillMapParameter(nKey, PRINT, mapParameter);
 		
-		String strLayerEditProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + LAYEREDIT );
-		mapParameter.setParameters(LAYEREDIT, getStringByPoint(strLayerEditProperty));
+		fillMapParameter(nKey, LAYEREDIT, mapParameter);
 		
-		String strExtentProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + EXTENT );
-		mapParameter.setParameters(EXTENT, getStringByPoint(strExtentProperty));
+		fillMapParameter(nKey, EXTENT, mapParameter);
 		
-		String strZoomSelectProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + ZOOMSELECT );
-		mapParameter.setParameters(ZOOMSELECT, getStringByPoint(strZoomSelectProperty));
+		fillMapParameter(nKey, ZOOMSELECT, mapParameter);
 		
-		String strZoomProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + ZOOM );
-		mapParameter.setParameters(ZOOM, getStringByPoint(strZoomProperty));
+		fillMapParameter(nKey, ZOOM, mapParameter);
 		
-		String strDefaultBackGroundProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + DEFAULTBACKGROUND );
-		mapParameter.setParameters(DEFAULTBACKGROUND, getStringByPoint(strDefaultBackGroundProperty));
+		fillMapParameter(nKey, DEFAULTBACKGROUND, mapParameter);
 		
-		String strBackGround1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + BACKGROUND1 );
-		mapParameter.setParameters(BACKGROUND1, getStringByPoint(strBackGround1Property));
+		fillMapParameter(nKey, BACKGROUND1, mapParameter);
 		
-		String strBackGround2Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + BACKGROUND2 );
-		mapParameter.setParameters(BACKGROUND2, getStringByPoint(strBackGround2Property));
+		fillMapParameter(nKey, BACKGROUND2, mapParameter);
 		
-		String strWMSBase1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WMSBASE1 );
-		mapParameter.setParameters(WMSBASE1, getStringByPoint(strWMSBase1Property));
+		fillMapParameter(nKey, WMSBASE1, mapParameter);
 		
-		String strWMSBase2Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WMSBASE2 );
-		mapParameter.setParameters(WMSBASE2, getStringByPoint(strWMSBase2Property));
+		fillMapParameter(nKey, WMSBASE2, mapParameter);
 		
-		String strWMSLayer1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WMSLAYER1 );
-		mapParameter.setParameters(WMSLAYER1, getStringByPoint(strWMSLayer1Property));
+		fillMapParameter(nKey, WMSLAYER1, mapParameter);
 		
-		String strWMSLayer2Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WMSLAYER2 );
-		mapParameter.setParameters(WMSLAYER2, getStringByPoint(strWMSLayer2Property));
+		fillMapParameter(nKey, WMSLAYER2, mapParameter);
 		
-		String strPopup1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + POPUP1 );
-		mapParameter.setParameters(POPUP1, getStringByPoint(strPopup1Property));
+		fillMapParameter(nKey, POPUP1, mapParameter);
 		
-		String strPopup2Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + POPUP2 );
-		mapParameter.setParameters(POPUP2, getStringByPoint(strPopup2Property));
+		fillMapParameter(nKey, POPUP2, mapParameter);
 		
-		String strPopup3Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + POPUP3 );
-		mapParameter.setParameters(POPUP3, getStringByPoint(strPopup3Property));
+		fillMapParameter(nKey, POPUP3, mapParameter);
 		
-		String strPopup4Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + POPUP4 );
-		mapParameter.setParameters(POPUP4, getStringByPoint(strPopup4Property));
+		fillMapParameter(nKey, POPUP4, mapParameter);
 		
-		String strWFS1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WFS1 );
-		mapParameter.setParameters(WFS1, getStringByPoint(strWFS1Property));
+		fillMapParameter(nKey, WFS1, mapParameter);
 		
-		String strWFS2Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WFS2 );
-		mapParameter.setParameters(WFS2, getStringByPoint(strWFS2Property));
+		fillMapParameter(nKey, WFS2, mapParameter);
 		
-		String strWMTS1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WMTS1 );
-		mapParameter.setParameters(WMTS1, getStringByPoint(strWMTS1Property));
+		fillMapParameter(nKey, WMTS1, mapParameter);
 		
-		String strGeoJSON1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + GEOJSON1 );
-		mapParameter.setParameters(GEOJSON1, getStringByPoint(strGeoJSON1Property));
+		fillMapParameter(nKey, GEOJSON1, mapParameter);
 		
-		String strLayerControlProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + LAYERCONTROL );
-		mapParameter.setParameters(LAYERCONTROL, getStringByPoint(strLayerControlProperty));
+		fillMapParameter(nKey, LAYERCONTROL, mapParameter);
 		
-		String strWFS3Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + WFS3 );
-		mapParameter.setParameters(WFS3, getStringByPoint(strWFS3Property));
+		fillMapParameter(nKey, WFS3, mapParameter);
 		
-		String strHEATMAP1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + HEATMAP1 );
-		mapParameter.setParameters(HEATMAP1, getStringByPoint(strHEATMAP1Property));
+		fillMapParameter(nKey, HEATMAP1, mapParameter);
 		
-		String strTHEMATICSIMPLE1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + THEMATICSIMPLE1 );
-		mapParameter.setParameters(THEMATICSIMPLE1, getStringByPoint(strTHEMATICSIMPLE1Property));
+		fillMapParameter(nKey, THEMATICSIMPLE1, mapParameter);
 		
-		String strTHEMATICCOMPLEX1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + THEMATICCOMPLEX1 );
-		mapParameter.setParameters(THEMATICCOMPLEX1, getStringByPoint(strTHEMATICCOMPLEX1Property));
+		fillMapParameter(nKey, THEMATICCOMPLEX1, mapParameter);
 		
-		String strCLUSTER1Property = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + CLUSTER1 );
-		mapParameter.setParameters(CLUSTER1, getStringByPoint(strCLUSTER1Property));
+		fillMapParameter(nKey, CLUSTER1, mapParameter);
 		
-		String strPOPUPSHOWLINKProperty = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + POPUPSHOWLINK );
-		mapParameter.setParameters(POPUPSHOWLINK, getStringByPoint(strPOPUPSHOWLINKProperty));
+		fillMapParameter(nKey, POPUPSHOWLINK, mapParameter);
 		
 		return mapParameter;
 	}
@@ -236,6 +193,15 @@ public class MapParameterDAO implements IMapParameterDAO
 		else
 			return strProperty;
 			
+	}
+	
+	public void fillMapParameter(int nKey, String strProperty, MapParameter mapParameter)
+	{
+		String strPropertyValue = AppPropertiesService.getProperty( GISMAP_VIEW + nKey + PARAMETER  + strProperty );
+		if(strPropertyValue!=null)
+		{
+			mapParameter.setParameters(strProperty, getStringByPoint(strPropertyValue));
+		}
 	}
 
 }
