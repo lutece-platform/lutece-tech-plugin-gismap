@@ -47,11 +47,11 @@ var GisMap = function (idMapInit) {
         dataInitialize(parameters);
         controlInitialize(parameters, fieldParameters);
         mapInitialize(parameters);
-        /*if(manager.getSpecificExtent() !== []){
+        if(manager.getSpecificExtent().length > 1 ){
             viewGisMap.getView().fit(manager.extentDefine, GlobalMap.getSize());
-        }else {*/
+        }else {
             viewGisMap.getView().fit(projectionGis.getExtent(), GlobalMap.getSize());
-        //}
+        }
         initInterfaces(parameters);
         var geomElement = document.getElementById(fieldParameters['GeomGeoJson']).value;
         if(geomElement !== null && geomElement !== '' && geomElement !== undefined) {
