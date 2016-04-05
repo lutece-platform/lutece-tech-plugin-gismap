@@ -18,7 +18,7 @@
     <button id="SelectVia" type="button" onClick="selectObjectLuteceViaMap(GisMapDisplay${idEntry}.getInteract().getSpecificInteract().getSpecificSelectedFeatures())">Select Via</button>
     <button id="SelectTo" type="button" onClick="GisMapDisplay${idEntry}.getInteract().getSpecificInteract().setSpecificSelectedFeatures(selectObjectMapViaLutece())">Select To</button>
     <button id="Show" type="button" onClick="GisMapDisplay${idEntry}.getLayer().showLayer('Arrondissements', true)">Show</button>
-    <button id="Validate" type="button" onClick="GisMapDisplay${idEntry}.getInteract().getEditor().forceValidate()">Validate</button>
+    <button id="Validate" type="button" onClick="GisMapDisplay${idEntry}.getInteract().getEditor().forceValidate();geocodage();">Validate</button>
     <a id="mapPrint" class="btn" download="map.png"><input type="button" value="Print Map"> </a>
     <!-- <script src="js/gismap/GisTest.js" type="text/javascript"></script> -->
     
