@@ -1,21 +1,38 @@
-/*global ol, popup, alert, featureLayer, DrawTools, Measure, SpecificInteracts, Editor, GlobalMap*/
+/*global ol, alert, DrawTools, Editor, Measure, SpecificInteracts*/
 
 /**
  * Interaction Class manage interactions on the map
  */
 
-function Interaction(layerEdit, fieldParameters){
+function Interaction(GlobalMap, layer, popup, projection, layerEdit, fieldParameters){
     'use strict';
-    var editorTools = null;
+    /**
+     * featureLayer is a reference of the Feature Layer Object
+     * @type {Feature|*}
+     */
+    var featureLayer = layer.getFeatureLayers();
+    /**
+     * drawTools is the draw tools object
+     * @type {DrawTools}
+     */
     var drawTools = new DrawTools();
+    /**
+     * measureTools is the measure tools object
+     * @type {Measure}
+     */
     var measureTools = new Measure();
-    var specifInteracts = new SpecificInteracts();
+    /**
+     * specifInteracts is the specifics interacts object
+     * @type {SpecificInteracts}
+     */
+    var specifInteracts = new SpecificInteracts(layer, featureLayer);
     /**
      * editorTools is the manager of edition tools
      * @type {Editor}
      */
+    var editorTools = null;
     if(fieldParameters['TypeEdit'] !== '' && fieldParameters['TypeEdit'] !== undefined && layerEdit !== '' && layerEdit !== undefined) {
-        editorTools = new Editor(layerEdit, fieldParameters);
+        editorTools = new Editor(this, layerEdit, fieldParameters, projection);
     }
     /**
      * ListInteracts contains all interactions enable on the map
@@ -240,15 +257,6 @@ function Interaction(layerEdit, fieldParameters){
         }
     };
 
-    /**
-     * Interaction Public METHOD
-     * getInteracts get the list of all interactions enable on the map
-     * @returns {Array} an array of all interactions
-     */
-    this.getInteracts = function(){
-        return this.ListInteracts;
-    };
-
      /**
      * Interaction Method
      * deleteFeatures is a method to call an action to delete all selected elements
@@ -280,26 +288,48 @@ function Interaction(layerEdit, fieldParameters){
         }
     };
 
+    /**
+     * Interaction Public METHOD
+     * getInteracts get the list of all interactions enable on the map
+     * @returns {Array} an array of all interactions
+     */
+    this.getInteracts = function(){
+        return this.ListInteracts;
+    };
+
+    /**
+     * Interaction Public METHOD
+     * getEditor is the accessor of the editor tools
+     * @returns {Editor} the manager of edition tools
+     */
     this.getEditor = function(){
         return editorTools;
     };
 
+    /**
+     * Interaction Public METHOD
+     * getDraw is the accessor of the draw tools
+     * @returns {DrawTools} the draw tools object
+     */
     this.getDraw = function(){
         return drawTools;
     };
 
+    /**
+     * Interaction Public METHOD
+     * getMeasure is the accessor of the measure tools
+     * @returns {Measure} the measure tools object
+     */
     this.getMeasure = function(){
         return measureTools;
     };
 
+    /**
+     * Interaction Public METHOD
+     * getSpecificInteract is the accessor of the specifics interacts object
+     * @returns {SpecificInteracts} the specifics interacts object
+     */
     this.getSpecificInteract = function(){
         return specifInteracts;
     };
-
-    /*return{
-        getEditor: getEditor,
-        getDraw: getDraw,
-        getMeasure: getMeasure,
-        getSpecificInteract: getSpecificInteract
-    };*/
 }

@@ -1,9 +1,7 @@
-/*global GlobalMap*/
-
 /**
  * Print Class manage all print actions enable on the plugin
  */
-function Print(){
+function Print(GlobalMap){
     'use strict';
     /**
      * printMapPng is a link to catch an event

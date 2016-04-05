@@ -32,7 +32,7 @@ var PopupForm = function() {
      */
     this.definePopupMultiForm = function(layer, id, info){
         var data = '';
-        data = data + '<p>' + layer + ' : <a type="button" href="#" onclick="popup.displaySimplePopup('+id+')">' + info + '</a></p>';
+        data = data + '<p>' + layer + ' : <a type="button" href="#" onclick="GisMapDisplay.getPopup().displaySimplePopup('+id+')">' + info + '</a></p>';
         return data;
     };
 

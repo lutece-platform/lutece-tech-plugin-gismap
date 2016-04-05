@@ -1,8 +1,7 @@
-/*global zoom*/
 /**
  * SuggestPoiLocator Class provide the SuggestPoi Service in the Gis Component
  */
-var SuggestPoiLocator = function(suggestPoiParams) {
+var SuggestPoiLocator = function(zoom, suggestPoiParams) {
     'use strict';
 
 	var url = suggestPoiParams[0];

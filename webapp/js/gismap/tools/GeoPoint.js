@@ -1,17 +1,17 @@
-/*globals ol, view*/
+/*globals ol*/
 
 /**
  *  GeoPoint Class manage the Geolocation system
  */
 
-function GeoPoint(currentMap) {
+function GeoPoint(currentMap, viewGisMap) {
     'use strict';
     /**
      * geoloc is the definition of the geolocalization on the current view
      * @type {ol.Geolocation}
      */
     this.geoloc = new ol.Geolocation({
-        projection: view.getView().getProjection()
+        projection: viewGisMap.getView().getProjection()
     });
 
     /**
@@ -50,8 +50,8 @@ function GeoPoint(currentMap) {
     this.geoloc.on('change:position', function() {
         var coordinates = this.getPosition();
         geolocFeature.setGeometry(coordinates ? new ol.geom.Point(coordinates) : null);
-        view.getView().fit(geolocFeature.getGeometry(), currentMap.getSize(),{
-            maxZoom: view.getZoomSelect()
+        viewGisMap.getView().fit(geolocFeature.getGeometry(), currentMap.getSize(),{
+            maxZoom: viewGisMap.getZoomSelect()
         });
         currentMap.render();
     });

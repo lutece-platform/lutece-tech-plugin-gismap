@@ -1,10 +1,10 @@
-/*global ol, projection, console, SpecificStyle*/
+/*global ol, console, SpecificStyle*/
 
 /**
  * Feature Class manage all features layers in the map
  */
 
-function Feature() {
+function Feature(projection) {
     'use strict';
     /**
      * style define the specific style several representation of the layer

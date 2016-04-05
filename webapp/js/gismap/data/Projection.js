@@ -69,9 +69,9 @@ var Projection = function() {
      * Projection Method
      * getEpsgData load the EPSG.json and search the active projection to define the projection
      * @param projValue is the code of the projection
-     * @param view is a marker to indicate is the projection is for the view or not
+     * @param viewMarker is a marker to indicate is the projection is for the view or not
      */
-    this.getEpsgData = function(projValue, view) {
+    this.getEpsgData = function(projValue, viewMarker) {
         projValue = projValue.split(':')[1];
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open("GET", 'js/gismap/lib/EPSG.json', false);
@@ -84,7 +84,7 @@ var Projection = function() {
                 if (result) {
                     var code = result['code'], proj4def = result['proj4'], bbox = result['bbox'];
                     if (code && code.length > 0 && proj4def && proj4def.length > 0 && bbox && bbox.length === 4) {
-                        if(view === true) {
+                        if(viewMarker === true) {
                             this.defineProjection(code, proj4def, bbox);
                             return;
                         }else{

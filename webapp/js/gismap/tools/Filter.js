@@ -1,11 +1,16 @@
-/*global ol, GlobalMap, featureLayer, projection, console*/
+/*global ol, console*/
 
 /**
  * Filter Class manage the query to filter data of all vectors layers in the map
  */
 
-function Filter() {
+function Filter(layer, projection) {
     'use strict';
+    /**
+     * featureLayer is a reference of the Feature Layer Object
+     * @type {Feature|*}
+     */
+    var featureLayer = layer.getFeatureLayers();
     /**
      * ListLayers contains all queryable Layers of the map
      * @type {Array}

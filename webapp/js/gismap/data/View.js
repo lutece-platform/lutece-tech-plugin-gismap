@@ -1,9 +1,9 @@
-/*globals ol, projection*/
+/*globals ol*/
 /**
  * View Class manage the view of the map
  */
 
-function View() {
+function View(projection) {
     'use strict';
     /**
      * centerUser define the center of the view

@@ -1,4 +1,3 @@
-/*global view, control, layer, projection, interact */
 /**
  * Manager Class read and manage all parameters of the Gis Component
  */
@@ -189,9 +188,11 @@ var Manager = function() {
     /**
      * Manager Method
      * readAndInitGeneralParams initiate generals properties of the map
+     * @param projection is the reference of the Projection Object
+     * @param viewGisMap is the reference of the View Object
      * @param parameters is the array of general parameters
      */
-    var readAndInitGeneralParams = function (parameters) {
+    var readAndInitGeneralParams = function (projection, viewGisMap, parameters) {
         if (parameters['Projection'] !== '' && parameters['Projection'] !== undefined) {
             projection.getEpsgData(parameters['Projection'], true);
             if (parameters['Projection'] !== 'EPSG:3857') {
@@ -206,19 +207,20 @@ var Manager = function() {
             this.specificExtent = false;
         }
         if (parameters['ZoomSelect'] !== '' && parameters['ZoomSelect'] !== undefined) {
-            view.setZoomSelect(parameters['ZoomSelect']);
+            viewGisMap.setZoomSelect(parameters['ZoomSelect']);
         }
         if (parameters['Zoom'] !== '' && parameters['Zoom'] !== undefined) {
-            view.setZoom(parameters['Zoom'][0], parameters['Zoom'][1]);
+            viewGisMap.setZoom(parameters['Zoom'][0], parameters['Zoom'][1]);
         }
     };
 
     /**
      * Manager Method
      * readAndInitDataParams initiate data properties of the map
+     * @param layer is the reference of the Layer Object
      * @param parameters is the array of data parameters
      */
-    var readAndInitDataParams = function (parameters) {
+    var readAndInitDataParams = function (layer, parameters) {
         if(parameters['BackGround'] !== '' && parameters['BackGround'] !== undefined){
             for(var background = 0; background < parameters['BackGround'].length; background++){
                 layer.addLayerRaster(parameters['BackGround'][background]);
@@ -260,9 +262,11 @@ var Manager = function() {
     /**
      * Manager Method
      * readAndInitActionParams initiate actions properties of the map
+     * @param control is the reference of the Control Object
+     * @param interact is the reference of the Interact Object
      * @param parameters is the array of actions parameters
      */
-    var readAndInitActionParams = function (parameters) {
+    var readAndInitActionParams = function (control, interact, parameters) {
         if(parameters['Controles'] !== '' && parameters['Controles'] !== undefined){
             control.initControls(parameters['Controles'], this.projectionChanged, this.specificExtent, this.extentDefine);
         }

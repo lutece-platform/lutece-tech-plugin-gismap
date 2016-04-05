@@ -1,10 +1,21 @@
-/*global ol, GlobalMap, popup, interact*/
+/*global ol, PopupForm*/
 /**
  * Popup Class manage all popups included in the map
  */
-var Popup = function(parameters) {
+var Popup = function(GlobalMap, parameters) {
     'use strict';
-    this.popupForm = new PopupForm();
+    /**
+     * popupForm is the reference of the form of the Popup
+     * @type {PopupForm}
+     */
+    var popupForm = new PopupForm();
+
+    /**
+     * interact stock a reference of the current interact of the map
+     * @type {Interaction}
+     */
+    var interact = null;
+
     /**
      * queries stock the value to display data in the popup
      * @type {Array}
@@ -30,6 +41,15 @@ var Popup = function(parameters) {
      * @type {Array}
      */
     var queryLayers = initOverlayPopupLayers(parameters);
+
+    /**
+     * Popup Method
+     * setInteract is a setter to define the interact reference
+     * @param newInteract
+     */
+    var setInteract = function(newInteract){
+        interact = newInteract;
+    };
 
     /**
      * Popup Method
@@ -64,7 +84,7 @@ var Popup = function(parameters) {
      * displaySimplePopup display the simple popup with all this data
      * @param id is the identifiant of the selected elements
      */
-    this.displaySimplePopup = function(id){
+    var displaySimplePopup = function(id){
         overlay.hide();
         var coordinates = queries[id][0];
         var layerInfo = queries[id][1];
@@ -75,12 +95,12 @@ var Popup = function(parameters) {
         for (var j = 0; j < keys.length; j++) {
             for (var k = 0; k < keysQuery.length; k++) {
                 if (keysQuery[k] === keys[j]) {
-                    data = data + this.popupForm.definePopupSimpleForm(keys[j], feature, keysQuery[k]);
+                    data = data + popupForm.definePopupSimpleForm(keys[j], feature, keysQuery[k]);
                 }
             }
         }
-        this.popupForm.displayPopupForm(overlay, coordinates, data);
-    };
+        popupForm.displayPopupForm(overlay, coordinates, data);
+    }
 
     /**
      * Popup Method
@@ -92,47 +112,47 @@ var Popup = function(parameters) {
      * @param count is the count of the features
      * @param id is the max of element into the queries array
      */
-    this.definePopup = function(evt, layerInfo, features, wmsLayers, count, id){
+    function definePopup(evt, layerInfo, features, wmsLayers, count, id){
         var data = '';
         if(layerInfo.length === 1){
             if(count < 2) {
                 queries[id] = [evt.coordinate, layerInfo, features[layerInfo+'0']];
-                popup.displaySimplePopup(id);
+                displaySimplePopup(id);
             }else{
                 for(var i = 0; i < count; i++){
                     queries[id] = [evt.coordinate, layerInfo, features[layerInfo+i]];
-                    data = data + this.popupForm.definePopupMultiForm(layerInfo, id, features[layerInfo+i].get(queryData[layerInfo][1]));
+                    data = data + popupForm.definePopupMultiForm(layerInfo, id, features[layerInfo+i].get(queryData[layerInfo][1]));
                     id++;
                 }
-                this.popupForm.displayPopupForm(overlay, evt.coordinate, data);
+                popupForm.displayPopupForm(overlay, evt.coordinate, data);
             }
         }else if(layerInfo.length > 1){
             for (var l = 0; l < layerInfo.length; l++) {
                 if(wmsLayers[layerInfo[l]] !== null && wmsLayers[layerInfo[l]] !== undefined){
                     queries[id] = [evt.coordinate, layerInfo[l], wmsLayers[layerInfo[l]]];
-                    data = data + this.popupForm.definePopupMultiForm(layerInfo[l], id, wmsLayers[layerInfo[l]].get(queryData[layerInfo[l]][1]));
+                    data = data + popupForm.definePopupMultiForm(layerInfo[l], id, wmsLayers[layerInfo[l]].get(queryData[layerInfo[l]][1]));
                     id++;
                 }else{
                     for(var m = 0; m < count; m++){
                         if(features[layerInfo[l]+m] !== null && features[layerInfo[l]+m] !== undefined){
                             var queryFeature = features[layerInfo[l]+m];
                             queries[id] = [evt.coordinate, layerInfo[l], queryFeature];
-                            data = data + this.popupForm.definePopupMultiForm(layerInfo[l], id, queryFeature[layerInfo[l]].get(queryData[layerInfo[l]][1]));
+                            data = data + popupForm.definePopupMultiForm(layerInfo[l], id, queryFeature[layerInfo[l]].get(queryData[layerInfo[l]][1]));
                             id++;
                         }
                     }
                 }
             }
-            this.popupForm.displayPopupForm(overlay, evt.coordinate, data);
+            popupForm.displayPopupForm(overlay, evt.coordinate, data);
         }
-    };
+    }
 
     /**
      * Popup Method$
      * initiatePopup catch the data and analyze it to create the popup
      * @param evt is the event catch by the listener
      */
-    this.initiatePopup = function(evt){
+    function initiatePopup(evt){
         overlay.hide();
         queries = [];
         var layerInfo = [];
@@ -170,15 +190,15 @@ var Popup = function(parameters) {
                 }
             }
         });*/
-        popup.definePopup(evt, layerInfo, features, wmsLayers, count, id);
-    };
+        definePopup(evt, layerInfo, features, wmsLayers, count, id);
+    }
 
     /**
      * Popup Method
      * managePopup add or remove the overlay of the map and the listener
      * @param value is a marker to enable or disable the popup overlay and his listener
      */
-    this.managePopup = function(value){
+    var managePopup = function(value){
         if(value === 'off'){
             overlay.hide();
             GlobalMap.removeOverlay(overlay);
@@ -186,7 +206,13 @@ var Popup = function(parameters) {
         }else if(value === 'on'){
             interact.manageActiveInteraction();
             GlobalMap.addOverlay(overlay);
-            popupKey = GlobalMap.on('singleclick', function(evt){popup.initiatePopup(evt);});
+            popupKey = GlobalMap.on('singleclick', function(evt){initiatePopup(evt);});
         }
+    };
+
+    return{
+        displaySimplePopup: displaySimplePopup,
+        managePopup: managePopup,
+        setInteract: setInteract
     };
 };

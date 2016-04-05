@@ -1,9 +1,9 @@
-/*global ol, alert, Map, projection, GlobalMap, interact*/
+/*global ol, alert, Map, */
 
 /**
  * Editor Class manage all Edition of data on the map
  */
-function Editor(layerEdit, fieldName) {
+function Editor(interact, layerEdit, fieldName, projection) {
     'use strict';
     /**
      * editInteraction is the map to stock all edit interaction

@@ -1,17 +1,69 @@
-/*global ol, layer, rasterLayer, featureLayer, interact*/
+/*global ol, LayerRaster, Feature*/
 
 /**
  * Layer Class manage all layers in the map
  */
 
-function Layer() {
+function Layer(projection) {
     'use strict';
+    /**
+     * interact stock a reference of the current interact of the map
+     * @type {Interaction}
+     */
+    var interact = null;
     /**
      * ListLayers contains all Layers of the map
      * @type {Array}
      */
     this.ListLayers = [];
+    /**
+     * selectableLayers contains all selectable Layers of the map
+     * @type {Array}
+     */
     this.selectableLayers = [];
+    /**
+     * featureLayerGis is the Feature Layer object
+     * @type {Feature}
+     */
+    this.featureLayerGis = new Feature(projection);
+    /**
+     * rasterLayerGis is the Raster Layer object
+     * @type {LayerRaster}
+     */
+    this.rasterLayerGis = new LayerRaster(projection);
+    /**
+     * Layer Method
+     * getLayers is a getter to all Layers
+     * @returns {Array} is an array with all data layers of the map
+     */
+    this.getLayers = function(){
+        return this.ListLayers;
+    };
+
+    /**
+     * Layer Method
+     * getSelectedLayers is a getter to all selectable Layers
+     * @returns {Array} is an array with all selectable layers of the map
+     */
+    this.getSelectableLayers = function(){
+        return this.selectableLayers;
+    };/**
+     * Layer Method
+     * getFeatureLayers is a getter to Feature Layer Object
+     * @returns {Feature|*}
+     */
+    this.getFeatureLayers = function(){
+        return this.featureLayerGis;
+    };
+
+    /**
+     * Layer Method
+     * setInteract is a setter to define the interact reference
+     * @param newInteract
+     */
+    this.setInteract = function(newInteract){
+        interact = newInteract;
+    };
 
     /**
      * Layer Method
@@ -19,7 +71,7 @@ function Layer() {
      * @param backGround is an array with all parameters to define a background
      */
     this.addLayerRaster = function(backGround){
-        var name = rasterLayer.createRasterLayer(backGround);
+        var name = this.rasterLayerGis.createRasterLayer(backGround);
         this.ListLayers.push(name);
     };
 
@@ -34,7 +86,7 @@ function Layer() {
         var wmsUrl = wms[2];
         var wmsLayer = wms[3];
         var wmsAttribution = wms[4];
-        rasterLayer.createWMSLayer(wmsLibelle, wmsServer, wmsUrl, wmsLayer, wmsAttribution);
+        this.rasterLayerGis.createWMSLayer(wmsLibelle, wmsServer, wmsUrl, wmsLayer, wmsAttribution);
         this.ListLayers.push(wmsLibelle);
     };
 
@@ -51,7 +103,7 @@ function Layer() {
         var wmtsReso = wmts[4];
         var wmtsOrigin = wmts[5];
         var wmtsAttribution = wmts[6];
-        rasterLayer.createWMTSLayer(wmtsLibelle, wmtsServer, wmtsUrl, wmtsProj, wmtsReso, wmtsOrigin, wmtsAttribution);
+        this.rasterLayerGis.createWMTSLayer(wmtsLibelle, wmtsServer, wmtsUrl, wmtsProj, wmtsReso, wmtsOrigin, wmtsAttribution);
         this.ListLayers.push(wmtsLibelle);
     };
 
@@ -68,7 +120,7 @@ function Layer() {
         var wmsLayer = wms[4];
         var wmsVisbility = wms[5];
         var wmsAttribution = wms[6];
-        featureLayer.createWMSQueryLayer(wmsName, wmsServer, wmsUrl, wmsLayer, wmsVisbility, wmsAttribution);
+        this.featureLayerGis.createWMSQueryLayer(wmsName, wmsServer, wmsUrl, wmsLayer, wmsVisbility, wmsAttribution);
         this.ListLayers.push(wmsOrder +'-'+ wmsName);
     };
 
@@ -88,7 +140,7 @@ function Layer() {
         var wfsProj = wfs[3];
         var wfsQuery = wfs[4];
         var wfsAttribution = wfs[5];
-        var wfsLayers = featureLayer.createWFSLayer(wfsIdLayer, wfsServer, wfsUrl, wfsProj, wfsQuery, wfsAttribution, heatmap, thematic, cluster, thematicComplex);
+        var wfsLayers = this.featureLayerGis.createWFSLayer(wfsIdLayer, wfsServer, wfsUrl, wfsProj, wfsQuery, wfsAttribution, heatmap, thematic, cluster, thematicComplex);
         for(var i = 0; i < wfsLayers.length; i++) {
             this.ListLayers.push(wfsLayers[i]);
         }
@@ -105,20 +157,11 @@ function Layer() {
      * @param thematicComplex define the thematic complex parameters
      */
     this.addLayerVector = function(data, format, heatmap, thematic, cluster, thematicComplex){
-        var names = featureLayer.addLayerFeature(data, format, heatmap, thematic, cluster, thematicComplex);
+        var names = this.featureLayerGis.addLayerFeature(data, format, heatmap, thematic, cluster, thematicComplex);
         for(var i = 0; i < names.length; i++) {
             this.ListLayers.push(names[i]);
             this.selectableLayers.push(names[i].split('-')[1]);
         }
-    };
-
-    /**
-     * Layer Method
-     * getLayers is a getter to all Layers
-     * @returns {Array} is an array with all data layers of the map
-     */
-    this.getLayers = function(){
-        return this.ListLayers;
     };
 
     /**
@@ -128,19 +171,10 @@ function Layer() {
      */
     this.setDefaultBackGround = function(defaultBackground){
         for (var layerMap = 0; layerMap < this.ListLayers.length; layerMap++){
-            if(rasterLayer.getRasterByName(this.ListLayers[layerMap])=== rasterLayer.getRasterByName(defaultBackground)) {
-                rasterLayer.setRasterVisibility(this.ListLayers[layerMap], true);
+            if(this.rasterLayerGis.getRasterByName(this.ListLayers[layerMap])=== this.rasterLayerGis.getRasterByName(defaultBackground)) {
+                this.rasterLayerGis.setRasterVisibility(this.ListLayers[layerMap], true);
             }
         }
-    };
-
-    /**
-     * Layer Method
-     * getSelectedLayers is a getter to all selectable Layers
-     * @returns {Array} is an array with all selectable layers of the map
-     */
-    this.getSelectableLayers = function(){
-        return this.selectableLayers;
     };
 
     /**
@@ -151,8 +185,8 @@ function Layer() {
     this.getLayersRasterMap = function(){
         var ListLayersRasterMap = [];
         for (var layerMap = 0; layerMap < this.ListLayers.length; layerMap++){
-            if(rasterLayer.getRasterByName(this.ListLayers[layerMap])!== undefined) {
-                ListLayersRasterMap.push(rasterLayer.getRasterByName(this.ListLayers[layerMap]));
+            if(this.rasterLayerGis.getRasterByName(this.ListLayers[layerMap])!== undefined) {
+                ListLayersRasterMap.push(this.rasterLayerGis.getRasterByName(this.ListLayers[layerMap]));
             }
         }
         return ListLayersRasterMap;
@@ -167,8 +201,8 @@ function Layer() {
         var ListLayersFeatureMap = [];
         for (var layerMap = this.ListLayers.length-1; layerMap >= 0; layerMap--){
             var layerMapName = this.ListLayers[layerMap].split('-')[1];
-            if(featureLayer.getFeatureByName(layerMapName)!== undefined) {
-                ListLayersFeatureMap.push(featureLayer.getFeatureByName(layerMapName));
+            if(this.featureLayerGis.getFeatureByName(layerMapName)!== undefined) {
+                ListLayersFeatureMap.push(this.featureLayerGis.getFeatureByName(layerMapName));
             }
         }
         return ListLayersFeatureMap;
@@ -205,11 +239,11 @@ function Layer() {
      * @param visible the indicator of visibility
      */
      this.showLayer = function(layerName, visible){
-        if(rasterLayer.getRasterByName(layerName)!== undefined) {
-            rasterLayer.getRasterByName(layerName).setVisible(visible);
+        if(this.rasterLayerGis.getRasterByName(layerName)!== undefined) {
+            this.rasterLayerGis.getRasterByName(layerName).setVisible(visible);
         }
-        if(featureLayer.getFeatureByName(layerName)!== undefined) {
-            featureLayer.getFeatureByName(layerName).setVisible(visible);
+        if(this.featureLayerGis.getFeatureByName(layerName)!== undefined) {
+            this.featureLayerGis.getFeatureByName(layerName).setVisible(visible);
         }
     };
 }

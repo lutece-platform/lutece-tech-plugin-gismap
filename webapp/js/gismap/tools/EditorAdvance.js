@@ -1,4 +1,4 @@
-/*global ol, Map, featureLayer, projection, GlobalMap*/
+/*global ol, Map*/
 
 /**
  * EditorAdvance Class manage all advance Edition of data on the map

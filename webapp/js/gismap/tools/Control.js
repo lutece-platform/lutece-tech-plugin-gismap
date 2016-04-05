@@ -1,4 +1,4 @@
-/*global ol, layerswitcher*/
+/*global ol*/
 /**
  * Control Class manage the control of the map
  */

@@ -1,22 +1,24 @@
-/*global geoPoint, interact, zoom, suggestPoiLocator, popup, ol, app*/
+/*global ol*/
 /**
  * InterfaceElements Class manage all elements included in the map
  */
-var InterfaceElements = function(parameters) {
+var InterfaceElements = function(app, interfaceValues, parameters) {
     'use strict';
     /**
      * ListElements is a list of all graphics components of the map
      * @type {Array}
      */
     this.ListElements = [];
+
     /**
      * InterfaceElement Method
      * This function initialise all graphics components of the map
+     * @param interfaceValues is an array of all object with interaction
      * @param parameters is an array of all parameters of the map
      * @param opt_options
      * @constructor
      */
-    app.CmdControl = function(parameters, opt_options) {
+    app.CmdControl = function(interfaceValues, parameters, opt_options) {
         var options = opt_options || {};
         var element = document.createElement('div');
         var rulerActive = false;
@@ -29,7 +31,7 @@ var InterfaceElements = function(parameters) {
                 suggestPoiText.setAttribute('name','addressSuggestPoi');
                 suggestPoiText.setAttribute('class','ui-autocomplete-input');
                 var handleSuggestPoiText = function (e) {
-                    suggestPoiLocator.locateBySuggestPoi();
+                    interfaceValues["suggestPoiLocator"].locateBySuggestPoi();
                 };
                 suggestPoiText.addEventListener('focus', handleSuggestPoiText, false);
                 element.appendChild(suggestPoiText);
@@ -45,13 +47,13 @@ var InterfaceElements = function(parameters) {
                 buttonDrawPolygon.setAttribute('type','button');
                 buttonDrawPolygon.innerHTML = 'Pn';
                 var handleDrawPoint = function (e) {
-                    interact.setDrawInteraction('Point');
+                    interfaceValues["interact"].setDrawInteraction('Point');
                 };
                 var handleDrawLine = function (e) {
-                    interact.setDrawInteraction('LineString');
+                    interfaceValues["interact"].setDrawInteraction('LineString');
                 };
                 var handleDrawPolygon = function (e) {
-                    interact.setDrawInteraction('Polygon');
+                    interfaceValues["interact"].setDrawInteraction('Polygon');
                 };
                 buttonDrawPoint.addEventListener('click', handleDrawPoint, false);
                 buttonDrawPoint.addEventListener('touchstart', handleDrawPoint, false);
@@ -71,10 +73,10 @@ var InterfaceElements = function(parameters) {
                 buttonMeasureArea.setAttribute('type','button');
                 buttonMeasureArea.innerHTML = 'Area';
                 var handleMeasureLen = function (e) {
-                    interact.setMeasureInteraction('Length');
+                    interfaceValues["interact"].setMeasureInteraction('Length');
                 };
                 var handleMeasureArea = function (e) {
-                    interact.setMeasureInteraction('Area');
+                    interfaceValues["interact"].setMeasureInteraction('Area');
                 };
                 buttonMeasureLen.addEventListener('click', handleMeasureLen, false);
                 buttonMeasureLen.addEventListener('touchstart', handleMeasureLen, false);
@@ -88,7 +90,7 @@ var InterfaceElements = function(parameters) {
                 buttonEdit.setAttribute('type','button');
                 buttonEdit.innerHTML = 'Edit';
                 var handleEdit = function (e) {
-                    interact.setEditInteraction();
+                    interfaceValues["interact"].setEditInteraction();
                 };
                 buttonEdit.addEventListener('click', handleEdit, false);
                 buttonEdit.addEventListener('touchstart', handleEdit, false);
@@ -99,7 +101,7 @@ var InterfaceElements = function(parameters) {
                 buttonSelect.setAttribute('type','button');
                 buttonSelect.innerHTML = 'Select';
                 var handleSelect = function (e) {
-                    interact.setSelectInteraction();
+                    interfaceValues["interact"].setSelectInteraction();
                 };
                 buttonSelect.addEventListener('click', handleSelect, false);
                 buttonSelect.addEventListener('touchstart', handleSelect, false);
@@ -110,7 +112,7 @@ var InterfaceElements = function(parameters) {
                 buttonGPS.setAttribute('type','button');
                 buttonGPS.innerHTML = 'GPS';
                 var handleGPS = function (e) {
-                    geoPoint.manageGPS();
+                    interfaceValues["geoPoint"].manageGPS();
                 };
                 buttonGPS.addEventListener('click', handleGPS, false);
                 buttonGPS.addEventListener('touchstart', handleGPS, false);
@@ -122,7 +124,7 @@ var InterfaceElements = function(parameters) {
                     buttonRuler.setAttribute('type','button');
                     buttonRuler.innerHTML = 'Ruler';
                     var handleClean = function (e) {
-                        interact.deleteFeatures();
+                        interfaceValues["interact"].deleteFeatures();
                     };
                     buttonRuler.addEventListener('click', handleClean, false);
                     buttonRuler.addEventListener('touchstart', handleClean, false);
@@ -136,7 +138,7 @@ var InterfaceElements = function(parameters) {
             buttonInfo.setAttribute('type','button');
             buttonInfo.innerHTML = 'I';
             var handlePopup = function (e) {
-                popup.managePopup('on');
+                interfaceValues["popup"].managePopup('on');
             };
             buttonInfo.addEventListener('click', handlePopup, false);
             element.appendChild(buttonInfo);
@@ -154,7 +156,7 @@ var InterfaceElements = function(parameters) {
      * @returns {Array} the list of graphics components
      */
     this.getElements = function(){
-        this.ListElements.push(new app.CmdControl(parameters));
+        this.ListElements.push(new app.CmdControl(interfaceValues, parameters));
         return this.ListElements;
     };
 };

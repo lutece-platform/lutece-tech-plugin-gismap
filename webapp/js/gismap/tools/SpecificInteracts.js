@@ -1,9 +1,9 @@
-/*global ol, layer, featureLayer*/
+/*global ol*/
 
 /**
  * SpecificInteracts Class manage a part of interaction enabled on the map
  */
-function SpecificInteracts(){
+function SpecificInteracts(layer, featureLayer){
     'use strict';
     /**
      * selectInteract is the interaction to select a feature on the map

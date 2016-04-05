@@ -1,8 +1,8 @@
-/*global ol, view, rasterLayer, projection*/
+/*global ol*/
 /**
  * LayerRaster Class manage all rasters layers in the map
  */
-function LayerRaster() {
+function LayerRaster(projection) {
     'use strict';
     /**
      * ListRasters contains all Rasters of the map
