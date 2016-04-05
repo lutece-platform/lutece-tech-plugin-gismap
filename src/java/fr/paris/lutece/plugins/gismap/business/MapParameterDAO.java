@@ -3,6 +3,9 @@
  */
 package fr.paris.lutece.plugins.gismap.business;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 /**
@@ -35,28 +38,21 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String ZOOMSELECT = "ZoomSelect";
     public static final String ZOOM = "Zoom";
     public static final String DEFAULTBACKGROUND = "DefaultBackGround";
+    public static final String LAYERCONTROL = "LayerControl";
+    public static final String POPUPSHOWLINK = "Popup_ShowLink";
     public static final String BACKGROUND1 = "BackGround1";
     public static final String BACKGROUND2 = "BackGround2";
-    public static final String WMSBASE1 = "WMS-Base1";
-    public static final String WMSBASE2 = "WMS-Base2";
-    public static final String WMSLAYER1 = "WMS-Layer1";
-    public static final String WMSLAYER2 = "WMS-Layer2";
-    public static final String POPUPSHOWLINK = "Popup_ShowLink";
-    public static final String POPUP1 = "Popup1";
-    public static final String POPUP2 = "Popup2";
-    public static final String POPUP3 = "Popup3";
-    public static final String POPUP4 = "Popup4";
-    public static final String WFS1 = "WFS1";
-    public static final String WFS2 = "WFS2";
-    public static final String WFS3 = "WFS3";
-    public static final String WMTS1 = "WMTS1";
-    public static final String GEOJSON1 = "GeoJSON1";
-    public static final String LAYERCONTROL = "LayerControl";
-    
-    public static final String HEATMAP1 = "HeatMap1";
-    public static final String THEMATICSIMPLE1 = "ThematicSimple1";
-    public static final String THEMATICCOMPLEX1 = "ThematicComplex1";
-    public static final String CLUSTER1 = "Cluster1";
+    // parameter 1 to 9
+    public static final String WMSBASE = "WMS-Base";
+    public static final String WMSLAYER = "WMS-Layer";
+    public static final String POPUP = "Popup";
+    public static final String WFS = "WFS";
+    public static final String WMTS = "WMTS";
+    public static final String GEOJSON = "GeoJSON";
+    public static final String HEATMAP = "HeatMap";
+    public static final String THEMATICSIMPLE = "ThematicSimple";
+    public static final String THEMATICCOMPLEX = "ThematicComplex";
+    public static final String CLUSTER = "Cluster";
     
     
 	@Override
@@ -113,43 +109,59 @@ public class MapParameterDAO implements IMapParameterDAO
 		
 		fillMapParameter(nKey, BACKGROUND2, mapParameter);
 		
-		fillMapParameter(nKey, WMSBASE1, mapParameter);
-		
-		fillMapParameter(nKey, WMSBASE2, mapParameter);
-		
-		fillMapParameter(nKey, WMSLAYER1, mapParameter);
-		
-		fillMapParameter(nKey, WMSLAYER2, mapParameter);
-		
-		fillMapParameter(nKey, POPUP1, mapParameter);
-		
-		fillMapParameter(nKey, POPUP2, mapParameter);
-		
-		fillMapParameter(nKey, POPUP3, mapParameter);
-		
-		fillMapParameter(nKey, POPUP4, mapParameter);
-		
-		fillMapParameter(nKey, WFS1, mapParameter);
-		
-		fillMapParameter(nKey, WFS2, mapParameter);
-		
-		fillMapParameter(nKey, WMTS1, mapParameter);
-		
-		fillMapParameter(nKey, GEOJSON1, mapParameter);
+		fillMapParameter(nKey, POPUPSHOWLINK, mapParameter);
 		
 		fillMapParameter(nKey, LAYERCONTROL, mapParameter);
 		
-		fillMapParameter(nKey, WFS3, mapParameter);
+		for(String property : getPropertyList(WMSBASE))
+		{
+			fillMapParameter(nKey, property, mapParameter);
+		}
 		
-		fillMapParameter(nKey, HEATMAP1, mapParameter);
+		for(String property : getPropertyList(WMSLAYER))
+		{
+			fillMapParameter(nKey, property, mapParameter);
+		}
 		
-		fillMapParameter(nKey, THEMATICSIMPLE1, mapParameter);
+		for(String property : getPropertyList(POPUP))
+		{
+			fillMapParameter(nKey, property, mapParameter);
+		}
 		
-		fillMapParameter(nKey, THEMATICCOMPLEX1, mapParameter);
+		for(String property : getPropertyList(WFS))
+		{
+			fillMapParameter(nKey, property, mapParameter);
+		}
 		
-		fillMapParameter(nKey, CLUSTER1, mapParameter);
+		for(String property : getPropertyList(WMTS))
+		{
+			fillMapParameter(nKey, property, mapParameter);
+		}
 		
-		fillMapParameter(nKey, POPUPSHOWLINK, mapParameter);
+		for(String property : getPropertyList(GEOJSON))
+		{
+			fillMapParameter(nKey, property, mapParameter);
+		}
+		
+		for(String property : getPropertyList(HEATMAP))
+		{
+			fillMapParameter(nKey, property, mapParameter);
+		}
+		
+		for(String property : getPropertyList(THEMATICSIMPLE))
+		{
+			fillMapParameter(nKey, property, mapParameter);
+		}
+		
+		for(String property : getPropertyList(THEMATICCOMPLEX))
+		{
+			fillMapParameter(nKey, property, mapParameter);
+		}
+		
+		for(String property : getPropertyList(CLUSTER))
+		{
+			fillMapParameter(nKey, property, mapParameter);
+		}
 		
 		return mapParameter;
 	}
@@ -202,6 +214,16 @@ public class MapParameterDAO implements IMapParameterDAO
 		{
 			mapParameter.setParameters(strProperty, getStringByPoint(strPropertyValue));
 		}
+	}
+	
+	public List<String> getPropertyList(String property)
+	{
+		List<String> listProperty = new ArrayList<String>();
+		for(int i=1;i<10;i++)
+		{
+			listProperty.add(property+i);
+		}
+		return listProperty;
 	}
 
 }
