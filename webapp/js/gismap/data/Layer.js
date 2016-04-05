@@ -47,13 +47,24 @@ function Layer(projection) {
      */
     this.getSelectableLayers = function(){
         return this.selectableLayers;
-    };/**
+    };
+
+    /**
      * Layer Method
      * getFeatureLayers is a getter to Feature Layer Object
      * @returns {Feature|*}
      */
     this.getFeatureLayers = function(){
         return this.featureLayerGis;
+    };
+
+    /**
+     * Layer Method
+     * getRasterLayers is a getter to Raster Layer Object
+     * @returns {LayerRaster|*}
+     */
+    this.getRasterLayers = function(){
+        return this.rasterLayerGis;
     };
 
     /**

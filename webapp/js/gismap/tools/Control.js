@@ -14,16 +14,14 @@ function Control() {
     /**
      * Control METHOD
      * initControls initialize all control of the map and add it in ListControl
-     * @param activeControls is an array of parameters to defin controls
-     * @param projectionChanged is a marker to indicate if the projection change
+     * @param activeControls is an array of parameters to define controls
+     * @param layer is a reference to Layer Object
+     * @param projection is a reference to Projection Object
      * @param specificExtent is a marker to indicate if the extent change
      * @param extentDefine is the new array of specific extent
      */
-    this.initControls = function(activeControls, projectionChanged, specificExtent, extentDefine){
+    this.initControls = function(activeControls, layer, projection, specificExtent, extentDefine){
         for(var ctrl = 0; ctrl < activeControls.length; ctrl++){
-            if(activeControls[ctrl] === "Overview" && projectionChanged === true) {
-                this.ListControl.push(new ol.control.OverviewMap());
-            }
             if(activeControls[ctrl] === "FullScreen" ){
                 this.ListControl.push(new ol.control.FullScreen());
             }
@@ -49,6 +47,18 @@ function Control() {
                     }
                 }));
             }
+        }
+        if(activeControls['Overview'] !== undefined) {
+            var layerOverview = new ol.layer.Tile({
+                source: layer.getRasterLayers().getRasterByName(activeControls["Overview"]).getSource(),
+                visible: true
+            });
+            this.ListControl.push(new ol.control.OverviewMap({
+                layers : [layerOverview],
+                view: new ol.View({
+                    projection: projection.getProjection().getCode()
+                })
+            }));
         }
     };
 

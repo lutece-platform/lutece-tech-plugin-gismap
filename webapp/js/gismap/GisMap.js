@@ -106,10 +106,9 @@ var GisMap = function (idMapInit) {
             interfaceValues["popup"] = popup;
         }
         interact = new Interaction(GlobalMap, layer, popup, projectionGis, parameters['LayerEdit'], fieldParameters);
-        interfaceValues["interact"] = interact;
         control = new Control();
-        manager.readAndInitActionParams(control, interact, parameters);
-
+        manager.readAndInitActionParams(control, interact, layer, projectionGis, parameters);
+        interfaceValues["interact"] = interact;
         layer.setInteract(interact);
         popup.setInteract(interact);
         zoom.setInteract(interact);
