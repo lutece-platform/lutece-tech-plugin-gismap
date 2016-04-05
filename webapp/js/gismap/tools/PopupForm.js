@@ -2,7 +2,7 @@
 /**
  * PopupForm Class define the Popup HTML
  */
-var PopupForm = function() {
+var PopupForm = function(idMap) {
     'use strict';
     /**
      * PopupForm Method
@@ -30,9 +30,10 @@ var PopupForm = function() {
      * @param info the data information
      * @returns {string} a line of the popup
      */
-    this.definePopupMultiForm = function(layer, id, info){
+    this.definePopupMultiForm = function(layer, id, info, evt){
         var data = '';
-        data = data + '<p>' + layer + ' : <a type="button" href="#" onclick="GisMapDisplay.getPopup().displaySimplePopup('+id+')">' + info + '</a></p>';
+        var popupRef = evt.originalEvent.view.Popup;
+        data = data + '<p>' + layer + ' : <a type="button" href="#" onclick="GisMapDisplay'+idMap+'.getPopup().displaySimplePopup('+id+')">' + info + '</a></p>';
         return data;
     };
 

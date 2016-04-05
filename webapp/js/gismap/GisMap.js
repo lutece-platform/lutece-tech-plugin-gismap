@@ -4,15 +4,13 @@ View, Zoom, InterfaceElements, GeoPoint, Print, Popup, Filter*/
 /**
  * File to manage the Gis Component with all parameters
  */
-
-var popup;
-
-var GisMap = function (idMapInit) {
+var GisMap = function (idMapInit, idInit) {
     'use strict';
     /**
      *  Global Object instantiation
      */
     this.idMap = idMapInit;
+    var id = idInit;
     window.app = {};
     var app = window.app;
     var control;
@@ -23,6 +21,7 @@ var GisMap = function (idMapInit) {
     var interfaceValues = [];
     var layer;
     var manager = new Manager();
+    var popup;
     var printer;
     var projectionGis;
     var suggestPoiLocator;
@@ -102,7 +101,7 @@ var GisMap = function (idMapInit) {
      */
     function controlInitialize(parameters, fieldParameters) {
         if(parameters['Popup'] !== '' && parameters['Popup'] !== undefined){
-            popup = new Popup(GlobalMap, parameters['Popup']);
+            popup = new Popup(GlobalMap, id, parameters['Popup']);
             interfaceValues["popup"] = popup;
         }
         interact = new Interaction(GlobalMap, layer, popup, projectionGis, parameters['LayerEdit'], fieldParameters);
