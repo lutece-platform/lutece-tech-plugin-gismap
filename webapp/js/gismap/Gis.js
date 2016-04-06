@@ -4,6 +4,7 @@
  * Method to start gis component to LUTECE
  */
 var idMap = 'map';
+var idInit = 1;
 var globalParameters = [];
 var parameters = [];
 var fieldParameters = [];
@@ -60,5 +61,5 @@ fieldParameters.push(fieldParameters['GeomCentroidXGeocodage']='GeomCentroidXGeo
 fieldParameters.push(fieldParameters['GeomCentroidYGeocodage']='GeomCentroidYGeocodage');
 fieldParameters.push(fieldParameters['GeomState']='GeomState');
 fieldParameters.push(fieldParameters['UrlGeoJSON1']=['Test','http://localhost:8081/myapp/myresource']);
-var GisMapDisplay1 = new GisMap(idMap, 1);
+var GisMapDisplay1 = new GisMap(idMap, idInit);
 GisMapDisplay1.initGisMap(globalParameters, parameters, fieldParameters);

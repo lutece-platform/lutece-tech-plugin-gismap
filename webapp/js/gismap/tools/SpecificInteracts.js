@@ -9,7 +9,15 @@ function SpecificInteracts(layer, featureLayer){
      * selectInteract is the interaction to select a feature on the map
      * @type {ol.interaction.Select}
      */
-    this.selectInteract = new ol.interaction.Select();
+    this.selectInteract = new ol.interaction.Select({
+        filter: function(feature) {
+            if(feature.get('features') !== undefined && feature.get('features').length !== 1){
+                return false;
+            }else{
+                return true;
+            }
+        }
+    });
 
     /**
      * selectClusterInteract is the interaction to manipulate the style of clustering features on the map

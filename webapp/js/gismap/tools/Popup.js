@@ -161,18 +161,20 @@ var Popup = function(GlobalMap, idMap, parameters) {
         var count = 0;
         var id = 0;
         GlobalMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
-            if(queryData[layer.get('title')] !== null && queryData[layer.get('title')] !== undefined) {
-                var unknown = true;
-                for (var i = 0; i < layerInfo.length; i++) {
-                    if (layerInfo[i] === layer.get('title')) {
-                        unknown = false;
+            if(layer !== null) {
+                if (queryData[layer.get('title')] !== null && queryData[layer.get('title')] !== undefined) {
+                    var unknown = true;
+                    for (var i = 0; i < layerInfo.length; i++) {
+                        if (layerInfo[i] === layer.get('title')) {
+                            unknown = false;
+                        }
                     }
+                    if (unknown === true) {
+                        layerInfo.push(layer.get('title'));
+                    }
+                    features[layer.get('title') + count] = feature;
+                    count++;
                 }
-                if (unknown === true) {
-                    layerInfo.push(layer.get('title'));
-                }
-                features[layer.get('title')+count] = feature;
-                count++;
             }
         });
         /*GlobalMap.forEachLayerAtPixel(evt.pixel, function (layer) {
