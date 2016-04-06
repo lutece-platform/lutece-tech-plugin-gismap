@@ -1,0 +1,48 @@
+.layer-switcher {
+    position: absolute;
+    top: 5em;
+    right: 0.5em;
+    text-align: left;
+}
+
+.ol-mouse-position {
+  top: 10px;
+  right: 45px;
+  position: absolute;
+}
+
+.ol-rotate {
+  top: 2.25em;
+  right: .5em;
+  transition: opacity .25s linear, visibility 0s linear;
+}
+
+.ol-zoomslider {
+  top: 6.5em;
+  left: .5em;
+  height: 200px;
+}
+
+.ol-overviewmap {
+  left: 0.5em;
+  bottom: 2em;
+}
+
+.ol-scale-line {
+  background: rgba(0,60,136,0.3);
+  border-radius: 4px;
+  bottom: 8px;
+  left: 8px;
+  padding: 2px;
+  position: absolute;
+}
+
+.ol-mycontrol {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+    padding: 2px;
+    position: absolute;
+    width:500px;
+    top: 5px;
+    left:40px;
+}
