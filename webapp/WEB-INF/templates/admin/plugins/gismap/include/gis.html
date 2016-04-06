@@ -3,7 +3,6 @@
 <#if entry?? && entry.idEntry?has_content >
 	<#assign idEntry = entry.idEntry >
 </#if>
-
 var idMap${idEntry} = '${idEntry}_map';
 var globalParameters${idEntry} = [];
 var parameters${idEntry} = [];
@@ -38,7 +37,7 @@ ol.proj.setProj4(proj4);
 	fieldParameters${idEntry}.push(fieldParameters${idEntry}['UrlGeoJSON1']=['Test','http://localhost:8081/myapp/myresource']);
 </#if>
 
-var GisMapDisplay${idEntry} = new GisMap(idMap${idEntry});
+var GisMapDisplay${idEntry} = new GisMap(idMap${idEntry}, ${idEntry});
 GisMapDisplay${idEntry}.initGisMap(globalParameters${idEntry}, parameters${idEntry}, fieldParameters${idEntry});
 
 </script>
