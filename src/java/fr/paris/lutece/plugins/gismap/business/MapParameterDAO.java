@@ -201,7 +201,7 @@ public class MapParameterDAO implements IMapParameterDAO
 			}
 		}
 		if(strPropertyArray.length>1)
-			return "["+strPropertyReturrn+"]";
+			return strPropertyReturrn;
 		else
 			return strProperty;
 			
