@@ -4,11 +4,6 @@
 var Manager = function() {
     'use strict';
     /**
-     * projectedChanged is a marker to indicate if the default projection is apply or not
-     * @type {boolean}
-     */
-    this.projectionChanged = false;
-    /**
      * specificExtent is a marker to indicate if a specific extent is define or not
      * @type {boolean}
      */
@@ -65,8 +60,8 @@ var Manager = function() {
         if (startParameters['DefaultBackGround'] !== '') {
             parameters['DefaultBackGround'] = startParameters['DefaultBackGround'];
         }
-        if (startParameters['Overview'] !== false) {
-            controls.push('Overview');
+        if (startParameters['Overview'] !== '') {
+            controls['Overview'] = startParameters['Overview'];
         }
         if (startParameters['ScaleBar'] !== false) {
             controls.push('ScaleBar');
@@ -195,9 +190,6 @@ var Manager = function() {
     var readAndInitGeneralParams = function (projection, viewGisMap, parameters) {
         if (parameters['Projection'] !== '' && parameters['Projection'] !== undefined) {
             projection.getEpsgData(parameters['Projection'], true);
-            if (parameters['Projection'] !== 'EPSG:3857') {
-                this.projectionChanged = true;
-            }
         }
         if (parameters['Extent'] !== '' && parameters['Extent'] !== undefined ) {
             this.extentDefine = parameters['Extent'];
@@ -264,11 +256,13 @@ var Manager = function() {
      * readAndInitActionParams initiate actions properties of the map
      * @param control is the reference of the Control Object
      * @param interact is the reference of the Interact Object
+     * @param layer is the reference of the Layer Object
+     * @param projection is the reference of the Projection Object
      * @param parameters is the array of actions parameters
      */
-    var readAndInitActionParams = function (control, interact, parameters) {
+    var readAndInitActionParams = function (control, interact, layer, projection, parameters) {
         if(parameters['Controles'] !== '' && parameters['Controles'] !== undefined){
-            control.initControls(parameters['Controles'], this.projectionChanged, this.specificExtent, this.extentDefine);
+            control.initControls(parameters['Controles'], layer, projection, this.specificExtent, this.extentDefine);
         }
         if(parameters['Interacts'] !== '' && parameters['Interacts'] !== undefined) {
             interact.initInteractions(parameters['Interacts']);

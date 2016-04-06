@@ -2,13 +2,13 @@
 /**
  * Popup Class manage all popups included in the map
  */
-var Popup = function(GlobalMap, parameters) {
+var Popup = function(GlobalMap, idMap, parameters) {
     'use strict';
     /**
      * popupForm is the reference of the form of the Popup
      * @type {PopupForm}
      */
-    var popupForm = new PopupForm();
+    var popupForm = new PopupForm(idMap);
 
     /**
      * interact stock a reference of the current interact of the map
@@ -121,7 +121,7 @@ var Popup = function(GlobalMap, parameters) {
             }else{
                 for(var i = 0; i < count; i++){
                     queries[id] = [evt.coordinate, layerInfo, features[layerInfo+i]];
-                    data = data + popupForm.definePopupMultiForm(layerInfo, id, features[layerInfo+i].get(queryData[layerInfo][1]));
+                    data = data + popupForm.definePopupMultiForm(layerInfo, id, features[layerInfo+i].get(queryData[layerInfo][1]), evt);
                     id++;
                 }
                 popupForm.displayPopupForm(overlay, evt.coordinate, data);
@@ -130,14 +130,14 @@ var Popup = function(GlobalMap, parameters) {
             for (var l = 0; l < layerInfo.length; l++) {
                 if(wmsLayers[layerInfo[l]] !== null && wmsLayers[layerInfo[l]] !== undefined){
                     queries[id] = [evt.coordinate, layerInfo[l], wmsLayers[layerInfo[l]]];
-                    data = data + popupForm.definePopupMultiForm(layerInfo[l], id, wmsLayers[layerInfo[l]].get(queryData[layerInfo[l]][1]));
+                    data = data + popupForm.definePopupMultiForm(layerInfo[l], id, wmsLayers[layerInfo[l]].get(queryData[layerInfo[l]][1]), evt);
                     id++;
                 }else{
                     for(var m = 0; m < count; m++){
                         if(features[layerInfo[l]+m] !== null && features[layerInfo[l]+m] !== undefined){
                             var queryFeature = features[layerInfo[l]+m];
                             queries[id] = [evt.coordinate, layerInfo[l], queryFeature];
-                            data = data + popupForm.definePopupMultiForm(layerInfo[l], id, queryFeature[layerInfo[l]].get(queryData[layerInfo[l]][1]));
+                            data = data + popupForm.definePopupMultiForm(layerInfo[l], id, queryFeature[layerInfo[l]].get(queryData[layerInfo[l]][1]), evt);
                             id++;
                         }
                     }
