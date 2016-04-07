@@ -161,22 +161,47 @@ var GisMap = function (idMapInit, idInit) {
         }
     }
 
+    /**
+     * GisMap Public Method
+     * getFilter is an accessor for the filter object
+     * @returns {*} the filter object
+     */
     var getFilter = function(){
         return filter;
     };
 
+    /**
+     * GisMap Public Method
+     * getInteract is an accessor for the interact object
+     * @returns {*} the interact object
+     */
     var getInteract = function(){
         return interact;
     };
 
+    /**
+     * GisMap Public Method
+     * getLayer is an accessor for the layer object
+     * @returns {*} the layer object
+     */
     var getLayer = function(){
         return layer;
     };
 
+    /**
+     * GisMap Public Method
+     * getPopup is an accessor for the popup object
+     * @returns {*} the popup object
+     */
     var getPopup = function(){
         return popup;
     };
 
+    /**
+     * GisMap Public Method
+     * getZoom is an accessor for the filter object
+     * @returns {*} the filter object
+     */
     var getZoom = function(){
         return zoom;
     };
