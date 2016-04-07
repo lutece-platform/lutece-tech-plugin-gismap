@@ -69,7 +69,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
     });
     /**
      * editLayer is the layer can be edit on the map
-     * @type {ol.layer.Layer}
+     * @type {ol.layer.Vector}
      */
     this.editLayer = new ol.layer.Vector({
         name:"EditLayer",
@@ -104,7 +104,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
         JSON.parse(getTransformStringToGeoJSON(editData))['geometry']['type'] : fieldName['TypeEdit'];
     /**
      * suggestPoiEdit is the marker to know the mode of edition on the map
-     * @type {ol.interaction.Draw}
+     * @type {Boolean}
      */
     this.suggestPoiEdit = fieldName['TypeEdit'] === 'SuggestPOI' ? true : false;
     /**
@@ -127,6 +127,27 @@ function Editor(interact, layerEdit, fieldName, projection) {
         source: this.editSource,
         type: editType
     });
+    /**
+     * suggestSelect is a marker to set the selection after SuggestPOI creation
+     * @type {boolean}
+     */
+    this.suggestSelect = false;
+    /**
+     * Editor Method
+     * getSuggestSelect is a getter to access at the value of the marker
+     * @returns {boolean} the value of the marker
+     */
+	this.getSuggestSelect = function(){
+		return this.suggestSelect;
+	};
+    /**
+     * Editor Method
+     * setSuggestSelect is a setter to change the value of the marker
+     * @param value the new value of the marker
+     */
+	this.setSuggestSelect = function(value){
+		this.suggestSelect = value;
+	};
     /**
      * Editor Method
      * getEditProj is a getter to know the projection of editor data
@@ -184,6 +205,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
         return this.editLayer;
     };
 
+
     /**
      * Editor Method
      * initEditInteraction initialize the List of interacts to edit data
@@ -232,7 +254,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
     /**
      * Editor METHOD
      * getEditorTools is a getter to access at the draw interaction
-     * @returns {Map} a map with all editor interaction
+     * @returns {Array} a map with all editor interaction
      */
     this.getEditorTools = function () {
         var listEditor = [];
@@ -273,7 +295,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
     this.managePoint = function(feature){
         /*Lambert 93*/
         var pointL93 = getCentroid(feature.getGeometry());
-        pointL93.transform(projection.getProjection().getCode(), 'EPSG:2154');
+        pointL93.transform(projection.getProjection().getCode(), projection.getEpsgData('EPSG:2154', false)[0].getCode());
         this.fieldCentroidXGeocodage.value = pointL93.getCoordinates()[0];
         this.fieldCentroidYGeocodage.value = pointL93.getCoordinates()[1];
         /*WGS 84*/
@@ -343,7 +365,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
      */
     this.getSelectedEditFeatures().on('add', function (evt) {
         var feature = evt.element;
-        if (interact.getEditor().selectInteract.getLayer(feature).get('name') === interact.getEditor().editLayer.get('name')){
+        if (interact.getEditor().getSuggestSelect() || interact.getEditor().selectInteract.getLayer(feature).get('name') === interact.getEditor().editLayer.get('name')){
             interact.getEditor().fieldEditionStatus.value = true;
             feature.on('change', function (evt) {
                 dirty[evt.target.getId()] = true;
@@ -359,7 +381,8 @@ function Editor(interact, layerEdit, fieldName, projection) {
      */
     this.getSelectedEditFeatures().on('remove', function (evt) {
         var feature = evt.element;
-        if (interact.getEditor().selectInteract.getLayer(feature).get('name') === interact.getEditor().editLayer.get('name')){
+        if (interact.getEditor().getSuggestSelect() || interact.getEditor().selectInteract.getLayer(feature).get('name') === interact.getEditor().editLayer.get('name')){
+			interact.getEditor().setSuggestSelect(false);
             interact.getEditor().writeGeoJSON(feature);
         }
     });
@@ -384,6 +407,8 @@ function Editor(interact, layerEdit, fieldName, projection) {
             var feature = new ol.Feature(point);
             this.editLayer.getSource().addFeature(feature);
             this.writeGeoJSON(feature);
+            this.suggestSelect = true;
+            this.selectInteract.getFeatures().push(this.editLayer.getSource().getFeatures()[0]);
         }
     };
 
