@@ -59,7 +59,21 @@ function SpecificStyle() {
         color: 'rgba(255, 255, 255, 0.01)'
     });
 
-
+    /**
+     * thematicMapSimple contains the name of the correspondence table for simple thematic representation
+     * @type {null}
+     */
+    var thematicMapSimple = null;
+    /**
+     * thematicStyleSimple contains the name of the style for simple thematic representation
+     * @type {null}
+     */
+    var thematicStyleSimple = null;
+    /**
+     * thematicFieldSimple contains the name of the field to define the simple representation
+     * @type {string}
+     */
+    var thematicFieldSimple = '';
     /**
      * thematicMap contains the name of the correspondence table for thematic representation
      * @type {null}
@@ -110,9 +124,9 @@ function SpecificStyle() {
      * @param styleThematic the name of the style definition
      */
     this.initThematicValue = function(field, mapThematic, styleThematic){
-        thematicField1 = field;
-        thematicMap = styleLayerDefinition.getMapCorrespondence(mapThematic);
-        thematicStyle = styleLayerDefinition.getStyleThematic(styleThematic);
+        thematicFieldSimple = field;
+        thematicMapSimple = styleLayerDefinition.getMapCorrespondence(mapThematic);
+        thematicStyleSimple = styleLayerDefinition.getStyleThematic(styleThematic);
     };
 
      /**
@@ -203,10 +217,10 @@ function SpecificStyle() {
      * @returns {*} the simple thematic style
      */
     this.styleThematicApply = function(feature){
-        if (thematicMap[feature.get(thematicField1)]){
-            return thematicStyle[thematicMap[feature.get(thematicField1)]];
+        if (thematicMapSimple[feature.get(thematicFieldSimple)]){
+            return thematicStyleSimple[thematicMapSimple[feature.get(thematicFieldSimple)]];
         }else{
-            return thematicStyle['default'];
+            return thematicStyleSimple['default'];
         }
     };
 
