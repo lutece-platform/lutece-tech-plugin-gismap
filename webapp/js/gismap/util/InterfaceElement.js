@@ -122,7 +122,7 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
                 if(rulerActive === false) {
                     var buttonRuler = document.createElement('button');
                     buttonRuler.setAttribute('type','button');
-                    buttonRuler.innerHTML = 'Ruler';
+                    buttonRuler.innerHTML = 'Rubber ';
                     var handleClean = function (e) {
                         interfaceValues["interact"].deleteFeatures();
                     };
