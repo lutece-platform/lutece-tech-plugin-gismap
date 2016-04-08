@@ -42,6 +42,7 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String POPUPSHOWLINK = "Popup_ShowLink";
     public static final String BACKGROUND1 = "BackGround1";
     public static final String BACKGROUND2 = "BackGround2";
+    public static final String HEIGHT = "Height";
     // parameter 1 to 9
     public static final String WMSBASE = "WMS-Base";
     public static final String WMSLAYER = "WMS-Layer";
@@ -53,7 +54,6 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String THEMATICSIMPLE = "ThematicSimple";
     public static final String THEMATICCOMPLEX = "ThematicComplex";
     public static final String CLUSTER = "Cluster";
-    
     
 	@Override
 	public MapParameter findById(int nKey) {
@@ -112,6 +112,8 @@ public class MapParameterDAO implements IMapParameterDAO
 		fillMapParameter(nKey, POPUPSHOWLINK, mapParameter);
 		
 		fillMapParameter(nKey, LAYERCONTROL, mapParameter);
+		
+		fillMapParameter(nKey, HEIGHT, mapParameter);
 		
 		for(String property : getPropertyList(WMSBASE))
 		{
@@ -225,5 +227,4 @@ public class MapParameterDAO implements IMapParameterDAO
 		}
 		return listProperty;
 	}
-
 }
