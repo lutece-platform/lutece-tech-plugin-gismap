@@ -2,7 +2,7 @@
 /**
  * LayerRaster Class manage all rasters layers in the map
  */
-function LayerRaster(projection) {
+function LayerRaster(projection, proxy) {
     'use strict';
     /**
      * ListRasters contains all Rasters of the map
@@ -57,7 +57,7 @@ function LayerRaster(projection) {
                             html: dataAttribution
                         })
                     ],
-                    url: url+dataName+'/ImageServer'
+                    url: url + dataName + '/ImageServer'
                 }),
                 visible:false
             });
@@ -71,7 +71,7 @@ function LayerRaster(projection) {
                             html: dataAttribution
                         })
                     ],
-                    url: url+dataName+'/MapServer'
+                    url: url + dataName + '/MapServer'
                 }),
                 visible:false
             });

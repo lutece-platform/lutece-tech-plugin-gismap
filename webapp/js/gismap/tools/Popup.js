@@ -37,10 +37,20 @@ var Popup = function(GlobalMap, idMap, parameters) {
      */
     var queryData = initOverlayPopupElements(parameters);
     /**
-     * queryLayers contains the reference of the data can be integrate in the popup
-     * @type {Array}
+     * dataJson is the value get on the wms request
+     * @type {null}
      */
-    var queryLayers = initOverlayPopupLayers(parameters);
+    var dataJson = null;
+    /**
+     * geoJSONFormat define the format GeoJSON
+     * @type {ol.format.GeoJSON}
+     */
+    var geoJsonFormat = new ol.format.GeoJSON();
+    /**
+     * esrijsonFormat define the format EsriJSON
+     * @type {ol.format.EsriJSON}
+     */
+    var esriJsonFormat = new ol.format.EsriJSON();
 
     /**
      * Popup Method
@@ -61,20 +71,6 @@ var Popup = function(GlobalMap, idMap, parameters) {
         var queryDataInit = [];
         for(var i = 0; i < parameters.length; i++){
             queryDataInit[parameters[i][0]] = parameters[i][1];
-        }
-        return queryDataInit;
-    }
-
-     /**
-     * Popup Method
-     * initOverlayPopupElements initialise the reference of the data popup
-     * @param parameters is the array of parameters to define popups informations
-     * @returns {Array} is the array with key value of all popups
-     */
-    function initOverlayPopupLayers(parameters){
-        var queryDataInit = [];
-        for(var i = 0; i < parameters.length; i++){
-            queryDataInit.push(parameters[i][0]);
         }
         return queryDataInit;
     }
@@ -100,7 +96,7 @@ var Popup = function(GlobalMap, idMap, parameters) {
             }
         }
         popupForm.displayPopupForm(overlay, coordinates, data);
-    }
+    };
 
     /**
      * Popup Method
@@ -116,8 +112,36 @@ var Popup = function(GlobalMap, idMap, parameters) {
         var data = '';
         if(layerInfo.length === 1){
             if(count < 2) {
-                queries[id] = [evt.coordinate, layerInfo, features[layerInfo+'0']];
-                displaySimplePopup(id);
+                if(features[layerInfo+'0'] !== undefined) {
+                    queries[id] = [evt.coordinate, layerInfo, features[layerInfo + '0']];
+                    displaySimplePopup(id);
+                }else{
+                    var url = wmsLayers[layerInfo].getSource().getGetFeatureInfoUrl(evt.coordinate,
+                        GlobalMap.getView().getResolution(),
+                        GlobalMap.getView().getProjection(),
+                        {'INFO_FORMAT': 'text/javascript'});
+                    $.ajax({
+                        url: url,
+                        dataType: 'jsonp',
+                        jsonpCallback: 'parseResponse',
+                        success: function (data) {
+                            if(dataJson === null) {
+                                dataJson = data;
+                                setTimeout(definePopup(evt, layerInfo, features, wmsLayers, count, id), 1000);
+                            }
+                        }
+                    });
+                    if(dataJson !== null) {
+                        var feature;
+                        if (wmsLayers[layerInfo].getSource().coordKeyPrefix_.indexOf('geoserver') > -1) {
+                            feature = geoJsonFormat.readFeatures(dataJson)[0];
+                        }else{
+                            feature = esriJsonFormat.readFeatures(dataJson)[0];
+                        }
+                        queries[id] = [evt.coordinate, layerInfo, feature];
+                        displaySimplePopup(id);
+                    }
+                }
             }else{
                 for(var i = 0; i < count; i++){
                     queries[id] = [evt.coordinate, layerInfo, features[layerInfo+i]];
@@ -129,15 +153,39 @@ var Popup = function(GlobalMap, idMap, parameters) {
         }else if(layerInfo.length > 1){
             for (var l = 0; l < layerInfo.length; l++) {
                 if(wmsLayers[layerInfo[l]] !== null && wmsLayers[layerInfo[l]] !== undefined){
-                    queries[id] = [evt.coordinate, layerInfo[l], wmsLayers[layerInfo[l]]];
-                    data = data + popupForm.definePopupMultiForm(layerInfo[l], id, wmsLayers[layerInfo[l]].get(queryData[layerInfo[l]][1]), evt);
-                    id++;
+                    var urlWms = wmsLayers[layerInfo[l]].getSource().getGetFeatureInfoUrl(evt.coordinate,
+                        GlobalMap.getView().getResolution(),
+                        GlobalMap.getView().getProjection(),
+                        {'INFO_FORMAT': 'text/javascript'});
+                    $.ajax({
+                        url: urlWms,
+                        dataType: 'jsonp',
+                        jsonpCallback: 'parseResponse',
+                        success: function (data) {
+                            if(dataJson === null) {
+                                dataJson = data;
+                                setTimeout(definePopup(evt, layerInfo, features, wmsLayers, count, id), 1000);
+                            }
+                        }
+                    });
+                    if(dataJson !== null) {
+                        var featureWms;
+                        if (wmsLayers[layerInfo[l]].getSource().coordKeyPrefix_.indexOf('geoserver') > -1) {
+                            featureWms = geoJsonFormat.readFeatures(dataJson)[0];
+                        }else{
+                            featureWms = esriJsonFormat.readFeatures(dataJson)[0];
+                        }
+                        queries[id] = [evt.coordinate, layerInfo, featureWms];
+                        queries[id] = [evt.coordinate, layerInfo[l], featureWms];
+                        data = data + popupForm.definePopupMultiForm(layerInfo[l], id, featureWms.get(queryData[layerInfo[l]][1]), evt);
+                        id++;
+                    }
                 }else{
                     for(var m = 0; m < count; m++){
                         if(features[layerInfo[l]+m] !== null && features[layerInfo[l]+m] !== undefined){
                             var queryFeature = features[layerInfo[l]+m];
                             queries[id] = [evt.coordinate, layerInfo[l], queryFeature];
-                            data = data + popupForm.definePopupMultiForm(layerInfo[l], id, queryFeature[layerInfo[l]].get(queryData[layerInfo[l]][1]), evt);
+                            data = data + popupForm.definePopupMultiForm(layerInfo[l], id, queryFeature.get(queryData[layerInfo[l]][1]), evt);
                             id++;
                         }
                     }
@@ -160,6 +208,7 @@ var Popup = function(GlobalMap, idMap, parameters) {
         var wmsLayers = [];
         var count = 0;
         var id = 0;
+        dataJson = null;
         GlobalMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
             if(layer !== null) {
                 if (queryData[layer.get('title')] !== null && queryData[layer.get('title')] !== undefined) {
@@ -177,8 +226,8 @@ var Popup = function(GlobalMap, idMap, parameters) {
                 }
             }
         });
-        /*GlobalMap.forEachLayerAtPixel(evt.pixel, function (layer) {
-            console.log(layer.getSource().getGetFeatureInfo())
+        /** A réactiver une fois le problème de Cors résolu
+        GlobalMap.forEachLayerAtPixel(evt.pixel, function (layer) {
             if(queryData[layer.get('title')] !== null && queryData[layer.get('title')] !== undefined) {
                 var unknown = true;
                 for (var i = 0; i < layerInfo.length; i++) {

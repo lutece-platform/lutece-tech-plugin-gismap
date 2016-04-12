@@ -43,7 +43,7 @@ var GisMap = function (idMapInit, idInit) {
     function initGis(startParameters, fieldParameters) {
         var parameters = manager.readAndManageParameters(startParameters, fieldParameters);
         globalInitialize(parameters);
-        dataInitialize(parameters);
+        dataInitialize(parameters, fieldParameters);
         controlInitialize(parameters, fieldParameters);
         mapInitialize(parameters);
         if(manager.getSpecificExtent().length > 1 ){
@@ -88,8 +88,8 @@ var GisMap = function (idMapInit, idInit) {
      * dataInitialize initiate the layers of the map
      * @param parameters is the array of parameters of properties file
      */
-    function dataInitialize(parameters){
-        layer = new Layer(projectionGis);
+    function dataInitialize(parameters, fieldParameters){
+        layer = new Layer(projectionGis, fieldParameters['Proxy']);
         manager.readAndInitDataParams(layer, parameters);
     }
 

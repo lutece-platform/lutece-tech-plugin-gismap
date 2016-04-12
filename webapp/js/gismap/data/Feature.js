@@ -4,7 +4,7 @@
  * Feature Class manage all features layers in the map
  */
 
-function Feature(projection) {
+function Feature(projection, proxy) {
     'use strict';
     /**
      * style define the specific style several representation of the layer

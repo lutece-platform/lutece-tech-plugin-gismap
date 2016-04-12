@@ -4,7 +4,7 @@
  * Layer Class manage all layers in the map
  */
 
-function Layer(projection) {
+function Layer(projection, proxy) {
     'use strict';
     /**
      * interact stock a reference of the current interact of the map
@@ -25,12 +25,12 @@ function Layer(projection) {
      * featureLayerGis is the Feature Layer object
      * @type {Feature}
      */
-    this.featureLayerGis = new Feature(projection);
+    this.featureLayerGis = new Feature(projection, proxy);
     /**
      * rasterLayerGis is the Raster Layer object
      * @type {LayerRaster}
      */
-    this.rasterLayerGis = new LayerRaster(projection);
+    this.rasterLayerGis = new LayerRaster(projection, proxy);
     /**
      * Layer Method
      * getLayers is a getter to all Layers
