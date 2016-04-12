@@ -265,7 +265,7 @@ function Measure() {
      * @param map is the globalMap
      */
     this.cleanMeasureLayer = function(map){
-        for(var measureTooltipElem = 0; measureTooltipElem < this.measureTooltipArray.length; measureTooltipElem++){
+        for(var measureTooltipElem = 0; measureTooltipElem < this.measureTooltipArray.length-1; measureTooltipElem++){
             map.removeOverlay(this.measureTooltipArray[measureTooltipElem]);
         }
         this.measureTooltipArray.splice(0, this.measureTooltipArray.length);
