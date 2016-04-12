@@ -20,7 +20,10 @@ ol.proj.setProj4(proj4);
 	<#assign strKey = "'" + key + "'" >
 	<#assign strVal = "'" + fieldParam[key] + "'" >
 	<#if strKey == "'UrlGeoJSON1'">
-		fieldParameters${idEntry}.push(fieldParameters${idEntry}[${strKey}] = ['Lutece',${strVal}]);
+		<#assign strValGeo = "'Lutece'" >
+		<#assign strValGeo = "${map_parameter.parameters['GeoJSON1']}"?split(",")[0] >
+		<#assign strValGeo = "${strValGeo}"?split("[")[1] >
+		fieldParameters${idEntry}.push(fieldParameters${idEntry}[${strKey}] = [${strValGeo},${strVal}]);
 	<#else>
 		fieldParameters${idEntry}.push(fieldParameters${idEntry}[${strKey}] = ${strVal});
 	</#if>
