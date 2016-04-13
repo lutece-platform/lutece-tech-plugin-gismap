@@ -4,7 +4,6 @@
 	<#assign idEntry = entry.idEntry >
 </#if>
 var idMap${idEntry} = '${idEntry}_map';
-var globalParameters${idEntry} = [];
 var parameters${idEntry} = [];
 var fieldParameters${idEntry} = [];
 ol.proj.setProj4(proj4);
@@ -14,6 +13,15 @@ ol.proj.setProj4(proj4);
 	<#assign strVal = map_parameter.parameters[key] >
 	parameters${idEntry}.push(parameters${idEntry}[${strKey}] = ${strVal});
 </#list>
+
+var varExtentContext${idEntry} = $('#${idEntry}_extentCurrent').val();
+
+var varListLayersVisible${idEntry} = $('#${idEntry}_visibleLayer').val();
+
+parameters${idEntry}.push(parameters${idEntry}['ExtentContext'] = varExtentContext${idEntry} );
+parameters${idEntry}.push(parameters${idEntry}['ListLayersVisible'] = varListLayersVisible${idEntry} );
+//parameters${idEntry}.push(parameters${idEntry}['ExtentContext'] = [641519.1384852936,6845868.910503937,656295.8195046519,6866452.567923885]);
+//parameters${idEntry}.push(parameters${idEntry}['ListLayersVisible'] = ['MapQuest',true,'OSM',false,'Otrho_Paris',false,'Otrho_Paris_Tiled',false,'Topp',true,'World_Simple_WMS',false,'Arrondissements_Ideation',false,'Popup_WMS',true,'Arrondissements',false,'Souillure',false,'Plan_Voirie',false,'HeatMap',true]);
 
 <#if fieldParam?? >
 <#list fieldParam?keys as key>
@@ -41,6 +49,6 @@ ol.proj.setProj4(proj4);
 </#if>
 
 var GisMapDisplay${idEntry} = new GisMap(idMap${idEntry}, ${idEntry});
-GisMapDisplay${idEntry}.initGisMap(globalParameters${idEntry}, parameters${idEntry}, fieldParameters${idEntry});
+GisMapDisplay${idEntry}.initGisMap(parameters${idEntry}, fieldParameters${idEntry});
 
 </script>
