@@ -55,6 +55,8 @@ parameters.push(parameters['Popup1'] = ['Test',['nom','prenom','type','link']]);
 parameters.push(parameters['Popup4'] = ['World_Simple_WMS',['type','admin','adm0_a3']]);
 parameters.push(parameters['Popup5'] = ['Topp',['STATE_NAME','SUB_REGION']]);
 parameters.push(parameters['Popup_ShowLink'] = true);
+parameters.push(parameters['ListLayersVisible'] = '');
+//parameters.push(parameters['ListLayersVisible'] = ['MapQuest',true,'OSM',false,'Otrho_Paris',false,'Otrho_Paris_Tiled',false,'Topp',true,'World_Simple_WMS',false,'Arrondissements_Ideation',false,'Popup_WMS',true,'Arrondissements',false,'Souillure',false,'Plan_Voirie',false,'HeatMap',true]);
 fieldParameters.push(fieldParameters['TypeEdit']='');
 //fieldParameters.push(fieldParameters['Proxy']='http://localhost:8085/myapp/myresource?url=');
 fieldParameters.push(fieldParameters['GeomGeoJson']='GeomGeoJson');
@@ -63,6 +65,8 @@ fieldParameters.push(fieldParameters['GeomCentroidYStockage']='GeomCentroidYStoc
 fieldParameters.push(fieldParameters['GeomCentroidXGeocodage']='GeomCentroidXGeocodage');
 fieldParameters.push(fieldParameters['GeomCentroidYGeocodage']='GeomCentroidYGeocodage');
 fieldParameters.push(fieldParameters['GeomState']='GeomState');
+fieldParameters.push(fieldParameters['ExtentContext']='ExtentContext');
+fieldParameters.push(fieldParameters['VisibleLayer']='VisibleLayer');
 fieldParameters.push(fieldParameters['UrlGeoJSON1']=['Test','http://localhost:8081/myapp/myresource']);
 var GisMapDisplay1 = new GisMap(idMap, idInit);
-GisMapDisplay1.initGisMap(globalParameters, parameters, fieldParameters);
+GisMapDisplay1.initGisMap(parameters, fieldParameters);

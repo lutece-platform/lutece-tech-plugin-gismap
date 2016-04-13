@@ -33,6 +33,9 @@ var GisMap = function (idMapInit, idInit) {
         interactions: ol.interaction.defaults({doubleClickZoom :false})
     });
 
+    var fieldExtent;
+    var fieldLayerVisible;
+
 
     /**
      * GisMap Private Method
@@ -41,11 +44,16 @@ var GisMap = function (idMapInit, idInit) {
      * @param fieldParameters is the array of parameters
      */
     function initGis(startParameters, fieldParameters) {
+        fieldExtent = document.getElementById(fieldParameters['ExtentContext']);
+        fieldLayerVisible = document.getElementById(fieldParameters['VisibleLayer']);
         var parameters = manager.readAndManageParameters(startParameters, fieldParameters);
         globalInitialize(parameters);
         dataInitialize(parameters, fieldParameters);
         controlInitialize(parameters, fieldParameters);
         mapInitialize(parameters);
+        if (parameters['ListLayersVisible'] !== '' && parameters['ListLayersVisible'] !== undefined){
+            setContext(parameters['ListLayersVisible']);
+        }
         if(manager.getSpecificExtent().length > 1 ){
             viewGisMap.getView().fit(manager.extentDefine, GlobalMap.getSize());
         }else {
@@ -162,6 +170,33 @@ var GisMap = function (idMapInit, idInit) {
     }
 
     /**
+     * GisMap Private Method
+     * getContext is a method to stock in hidden field the current context of the map
+     */
+    function getContext(){
+        fieldExtent.value = GlobalMap.getView().calculateExtent(GlobalMap.getSize());
+        fieldLayerVisible.value = '['+layer.getVisibleLayers()+']';
+    }
+
+    /**
+     * GisMap Private Method
+     * setContextValue is an accessor for the filter object
+     * @param listLayerVisible is an array with name and marker of visibility for each layers
+     */
+    function setContext(listLayerVisible){
+       for(var i = 0; i < listLayerVisible.length-1; i=i+2){
+           layer.showLayer(listLayerVisible[i], listLayerVisible[i+1]);
+       }
+    }
+
+    /**
+     * GisMap Handler Method
+     */
+    GlobalMap.on('postrender', function(e){
+        getContext();
+    });
+
+    /**
      * GisMap Public Method
      * getFilter is an accessor for the filter object
      * @returns {*} the filter object
@@ -209,12 +244,11 @@ var GisMap = function (idMapInit, idInit) {
     /**
      * GisMap Method
      * initGisMap is the enter point of the GisMap plugin
-     * @param globalParameters is an array of Lutece Parameters
      * @param parameters is the array of parameters of properties file
      * @param fieldParameters is the array of parameters
      * @returns {*} the map with all elements
      */
-    var initGisMap = function(globalParameters, parameters, fieldParameters) {
+    var initGisMap = function(parameters, fieldParameters) {
         initGis(parameters, fieldParameters);
         return GlobalMap;
     };

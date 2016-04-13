@@ -177,6 +177,7 @@ var Manager = function() {
         parameters['WKT'] = startParameters['WKT'];
         parameters['LayerEdit'] = startParameters['LayerEdit'];
         parameters['LayerControl'] = startParameters['LayerControl'];
+        parameters['ListLayersVisible'] = startParameters['ListLayersVisible'];
         return parameters;
     };
 
