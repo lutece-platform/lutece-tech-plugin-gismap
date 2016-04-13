@@ -44,7 +44,7 @@ var GisMap = function (idMapInit, idInit) {
      * @param fieldParameters is the array of parameters
      */
     function initGis(startParameters, fieldParameters) {
-        fieldExtent = document.getElementById(fieldParameters['ExtentContext']);
+        fieldExtent = document.getElementById(fieldParameters['ExtentCurrent']);
         fieldLayerVisible = document.getElementById(fieldParameters['VisibleLayer']);
         var parameters = manager.readAndManageParameters(startParameters, fieldParameters);
         globalInitialize(parameters);
@@ -54,7 +54,9 @@ var GisMap = function (idMapInit, idInit) {
         if (parameters['ListLayersVisible'] !== '' && parameters['ListLayersVisible'] !== undefined){
             setContext(parameters['ListLayersVisible']);
         }
-        if(manager.getSpecificExtent().length > 1 ){
+        if(parameters['ExtentContext'] !== '' && parameters['ExtentContext'] !== undefined) {
+            viewGisMap.getView().fit(parameters['ExtentContext'], GlobalMap.getSize());
+        }else if(manager.getSpecificExtent().length > 1 ){
             viewGisMap.getView().fit(manager.extentDefine, GlobalMap.getSize());
         }else {
             viewGisMap.getView().fit(projectionGis.getExtent(), GlobalMap.getSize());
@@ -174,7 +176,7 @@ var GisMap = function (idMapInit, idInit) {
      * getContext is a method to stock in hidden field the current context of the map
      */
     function getContext(){
-        fieldExtent.value = GlobalMap.getView().calculateExtent(GlobalMap.getSize());
+        fieldExtent.value = '['+GlobalMap.getView().calculateExtent(GlobalMap.getSize())+']';
         fieldLayerVisible.value = '['+layer.getVisibleLayers()+']';
     }
 

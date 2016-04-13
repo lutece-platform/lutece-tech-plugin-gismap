@@ -178,6 +178,7 @@ var Manager = function() {
         parameters['LayerEdit'] = startParameters['LayerEdit'];
         parameters['LayerControl'] = startParameters['LayerControl'];
         parameters['ListLayersVisible'] = startParameters['ListLayersVisible'];
+        parameters['ExtentContext'] = startParameters['ExtentContext'];
         return parameters;
     };
 
