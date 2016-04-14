@@ -237,9 +237,9 @@ function SpecificStyle() {
         }else{
             finalStyle = thematicStyle['default'];
         }
-        if (thematicField2 !== '' || thematicField2 !== undefined){
+        if (thematicField2 !== '' && thematicField2 !== undefined && thematicField2 !== null){
             if (feature.get(thematicField2) !== '' || feature.get(thematicField2) !== undefined ) {
-               if (thematicCoef === '' || thematicCoef === undefined){
+               if (thematicCoef === '' && thematicCoef === undefined && thematicField2 !== null){
                     thematicCoef = 1;
                 }
                 var size = parseFloat(feature.get(thematicField2))*parseFloat(thematicCoef);
@@ -250,7 +250,7 @@ function SpecificStyle() {
                 }
             }
         }
-        if(finalStyle.getText() !== null || thematicField3 !== '' || thematicField3 !== undefined) {
+        if(finalStyle.getText() !== null && thematicField3 !== '' && thematicField3 !== undefined && thematicField3 !== null) {
             finalStyle.getText().setText(feature.get(thematicField3).toString());
         }
         return finalStyle;

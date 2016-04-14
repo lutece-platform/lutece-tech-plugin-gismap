@@ -41,8 +41,8 @@ var Zoom = function(GlobalMap, projection, viewGisMap) {
      */
     var zoomSelect = function () {
         var selectFeatures = interact.getSpecificInteract().getSelectedFeatures().getArray();
-        if(selectFeatures < 0 ) {
-            selectFeatures = interact.getEditor().getSelectInteraction().getFeatures().getArray();
+        if(selectFeatures.length === 0 ) {
+            selectFeatures = interact.getEditor().getSelectEditInteract().getFeatures().getArray();
         }
         if (selectFeatures.length === 1) {
             viewGisMap.getView().fit(selectFeatures[0].getGeometry(), GlobalMap.getSize(),{
