@@ -239,12 +239,23 @@ function SpecificStyle() {
         }
         if (thematicField2 !== '' && thematicField2 !== undefined && thematicField2 !== null){
             if (feature.get(thematicField2) !== '' || feature.get(thematicField2) !== undefined ) {
-               if (thematicCoef === '' && thematicCoef === undefined && thematicField2 !== null){
+                if (thematicCoef === '' && thematicCoef === undefined && thematicField2 !== null){
                     thematicCoef = 1;
                 }
                 var size = parseFloat(feature.get(thematicField2))*parseFloat(thematicCoef);
                 if(finalStyle.getImage() !== null){
-                    finalStyle.getImage().setScale(size);
+                    if(finalStyle.getImage() instanceof ol.style.Icon){
+                        finalStyle.getImage().setScale(size);
+                    }else if(finalStyle.getImage() instanceof ol.style.Circle){
+                        finalStyle = new ol.style.Style({
+                            text: finalStyle.getText(),
+                            image: new ol.style.Circle({
+                                radius: size,
+                                fill: finalStyle.getImage().getFill(),
+                                stroke: finalStyle.getImage().getStroke()
+                            }),
+                        });
+                    }
                 }else if(finalStyle.getStroke !== null){
                     finalStyle.getStroke().setWidth(size);
                 }
