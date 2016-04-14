@@ -265,10 +265,9 @@ function Measure() {
      * @param map is the globalMap
      */
     this.cleanMeasureLayer = function(map){
-        for(var measureTooltipElem = 0; measureTooltipElem < this.measureTooltipArray.length-1; measureTooltipElem++){
-            map.removeOverlay(this.measureTooltipArray[measureTooltipElem]);
-        }
+        map.getOverlays().clear();
         this.measureTooltipArray.splice(0, this.measureTooltipArray.length);
         this.measureLayer.getSource().clear();
+        this.createMeasureTooltip(map);
     };
 }

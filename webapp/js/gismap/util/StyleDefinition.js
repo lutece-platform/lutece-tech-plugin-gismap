@@ -117,6 +117,114 @@ function StyleDefinition() {
         width: 3
     });
 
+    /********** STYLE LIBRAIRY ************************/
+	 /**
+     * defaultFill define the default fill style of geometry
+     * @type {ol.style.Fill}
+     */
+    var fill_BlueSky = new ol.style.Fill({
+        color: 'rgba(141, 205, 227, 0.3)'
+    });
+
+    /**
+     * defaultStroke define the default stroke style of geometry
+     * @type {ol.style.Stroke}
+     */
+    var stroke_BlueSky = new ol.style.Stroke({
+        color: 'rgba(175, 205, 245, 1)',
+        lineDash: [0,0],
+        width: 3
+    });
+
+    /**
+     * defaultFill define the default fill style of text
+     * @type {ol.style.Fill}
+     */
+    var fill_White = new ol.style.Fill({
+        color: '#fff'
+    });
+
+    /**
+     * defaultStroke define the default stroke style of text
+     * @type {ol.style.Stroke}
+     */
+    var stroke_Black = new ol.style.Stroke({
+        color: 'rgba(0, 0, 0, 1)',
+        width: 3
+    });
+
+
+    /**
+     * Sample of style definition
+     * @type {ol.style.Fill}
+     */
+    var fill_GreenWater = new ol.style.Fill({
+        color: 'rgba(153, 255, 204, 0.75)'
+    });
+
+    /**
+     * Sample of style definition
+     * @type {ol.style.Stroke}
+     */
+    var stroke_Cyan = new ol.style.Stroke({
+        color: 'rgba(153, 255, 255, 1)',
+        lineDash: [0,0],
+        width: 3
+    });
+
+    /**
+     * Sample of style definition
+     * @type {ol.style.Fill}
+     */
+    var fill_Violet = new ol.style.Fill({
+        color: 'rgba(153, 35, 204, 0.75)'
+    });
+
+    /**
+     * Sample of style definition
+     * @type {ol.style.Stroke}
+     */
+    var stroke_Violet = new ol.style.Stroke({
+        color: 'rgba(153, 35, 255, 1)',
+        lineDash: [0,0],
+        width: 3
+    });
+
+    /**
+     * text define the text style for label
+     * @type {ol.style.Text}
+     */
+    var text_WhiteAndBlack = new ol.style.Text({
+        scale: 1.4,
+        fill: fill_White,
+        stroke: stroke_Black,
+        text: ''
+    });
+
+    /**
+     * text define the text style for label
+     * @type {ol.style.Text}
+     */
+    var text_VioletAndBlueSky = new ol.style.Text({
+        scale: 1.4,
+        fill: fill_Violet,
+        stroke: stroke_BlueSky,
+        text: ''
+    });
+
+    /**
+     * Sample of style definition
+     * @type {ol.style.Style}
+     */
+    var iconStyle = new ol.style.Style({
+        image : new ol.style.Icon({
+			anchor : [0.5,0.5],
+			anchorXUnits: 'fraction',
+			anchorYUnits: 'fraction',
+			src: 'css/img/lutece-logo.png'
+		})
+    });
+
     /**
      * Sample of correspondence table
      * @type {Map}
@@ -157,6 +265,103 @@ function StyleDefinition() {
         'default': new ol.style.Style({
             fill: defaultFill,
             stroke: defaultStroke
+        })
+    };
+
+    this.listMaps['map_StyleSouillureComplex'] = {
+        '1':"1",
+        '2':"2",
+        '3':"3",
+		'4':"4",
+        '5':"5",
+        '6':"6"
+    };
+
+    this.listStyles['arbreStyle'] = {
+        'vide': iconStyle,
+        'souche': new ol.style.Style({
+			image:new ol.style.Circle({
+				radius : 1,
+				fill: fill_Violet,
+				stroke: stroke_Violet
+			})
+        }),
+        'arbre': new ol.style.Style({
+            image:new ol.style.Circle({
+				radius : 1,
+				fill: fill_GreenWater,
+				stroke: stroke_Cyan
+			})
+        }),
+        'default': new ol.style.Style({
+			image:new ol.style.Circle({
+				radius : 1,
+				fill: fill_BlueSky,
+				stroke: stroke_BlueSky
+			})
+		})
+	};
+
+	    /**
+     * Sample of style definition
+     * @type {}
+     */
+    this.listStyles['StyleSouillureComplex'] = {
+        '1': new ol.style.Style({
+            text: text_WhiteAndBlack,
+			image:new ol.style.Circle({
+				radius : 1,
+				fill: fill_Violet,
+				stroke: stroke_Violet
+			}),
+        }),
+        '2': new ol.style.Style({
+            text: text_WhiteAndBlack,
+			image:new ol.style.Circle({
+				radius : 1,
+				fill: fill_GreenWater,
+				stroke: stroke_Violet
+			})
+        }),
+        '3': new ol.style.Style({
+            text: text_WhiteAndBlack,
+			image:new ol.style.Circle({
+				radius : 1,
+				fill: fill_Violet,
+				stroke: stroke_Violet
+			}),
+        }),
+        '4': new ol.style.Style({
+            text: text_WhiteAndBlack,
+			image:new ol.style.Circle({
+				radius : 10,
+				fill: fill_GreenWater,
+				stroke: stroke_Cyan
+			}),
+        }),
+        '5': new ol.style.Style({
+            text: text_WhiteAndBlack,
+			image:new ol.style.Circle({
+				radius : 1,
+				fill: fill_Violet,
+				stroke: stroke_Cyan
+			}),
+        }),
+        '6': new ol.style.Style({
+            text: text_WhiteAndBlack,
+			image:new ol.style.Circle({
+				radius : 1,
+				fill: fill_White,
+				stroke: stroke_Cyan
+			}),
+        }),
+        'default': new ol.style.Style({
+            text: text_WhiteAndBlack,
+			image:new ol.style.Circle({
+				radius : 1,
+				fill: fill_BlueSky,
+				stroke: stroke_BlueSky
+			})
         })
     };
 

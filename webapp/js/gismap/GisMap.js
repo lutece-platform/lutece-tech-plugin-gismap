@@ -4,6 +4,8 @@ View, Zoom, InterfaceElements, GeoPoint, Print, Popup, Filter*/
 /**
  * File to manage the Gis Component with all parameters
  */
+
+    var GlobalMap;
 var GisMap = function (idMapInit, idInit) {
     'use strict';
     /**
@@ -28,7 +30,7 @@ var GisMap = function (idMapInit, idInit) {
     var viewGisMap;
     var zoom;
 
-    var GlobalMap = new ol.Map({
+    GlobalMap = new ol.Map({
         target: this.idMap,
         interactions: ol.interaction.defaults({doubleClickZoom :false})
     });
@@ -62,9 +64,11 @@ var GisMap = function (idMapInit, idInit) {
             viewGisMap.getView().fit(projectionGis.getExtent(), GlobalMap.getSize());
         }
         initInterfaces(parameters);
-        var geomElement = document.getElementById(fieldParameters['GeomGeoJson']).value;
-        if(geomElement !== null && geomElement !== '' && geomElement !== undefined) {
-            zoom.initialZoom(fieldParameters['GeomGeoJson']);
+        if(getInteract().getEditor()!==null) {
+            var geomElement = document.getElementById(fieldParameters['GeomGeoJson']).value;
+            if (geomElement !== null && geomElement !== '' && geomElement !== undefined) {
+                zoom.initialZoom(fieldParameters['GeomGeoJson']);
+            }
         }
     }
 
