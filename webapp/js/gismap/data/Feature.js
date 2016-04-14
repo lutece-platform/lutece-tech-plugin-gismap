@@ -97,8 +97,8 @@ function Feature(projection, proxy) {
         var dataNames = [];
         var idLayer = data[0];
         var dataProj = data[1];
-        var dataAttribution = data[2];
-        var dataUrl = data[3];
+        var dataAttribution = data[4];
+        var dataUrl = data[5];
         var vectorSource;
         var features = [];
         if(dataFormat === 'WKT'){
@@ -361,8 +361,16 @@ function Feature(projection, proxy) {
      * @param dataName is the name of the data on the server
      * @param visibility is the indicator to display or not at the start
      * @param dataAttribution is the information about the data
+     * @param resoMin is the minimal resolution to display the layer
+     * @param resoMax is the maximal resolution to display the layer
      */
-    this.createWMSQueryLayer = function(layerName, server, url, dataName, visibility, dataAttribution){
+    this.createWMSQueryLayer = function(layerName, server, url, dataName, visibility, dataAttribution, resoMin, resoMax){
+        if(resoMin === ''){
+            resoMin = 0;
+        }
+        if(resoMax === ''){
+            resoMax = 156543.03;
+        }
         if(server === 'AGS-IMS'){
             this.ListFeatures[layerName] = new ol.layer.Tile({
                 title: layerName,
@@ -372,8 +380,11 @@ function Feature(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: url + dataName + '/ImageServer'
+                    url: /*proxy + encodeURI(*/url + dataName + '/ImageServer'//),
+                    //crossOrigin:'anonymous'
                 }),
+                minResolution: parseFloat(resoMin),
+                maxResolution: parseFloat(resoMax),
                 visible: visibility
             });
         }else if(server === 'AGS-MPS'){
@@ -385,8 +396,11 @@ function Feature(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: url + dataName + '/MapServer'
+                    url: /*proxy + encodeURI(*/url + dataName + '/MapServer'//),
+                    //crossOrigin:'anonymous'
                 }),
+                minResolution: parseFloat(resoMin),
+                maxResolution: parseFloat(resoMax),
                 visible: visibility
             });
         }else if (server === 'GeoServer'){
@@ -398,10 +412,13 @@ function Feature(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: url,
+                    url: url,//proxy + encodeURI(url),
                     params: {'LAYERS': dataName},
-                    serverType:'geoserver'
+                    serverType:'geoserver',
+                    //crossOrigin:'anonymous'
                 }),
+                minResolution: parseFloat(resoMin),
+                maxResolution: parseFloat(resoMax),
                 visible: visibility
             });
         }
@@ -436,6 +453,8 @@ function Feature(projection, proxy) {
                 var radiusValue = parseInt(heatmap[heatmapNb][5]);
                 var blurValue = parseInt(heatmap[heatmapNb][6]);
                 var maxValue = parseFloat(heatmap[heatmapNb][7]);
+                var resoMin = heatmap[heatmapNb][8] === '' ? 0 : parseFloat(heatmap[heatmapNb][8]);
+                var resoMax = heatmap[heatmapNb][9] === '' ? 156543.03 : parseFloat(heatmap[heatmapNb][9]);
 
                 vectorSource.on('addfeature', function(event) {
                     var value = event.feature.get(attributeLayer);
@@ -447,6 +466,8 @@ function Feature(projection, proxy) {
                     source: vectorSource,
                     blur: blurValue,
                     radius: radiusValue,
+                    minResolution: parseFloat(resoMin),
+                    maxResolution: parseFloat(resoMax),
                     visible: visibility
                 });
                 this.ListFilterFeatures[labelLayer] = dataFilter;
@@ -473,6 +494,8 @@ function Feature(projection, proxy) {
                 var visibility = cluster[clusterNb][3];
                 var distCluster = parseInt(cluster[clusterNb][4]);
                 this.style.initClusterValue(cluster[clusterNb][5]);
+                var resoMin = cluster[clusterNb][6] === '' ? 0 : parseFloat(cluster[clusterNb][6]);
+                var resoMax = cluster[clusterNb][7] === '' ? 156543.03 : parseFloat(cluster[clusterNb][7]);
 
                 this.ListFeatures[labelLayer] = new ol.layer.Vector({
                     title: labelLayer,
@@ -482,6 +505,8 @@ function Feature(projection, proxy) {
                         distance: distCluster
                     }),
                     style: this.style.styleCluster,
+                    minResolution: parseFloat(resoMin),
+                    maxResolution: parseFloat(resoMax),
                     visible: visibility
                 });
                 this.clusterLayer.push(labelLayer);
@@ -508,11 +533,15 @@ function Feature(projection, proxy) {
                 var orderLayer = thematic[thematicNb][1];
                 var visibility = thematic[thematicNb][3];
                 this.style.initThematicValue(thematic[thematicNb][4], thematic[thematicNb][5], thematic[thematicNb][6]);
+                var resoMin = thematic[thematicNb][7] === '' ? 0 : parseFloat(thematic[thematicNb][7]);
+                var resoMax = thematic[thematicNb][8] === '' ? 156543.03 : parseFloat(thematic[thematicNb][8]);
 
                 this.ListFeatures[labelLayer] = new ol.layer.Vector({
                     title: labelLayer,
                     source: vectorSource,
                     style: this.style.styleThematicApply,
+                    minResolution: parseFloat(resoMin),
+                    maxResolution: parseFloat(resoMax),
                     visible: visibility
                 });
                 this.ListFilterFeatures[labelLayer] = dataFilter;
@@ -537,15 +566,19 @@ function Feature(projection, proxy) {
                  var labelLayer = thematicComplex[thematicComplexNb][0];
                  var orderLayer = thematicComplex[thematicComplexNb][1];
                  var visibility = thematicComplex[thematicComplexNb][3];
-                this.style.initThematicComplexValue(thematicComplex[thematicComplexNb][4],
+                 this.style.initThematicComplexValue(thematicComplex[thematicComplexNb][4],
                     thematicComplex[thematicComplexNb][5], thematicComplex[thematicComplexNb][6],
                     thematicComplex[thematicComplexNb][7], thematicComplex[thematicComplexNb][8],
                     thematicComplex[thematicComplexNb][9]);
+                 var resoMin = thematicComplex[thematicComplexNb][10] === '' ? 0 : parseFloat(thematicComplex[thematicComplexNb][10]);
+                 var resoMax = thematicComplex[thematicComplexNb][11] === '' ? 156543.03 : parseFloat(thematicComplex[thematicComplexNb][11]);
 
                  this.ListFeatures[labelLayer] = new ol.layer.Vector({
-                     title: labelLayer,
+                    title: labelLayer,
                     source: vectorSource,
                     style: this.style.styleThematicComplexApply,
+                    minResolution: parseFloat(resoMin),
+                    maxResolution: parseFloat(resoMax),
                     visible: visibility
                  });
                  this.ListFilterFeatures[labelLayer] = dataFilter;

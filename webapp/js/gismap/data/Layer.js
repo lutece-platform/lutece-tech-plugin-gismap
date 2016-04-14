@@ -50,7 +50,7 @@ function Layer(projection, proxy) {
         var RasterLayer = this.getLayersRasterMap();
         var FeatureLayer = this.getLayersFeatureMap();
         for(var i = 0; i < RasterLayer.length-1; i++){
-            ListVisibleLayers.push("'"+RasterLayer[i].get('title')+"'")
+            ListVisibleLayers.push("'"+RasterLayer[i].get('title')+"'");
             ListVisibleLayers.push(RasterLayer[i].getVisible());
         }
         for(var j = 0; j < FeatureLayer.length-1; j++){
@@ -151,7 +151,9 @@ function Layer(projection, proxy) {
         var wmsLayer = wms[4];
         var wmsVisbility = wms[5];
         var wmsAttribution = wms[6];
-        this.featureLayerGis.createWMSQueryLayer(wmsName, wmsServer, wmsUrl, wmsLayer, wmsVisbility, wmsAttribution);
+        var wmsResoMin = wms[7];
+        var wmsResoMax = wms[8];
+        this.featureLayerGis.createWMSQueryLayer(wmsName, wmsServer, wmsUrl, wmsLayer, wmsVisbility, wmsAttribution, wmsResoMin, wmsResoMax);
         this.ListLayers.push(wmsOrder +'-'+ wmsName);
     };
 

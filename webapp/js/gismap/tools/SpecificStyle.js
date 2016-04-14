@@ -60,50 +60,15 @@ function SpecificStyle() {
     });
 
     /**
-     * thematicMapSimple contains the name of the correspondence table for simple thematic representation
-     * @type {null}
+     * thematicSimpleValues contains all information for simple thematic representation
+     * @type {Array}
      */
-    var thematicMapSimple = null;
+    var thematicSimpleValues = [];
     /**
-     * thematicStyleSimple contains the name of the style for simple thematic representation
-     * @type {null}
+     * thematicComplexValues contains all information for complex thematic representation
+     * @type {Array}
      */
-    var thematicStyleSimple = null;
-    /**
-     * thematicFieldSimple contains the name of the field to define the simple representation
-     * @type {string}
-     */
-    var thematicFieldSimple = '';
-    /**
-     * thematicMap contains the name of the correspondence table for thematic representation
-     * @type {null}
-     */
-    var thematicMap = null;
-    /**
-     * thematicStyle contains the name of the style for thematic representation
-     * @type {null}
-     */
-    var thematicStyle = null;
-    /**
-     * thematicField1 contains the name of the field to define the color representation
-     * @type {string}
-     */
-    var thematicField1 = '';
-    /**
-     * thematicField2 contains the name of the field to define the size representation
-     * @type {string}
-     */
-    var thematicField2 = '';
-    /**
-     * thematicField3 contains the name of the field to define the label
-     * @type {string}
-     */
-    var thematicField3 = '';
-    /**
-     * thematicCoef contains the value of the coefficient to calculate the size of style representation
-     * @type {string}
-     */
-    var thematicCoef = '';
+    var thematicComplexValues = [];
 
     /**
      * SpecificStyle Method
@@ -124,9 +89,8 @@ function SpecificStyle() {
      * @param styleThematic the name of the style definition
      */
     this.initThematicValue = function(field, mapThematic, styleThematic){
-        thematicFieldSimple = field;
-        thematicMapSimple = styleLayerDefinition.getMapCorrespondence(mapThematic);
-        thematicStyleSimple = styleLayerDefinition.getStyleThematic(styleThematic);
+        thematicSimpleValues[field] = [field, styleLayerDefinition.getMapCorrespondence(mapThematic),
+            styleLayerDefinition.getStyleThematic(styleThematic)];
     };
 
      /**
@@ -140,12 +104,8 @@ function SpecificStyle() {
      * @param coef value of the coefficient
      */
     this.initThematicComplexValue = function(field1, field2, field3, mapThematicComplex, styleThematicComplex, coef){
-        thematicField1 = field1;
-        thematicField2 = field2;
-        thematicField3 = field3;
-        thematicMap = styleLayerDefinition.getMapCorrespondence(mapThematicComplex);
-        thematicStyle = styleLayerDefinition.getStyleThematic(styleThematicComplex);
-        thematicCoef = coef;
+        thematicComplexValues[field1] = [field1, field2, field3, styleLayerDefinition.getMapCorrespondence(mapThematicComplex),
+            styleLayerDefinition.getStyleThematic(styleThematicComplex), coef];
     };
 
     /**
@@ -216,11 +176,19 @@ function SpecificStyle() {
      * @param feature contains by the layer
      * @returns {*} the simple thematic style
      */
-    this.styleThematicApply = function(feature){
-        if (thematicMapSimple[feature.get(thematicFieldSimple)]){
-            return thematicStyleSimple[thematicMapSimple[feature.get(thematicFieldSimple)]];
-        }else{
-            return thematicStyleSimple['default'];
+    this.styleThematicApply = function(feature) {
+        var array = feature.getKeys();
+        for(var i = 0; i < array.length - 1 ; i++){
+            if(thematicSimpleValues[array[i]] !== undefined) {
+                var thematicFieldSimple = thematicSimpleValues[array[i]][0];
+                var thematicMapSimple = thematicSimpleValues[array[i]][1];
+                var thematicStyleSimple = thematicSimpleValues[array[i]][2];
+                if (thematicMapSimple[feature.get(thematicFieldSimple)]) {
+                    return thematicStyleSimple[thematicMapSimple[feature.get(thematicFieldSimple)]];
+                } else {
+                    return thematicStyleSimple['default'];
+                }
+            }
         }
     };
 
@@ -231,40 +199,51 @@ function SpecificStyle() {
      * @returns {*} the complex thematic style
      */
     this.styleThematicComplexApply = function(feature){
-        var finalStyle = null;
-        if (thematicMap[feature.get(thematicField1)]){
-            finalStyle = thematicStyle[thematicMap[feature.get(thematicField1)]];
-        }else{
-            finalStyle = thematicStyle['default'];
-        }
-        if (thematicField2 !== '' && thematicField2 !== undefined && thematicField2 !== null){
-            if (feature.get(thematicField2) !== '' || feature.get(thematicField2) !== undefined ) {
-                if (thematicCoef === '' && thematicCoef === undefined && thematicField2 !== null){
-                    thematicCoef = 1;
+        var array = feature.getKeys();
+        for(var i = 0; i < array.length - 1 ; i++) {
+            if (thematicComplexValues[array[i]] !== undefined) {
+                var finalStyle = null;
+                var thematicField1= thematicComplexValues[array[i]][0];
+                var thematicField2= thematicComplexValues[array[i]][1];
+                var thematicField3 = thematicComplexValues[array[i]][2];
+                var thematicMap = thematicComplexValues[array[i]][3];
+                var thematicStyle = thematicComplexValues[array[i]][4];
+                var thematicCoef = thematicComplexValues[array[i]][5];
+                if (thematicMap[feature.get(thematicField1)]) {
+                    finalStyle = thematicStyle[thematicMap[feature.get(thematicField1)]];
+                } else {
+                    finalStyle = thematicStyle['default'];
                 }
-                var size = parseFloat(feature.get(thematicField2))*parseFloat(thematicCoef);
-                if(finalStyle.getImage() !== null){
-                    if(finalStyle.getImage() instanceof ol.style.Icon){
-                        finalStyle.getImage().setScale(size);
-                    }else if(finalStyle.getImage() instanceof ol.style.Circle){
-                        finalStyle = new ol.style.Style({
-                            text: finalStyle.getText(),
-                            image: new ol.style.Circle({
-                                radius: size,
-                                fill: finalStyle.getImage().getFill(),
-                                stroke: finalStyle.getImage().getStroke()
-                            }),
-                        });
+                if (thematicField2 !== '' && thematicField2 !== undefined && thematicField2 !== null) {
+                    if (feature.get(thematicField2) !== '' || feature.get(thematicField2) !== undefined) {
+                        if (thematicCoef === '' && thematicCoef === undefined && thematicField2 !== null) {
+                            thematicCoef = 1;
+                        }
+                        var size = parseFloat(feature.get(thematicField2)) * parseFloat(thematicCoef);
+                        if (finalStyle.getImage() !== null) {
+                            if (finalStyle.getImage() instanceof ol.style.Icon) {
+                                finalStyle.getImage().setScale(size);
+                            } else if (finalStyle.getImage() instanceof ol.style.Circle) {
+                                finalStyle = new ol.style.Style({
+                                    text: finalStyle.getText(),
+                                    image: new ol.style.Circle({
+                                        radius: size,
+                                        fill: finalStyle.getImage().getFill(),
+                                        stroke: finalStyle.getImage().getStroke()
+                                    }),
+                                });
+                            }
+                        } else if (finalStyle.getStroke !== null) {
+                            finalStyle.getStroke().setWidth(size);
+                        }
                     }
-                }else if(finalStyle.getStroke !== null){
-                    finalStyle.getStroke().setWidth(size);
                 }
+                if (finalStyle.getText() !== null && feature.get(thematicField3) !== '' && feature.get(thematicField3) !== undefined) {
+                    finalStyle.getText().setText(feature.get(thematicField3).toString());
+                }
+                return finalStyle;
             }
         }
-        if(finalStyle.getText() !== null && thematicField3 !== '' && thematicField3 !== undefined && thematicField3 !== null) {
-            finalStyle.getText().setText(feature.get(thematicField3).toString());
-        }
-        return finalStyle;
     };
 
 }
