@@ -226,7 +226,6 @@ var Popup = function(GlobalMap, idMap, parameters) {
                 }
             }
         });
-        /** A réactiver une fois le problème de Cors résolu
         GlobalMap.forEachLayerAtPixel(evt.pixel, function (layer) {
             if(queryData[layer.get('title')] !== null && queryData[layer.get('title')] !== undefined) {
                 var unknown = true;
@@ -240,7 +239,7 @@ var Popup = function(GlobalMap, idMap, parameters) {
                     wmsLayers[layer.get('title')] = layer;
                 }
             }
-        });*/
+        });
         definePopup(evt, layerInfo, features, wmsLayers, count, id);
     }
 

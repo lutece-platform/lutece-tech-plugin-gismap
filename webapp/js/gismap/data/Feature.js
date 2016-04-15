@@ -97,8 +97,8 @@ function Feature(projection, proxy) {
         var dataNames = [];
         var idLayer = data[0];
         var dataProj = data[1];
-        var dataAttribution = data[4];
-        var dataUrl = data[5];
+        var dataAttribution = data[2];
+        var dataUrl = data[3];
         var vectorSource;
         var features = [];
         if(dataFormat === 'WKT'){
@@ -380,8 +380,8 @@ function Feature(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: /*proxy + encodeURI(*/url + dataName + '/ImageServer'//),
-                    //crossOrigin:'anonymous'
+                    url: proxy + encodeURI(url + dataName + '/ImageServer'),
+                    crossOrigin:'anonymous'
                 }),
                 minResolution: parseFloat(resoMin),
                 maxResolution: parseFloat(resoMax),
@@ -396,8 +396,8 @@ function Feature(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: /*proxy + encodeURI(*/url + dataName + '/MapServer'//),
-                    //crossOrigin:'anonymous'
+                    url: proxy + encodeURI(url + dataName + '/MapServer'),
+                    crossOrigin:'anonymous'
                 }),
                 minResolution: parseFloat(resoMin),
                 maxResolution: parseFloat(resoMax),
@@ -412,10 +412,10 @@ function Feature(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: url,//proxy + encodeURI(url),
+                    url: proxy + encodeURI(url),
                     params: {'LAYERS': dataName},
                     serverType:'geoserver',
-                    //crossOrigin:'anonymous'
+                    crossOrigin:'anonymous'
                 }),
                 minResolution: parseFloat(resoMin),
                 maxResolution: parseFloat(resoMax),

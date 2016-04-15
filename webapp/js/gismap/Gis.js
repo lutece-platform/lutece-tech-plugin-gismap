@@ -46,7 +46,7 @@ parameters.push(parameters['Popup3'] = ['Arrondissements',['l_ar','c_arinsee']])
 parameters.push(parameters['WFS2']=['Mairie:arrondissements','GeoServer','http://localhost:8080/geoserver/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=Mairie:arrondissements','EPSG:4326','','GeoServer-WFS']);
 parameters.push(parameters['WFS3']=['DPE_points_noirs','AGS','http://capgeo.sig.paris.fr/arcgis/rest/services/capgeo_dpe/DPE_points_noirs/FeatureServer/6','EPSG:2154','','ESRI-WFS']);
 parameters.push(parameters['WMTS1']=['Otrho_Paris_Tiled','AGS','http://capgeo.sig.paris.fr/arcgis/rest/services/CapGEO_FDP/Ortho_AERODATA_Ete2013/ImageServer','EPSG:2154',[305.7480844128355,152.874174498349,76.43695495724326,38.218609770552874,19.109304885276437,9.554652442638218,4.777326221319109,2.3886631106595546,1.1943315553297773,0.5971657776648887,0.2984505969011938,0.13229193125052918],[-35597500, 48953100],'ESRI-WMTS']);
-parameters.push(parameters['GeoJSON1'] = ['Test','EPSG:4326','','','Lutece']);
+parameters.push(parameters['GeoJSON1'] = ['Test','EPSG:4326','Lutece']);
 parameters.push(parameters['HeatMap1'] = ['HeatMap','1','Lieu',false,'','10','25','20','','']);
 parameters.push(parameters['ThematicSimple1'] = ['Arrondissements','4','Mairie:arrondissements',false, 'c_arinsee', 'mapStyle1', 'defaultStyle1','','']);
 parameters.push(parameters['ThematicSimple2'] = ['Souillure simple','8','DPE_points_noirs',false, 'TYPE_SOUILLURE', 'map_StyleSouillureComplex', 'StyleSouillureComplex','','']);

@@ -57,7 +57,8 @@ function LayerRaster(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: url + dataName + '/ImageServer'
+                    url: proxy + encodeURI(url + dataName + '/ImageServer'),
+                    crossOrigin:'anonymous'
                 }),
                 visible:false
             });
@@ -71,7 +72,8 @@ function LayerRaster(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: url + dataName + '/MapServer'
+                    url: proxy + encodeURI(url + dataName + '/MapServer'),
+                    crossOrigin:'anonymous'
                 }),
                 visible:false
             });
@@ -85,9 +87,10 @@ function LayerRaster(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: url,
+                    url: proxy + encodeURI(url),
                     params: {'LAYERS': dataName},
-                    serverType:'geoserver'
+                    serverType:'geoserver',
+                    crossOrigin:'anonymous'
                 }),
                 visible:false
             });
