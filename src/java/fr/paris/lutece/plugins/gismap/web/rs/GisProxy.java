@@ -60,9 +60,9 @@ public class GisProxy
 {
     final static private String PROPERTY_HTTP_PROXY_HOST = "gismap.gisproxy.host";
     final static private String PROPERTY_HTTP_PROXY_PORT = "gismap.gisproxy.port";
+    final static private String PROPERTY_HTTP_NOPROXYFOR = "gismap.gisproxy.noProxyFor";
     final static private String SYSTEM_HTTP_PROXY_HOST = "http.proxyHost";
     final static private String SYSTEM_HTTP_PROXY_PORT = "http.proxyPort";
-    final static private String SYSTEM_HTTP_NOPROXYFOR = "http.noProxyFor";
     final static private String PARAMETER_URL = "url=";
     final static private String CODAGE_UTF_8 = "UTF-8";
     final static private String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
@@ -77,7 +77,7 @@ public class GisProxy
         String hostname = url.getHost(  );
 
         String[] _listHostnames = null;
-        String strPropertyHttpNoProxyFor = AppPropertiesService.getProperty( SYSTEM_HTTP_NOPROXYFOR );
+        String strPropertyHttpNoProxyFor = AppPropertiesService.getProperty( PROPERTY_HTTP_NOPROXYFOR );
 
         if ( strPropertyHttpNoProxyFor != null )
         {
