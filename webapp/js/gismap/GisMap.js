@@ -4,8 +4,6 @@ View, Zoom, InterfaceElements, GeoPoint, Print, Popup, Filter*/
 /**
  * File to manage the Gis Component with all parameters
  */
-
-    var GlobalMap;
 var GisMap = function (idMapInit, idInit) {
     'use strict';
     /**
@@ -30,7 +28,7 @@ var GisMap = function (idMapInit, idInit) {
     var viewGisMap;
     var zoom;
 
-    GlobalMap = new ol.Map({
+    var GlobalMap = new ol.Map({
         target: this.idMap,
         interactions: ol.interaction.defaults({doubleClickZoom :false})
     });
