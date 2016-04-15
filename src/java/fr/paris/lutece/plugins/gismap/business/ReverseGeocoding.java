@@ -11,6 +11,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 //import javax.ws.rs.client.ClientBuilder;
 
+
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -25,16 +27,22 @@ import net.sf.json.JSONSerializer;
 @Path("/rest/gismap/")
 public class ReverseGeocoding 
 {
+	public static final String REVERSEGEOCODINGURL = "gismap.ReverseGeocodingUrl";
+	
 	@GET
 	@Path("xy/{xy}")
 	@Produces( MediaType.APPLICATION_JSON )
 	public String getListRecordField(@PathParam("xy") String strXY) 
 	{
+		String strREVERSEGEOCODINGURLProperty = AppPropertiesService.getProperty( REVERSEGEOCODINGURL );
+		if(strREVERSEGEOCODINGURLProperty==null)
+			strREVERSEGEOCODINGURLProperty = "http://xdir-infspub-pr.ressources.paris.mdp:8080/StoreBoss/rest/adrlib/xy/";
+		
 		JSONArray jsonObject = null;
 		try 
 		{
 			HttpAccess Client = new HttpAccess();
-			String strResponse = Client.doGet("http://xdir-infspub-pr.ressources.paris.mdp:8080/StoreBoss/rest/adrlib/xy/%28"+ strXY +"%29");
+			String strResponse = Client.doGet(strREVERSEGEOCODINGURLProperty + "%28"+ strXY +"%29");
 			jsonObject = (JSONArray) JSONSerializer.toJSON(strResponse);
 		}
 		catch (HttpAccessException e)
