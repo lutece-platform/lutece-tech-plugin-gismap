@@ -43,6 +43,8 @@ import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 import java.io.InputStream;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 
 import javax.ws.rs.GET;
@@ -60,6 +62,7 @@ public class GisProxy
     final static private String PROPERTY_HTTP_PROXY_PORT = "gismap.gisproxy.port";
     final static private String SYSTEM_HTTP_PROXY_HOST = "http.proxyHost";
     final static private String SYSTEM_HTTP_PROXY_PORT = "http.proxyPort";
+    final static private String SYSTEM_HTTP_NOPROXYFOR = "http.noProxyFor";
     final static private String PARAMETER_URL = "url=";
     final static private String CODAGE_UTF_8 = "UTF-8";
     final static private String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
@@ -67,60 +70,109 @@ public class GisProxy
     final static private String HTTP_HEADER_ACCESS_CTRL_ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
     final static private String HTTP_HEADER_ACCESS_CTRL_ALLOW_METHODS = "Access-Control-Allow-Methods";
 
+    private void manageProxyConfiguration( String decodedUrl )
+        throws MalformedURLException
+    {
+        URL url = new URL( decodedUrl );
+        String hostname = url.getHost(  );
+
+        String[] _listHostnames = null;
+        String strPropertyHttpNoProxyFor = AppPropertiesService.getProperty( SYSTEM_HTTP_NOPROXYFOR );
+
+        if ( strPropertyHttpNoProxyFor != null )
+        {
+            if ( !( strPropertyHttpNoProxyFor.trim(  ).equals( "" ) ) )
+            {
+                _listHostnames = strPropertyHttpNoProxyFor.split( "," );
+            }
+        }
+
+        boolean matchNoProxy = false;
+
+        if ( _listHostnames != null )
+        {
+            for ( int i = 0; i < _listHostnames.length; i++ )
+            {
+                if ( hostname.matches( _listHostnames[i].trim(  ) ) )
+                {
+                    matchNoProxy = true;
+
+                    break;
+                }
+            }
+        }
+
+        System.clearProperty( SYSTEM_HTTP_PROXY_HOST );
+        System.clearProperty( SYSTEM_HTTP_PROXY_PORT );
+
+        if ( !matchNoProxy )
+        {
+            String strPropertyHttpProxyHost = AppPropertiesService.getProperty( PROPERTY_HTTP_PROXY_HOST );
+            String strPropertyHttpProxyPort = AppPropertiesService.getProperty( PROPERTY_HTTP_PROXY_PORT );
+
+            if ( strPropertyHttpProxyHost != null )
+            {
+                if ( !( strPropertyHttpProxyHost.trim(  ).equals( "" ) ) )
+                {
+                    System.setProperty( SYSTEM_HTTP_PROXY_HOST, strPropertyHttpProxyHost );
+                }
+            }
+
+            if ( strPropertyHttpProxyPort != null )
+            {
+                if ( !( strPropertyHttpProxyPort.trim(  ).equals( "" ) ) )
+                {
+                    System.setProperty( SYSTEM_HTTP_PROXY_PORT, strPropertyHttpProxyPort );
+                }
+            }
+        }
+    }
+
     @GET
     public Response sendGisRequest( @Context
-    Request request ) throws Exception
+    Request request )
     {
         AppLogService.info( "Enter the sendGisRequest function ..." );
 
-        String strPropertyHttpProxyHost = AppPropertiesService.getProperty( PROPERTY_HTTP_PROXY_HOST );
-        String strPropertyHttpProxyPort = AppPropertiesService.getProperty( PROPERTY_HTTP_PROXY_PORT );
+        Response responseToReturn = null;
 
-        if ( strPropertyHttpProxyHost != null )
+        try
         {
-            if ( !( strPropertyHttpProxyHost.trim(  ).equals( "" ) ) )
+            String url = ( (ContainerRequest) request ).getRequestUri(  ).getQuery(  );
+            url = url.substring( PARAMETER_URL.length(  ) );
+
+            int index = url.indexOf( "?" );
+
+            if ( index < 0 )
             {
-                System.setProperty( SYSTEM_HTTP_PROXY_HOST, strPropertyHttpProxyHost );
+                url = url.replaceFirst( "&", "?" );
             }
-        }
 
-        if ( strPropertyHttpProxyPort != null )
+            String decodedUrl = URLDecoder.decode( url, CODAGE_UTF_8 );
+
+            AppLogService.info( "decodedUrl=" + decodedUrl );
+
+            manageProxyConfiguration( decodedUrl );
+
+            Client client = Client.create(  );
+            WebResource webResource = client.resource( decodedUrl );
+            webResource.accept( MediaType.MEDIA_TYPE_WILDCARD );
+
+            ClientResponse response = webResource.get( ClientResponse.class );
+
+            String contentType = "" + response.getHeaders(  ).get( HTTP_HEADER_CONTENT_TYPE ).get( 0 );
+
+            responseToReturn = Response.status( Response.Status.OK ).header( HTTP_HEADER_ACCESS_CTRL_ALLOW_ORGIN, "*" )
+                                       .header( HTTP_HEADER_ACCESS_CTRL_ALLOW_CREDENTIALS, "false" )
+                                       .header( HTTP_HEADER_ACCESS_CTRL_ALLOW_METHODS, "GET, POST, DELETE, PUT" )
+                                       .header( HTTP_HEADER_CONTENT_TYPE, contentType )
+                                       .entity( response.getEntity( InputStream.class ) ).build(  );
+        }
+        catch ( Exception e )
         {
-            if ( !( strPropertyHttpProxyPort.trim(  ).equals( "" ) ) )
-            {
-                System.setProperty( SYSTEM_HTTP_PROXY_PORT, strPropertyHttpProxyPort );
-            }
+            AppLogService.error( "Error when treating url, exception:" + e.getMessage(  ) );
         }
 
-        String url = ( (ContainerRequest) request ).getRequestUri(  ).getQuery(  );
-        url = url.substring( PARAMETER_URL.length(  ) );
-
-        int index = url.indexOf( "?" );
-
-        if ( index < 0 )
-        {
-            url = url.replaceFirst( "&", "?" );
-        }
-
-        String decodedUrl = URLDecoder.decode( url, CODAGE_UTF_8 );
-
-        Client client = Client.create(  );
-
-        AppLogService.info( "decodedUrl=" + decodedUrl );
-
-        WebResource webResource = client.resource( decodedUrl );
-        webResource.accept( MediaType.MEDIA_TYPE_WILDCARD );
-
-        ClientResponse response = webResource.get( ClientResponse.class );
-
-        String contentType = "" + response.getHeaders(  ).get( HTTP_HEADER_CONTENT_TYPE ).get( 0 );
-
-        Response responseToReturn = Response.status( Response.Status.OK )
-                                            .header( HTTP_HEADER_ACCESS_CTRL_ALLOW_ORGIN, "*" )
-                                            .header( HTTP_HEADER_ACCESS_CTRL_ALLOW_CREDENTIALS, "false" )
-                                            .header( HTTP_HEADER_ACCESS_CTRL_ALLOW_METHODS, "GET, POST, DELETE, PUT" )
-                                            .header( HTTP_HEADER_CONTENT_TYPE, contentType )
-                                            .entity( response.getEntity( InputStream.class ) ).build(  );
         AppLogService.info( "Exit the sendGisRequest function" );
 
         return responseToReturn;
