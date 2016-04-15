@@ -42,7 +42,8 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String POPUPSHOWLINK = "Popup_ShowLink";
     public static final String BACKGROUND1 = "BackGround1";
     public static final String BACKGROUND2 = "BackGround2";
-    public static final String HEIGHT = "Height";
+    public static final String MAPCLASS = "MapClass";
+    public static final String RMMSHOWCENTROID = "RenderMapManagement.ShowCentoid";
     // parameter 1 to 9
     public static final String WMSBASE = "WMS-Base";
     public static final String WMSLAYER = "WMS-Layer";
@@ -113,7 +114,9 @@ public class MapParameterDAO implements IMapParameterDAO
 		
 		fillMapParameter(nKey, LAYERCONTROL, mapParameter);
 		
-		fillMapParameter(nKey, HEIGHT, mapParameter);
+		fillMapParameter(nKey, MAPCLASS, mapParameter);
+		
+		fillMapParameter(nKey, RMMSHOWCENTROID, mapParameter);
 		
 		for(String property : getPropertyList(WMSBASE))
 		{

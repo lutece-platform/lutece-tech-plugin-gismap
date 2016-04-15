@@ -10,11 +10,11 @@
 	</#if>
 </#list>
 
-<#assign strValHeight = 350 >
+<#assign strValMapClass = "map" >
 <#list map_parameter.parameters?keys as key>
 	<#assign strKey = "'" + key + "'">
-	<#if strKey == "'Height'">
-		<#assign strValHeight = map_parameter.parameters[key] >
+	<#if strKey == "'MapClass'">
+		<#assign strValMapClass = "${map_parameter.parameters[key]}"?split("'")[1] >
 	</#if>
 </#list>
 
@@ -25,7 +25,7 @@
     <input type="hidden" id="${idEntry}_extentCurrent" value=""/>
     <input type="hidden" id="${idEntry}_visibleLayer" value=""/>
     
-    <div id="${idEntry}_map" class="map" style="height: ${strValHeight}px"><div id="popup"></div></div>
+    <div id="${idEntry}_map" class="${strValMapClass}"><div id="popup"></div></div>
     
     <button id="zoomSelect" type="button" onClick="GisMapDisplay${idEntry}.getZoom().zoomSelect()">Zoom To</button>
     <#if editModeValue?? && editModeValue=="">
