@@ -91,8 +91,8 @@ public class GismapService
     public String getMapTemplate(HttpServletRequest request)
 	{
 		Map<String, Object> model = new HashMap<String, Object>(  );
-        String strInitView = AppPropertiesService.getProperty( GISMAP_VIEW_INIT );
-        View view = ViewHome.findByPrimaryKey(Integer.parseInt(strInitView));
+        //String strInitView = AppPropertiesService.getProperty( GISMAP_VIEW_INIT );
+        View view = ViewHome.findByPrimaryKey(1);
         
         model.put(PARAMETER_MAP_PARAMETER, view.getMapParameter());
         
