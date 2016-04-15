@@ -1,3 +1,24 @@
+.map:-moz-full-screen {
+    height: 100%;
+    width: 100%;
+}
+.map:-webkit-full-screen {
+    height: 100%;
+    width: 100%;
+}
+.map:-ms-fullscreen {
+    height: 100%;
+    width: 100%;
+}
+.map:fullscreen {
+    height: 100%;
+    width: 100%;
+}
+.map {
+    height: 30%;
+    width: 70%;
+}
+
 .layer-switcher {
     position: absolute;
     top: 5em;

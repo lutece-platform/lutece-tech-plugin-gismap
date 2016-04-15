@@ -116,7 +116,7 @@ var Manager = function() {
         if (startParameters['Print'] !== false) {
             interacts.push('Print');
         }
-        for(var n = 1; n < 10; n++) {
+        for(var n = 1; n <= 10; n++) {
             if (startParameters['BackGround'+n] !== '' && startParameters['BackGround'+n] !== undefined ) {
                 background.push(startParameters['BackGround'+n]);
             }
