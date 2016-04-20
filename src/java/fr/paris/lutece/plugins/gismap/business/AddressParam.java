@@ -7,7 +7,7 @@ public class AddressParam
 	private String _strUrl;
     private String _strDelay;
     private String _strMinLength;
-    private List<String> _listType;
+    private String _strListType;
     private String _strNbResult;
     private String _strClientId;
 	/**
@@ -49,14 +49,14 @@ public class AddressParam
 	/**
 	 * @return the _listType
 	 */
-	public List<String> getListType() {
-		return _listType;
+	public String getListType() {
+		return _strListType;
 	}
 	/**
 	 * @param _listType the _listType to set
 	 */
-	public void setListType(List<String> listType) {
-		this._listType = listType;
+	public void setListType(String strListType) {
+		this._strListType = strListType;
 	}
 	/**
 	 * @return the _strNbResult

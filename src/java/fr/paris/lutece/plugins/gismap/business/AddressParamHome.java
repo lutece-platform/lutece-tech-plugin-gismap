@@ -1,7 +1,5 @@
 package fr.paris.lutece.plugins.gismap.business;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
@@ -26,11 +24,7 @@ public final class AddressParamHome
 		String strMinLengthProperty = AppPropertiesService.getProperty( GISMAP_ADDRESS + MIN_LENGTH );
 		parameters.setMinLength(strMinLengthProperty);
 		String strTypeProperty = AppPropertiesService.getProperty( GISMAP_ADDRESS + TYPE );
-		String[] arrayTypeProperty = strTypeProperty.split(",");
-		List<String> listType = new ArrayList<String>();
-		for(int i=0;i<arrayTypeProperty.length;i++)
-			listType.add(arrayTypeProperty[i]);
-		parameters.setListType(listType);
+		parameters.setListType(strTypeProperty);
 		String strNbResultProperty = AppPropertiesService.getProperty( GISMAP_ADDRESS + NB_RESULT );
 		parameters.setNbResult(strNbResultProperty);
 		String strClientIdProperty = AppPropertiesService.getProperty( GISMAP_ADDRESS + CLIENT_ID );

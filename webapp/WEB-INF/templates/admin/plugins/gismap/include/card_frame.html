@@ -17,13 +17,28 @@
 		<#assign strValMapClass = "${map_parameter.parameters[key]}"?split("'")[1] >
 	</#if>
 </#list>
-
+<#assign strValTypeEdit = "" >
+<#if fieldParam?? >
+<#list fieldParam?keys as key>
+	<#assign strKey = "'" + key + "'">
+	<#if strKey == "'TypeEdit'">
+		<#assign strValTypeEdit = "'" + fieldParam[key] + "'" >
+		<#break>
+	</#if>
+</#list>
+</#if>
+<script src="js/autocomplete/jquery.session.js"></script>
 <div>
 	<input type="hidden" id="${idEntry}_geomCentroidXGeocodage" value=""/>
     <input type="hidden" id="${idEntry}_geomCentroidYGeocodage" value=""/>
     <input type="hidden" id="${idEntry}_geomState" value='false'/>
-    <input type="hidden" id="${idEntry}_extentCurrent" value=""/>
-    <input type="hidden" id="${idEntry}_visibleLayer" value=""/>
+    
+    <input type="hidden" id="${idEntry}_extent_current" name="${idEntry}_extent_current" value="" >
+    <input type="hidden" id="${idEntry}_visible_layer" name="${idEntry}_visible_layer" value="" >
+    <input type="hidden" name="gismap_entry" value="${idEntry}" > 
+    
+    <input type="hidden" id="${idEntry}_extent_current_val" name="extent_current_val"  value="">
+	<input type="hidden" id="${idEntry}_visible_layer_val" name="visible_layer_val" value="" >
     
     <div id="${idEntry}_map" class="${strValMapClass}"><div id="popup"></div></div>
     
@@ -38,13 +53,28 @@
     
     <!-- <script src="js/Gis.js" type="text/javascript"></script> </script> -->
 </div>
-
 <script>
 
 $( "#${idEntry}_map" )
 .mouseout(function() {
-	GisMapDisplay${idEntry}.getInteract().getEditor().forceValidate();
-	geocodage();
+	var typeEdit   = "${strValTypeEdit}";
+	if(typeEdit != "''"){
+		GisMapDisplay${idEntry}.getInteract().getEditor().forceValidate();
+		geocodage();
+	}
+	else{
+		var varExtendCurrent = $("#${idEntry}_extent_current").val();
+		var varVisibleLayer = $("#${idEntry}_visible_layer").val();
+		if(varExtendCurrent != "" && varVisibleLayer != ""){
+			$.session.set("extent_current", varExtendCurrent);
+			$.session.set("visible_layer", varVisibleLayer);
+		}
+		
+		$("#${idEntry}_extent_current_val").val($.session.get("extent_current"));
+		$("#${idEntry}_visible_layer_val").val($.session.get("visible_layer"));
+
+	}
+	
 });
 
 function selectObjectLuteceViaMap( idSelected ){
@@ -81,4 +111,5 @@ function inIdSelected(id, idSelected){
 	}
 	return varBoolean;
 };
+
 </script>
