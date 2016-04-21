@@ -59,8 +59,12 @@ $( "#${idEntry}_map" )
 .mouseout(function() {
 	var typeEdit   = "${strValTypeEdit}";
 	if(typeEdit != "''"){
-		GisMapDisplay${idEntry}.getInteract().getEditor().forceValidate();
-		geocodage();
+	var varX = $("#${idEntry}_x").val();
+	var varY = $("#${idEntry}_y").val();
+		if(varX != "" && varY != ""){
+			GisMapDisplay${idEntry}.getInteract().getEditor().forceValidate();
+			geocodage${idEntry}();
+		}
 	}
 	else{
 		var varExtendCurrent = $("#${idEntry}_extent_current").val();
