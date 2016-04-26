@@ -35,33 +35,37 @@ package fr.paris.lutece.plugins.gismap.business;
 
 import java.util.List;
 
+
 /**
  * This class provides Data Access methods for View objects
  */
 public final class ViewDAO implements IViewDAO
 {
-	private static final String MAP_TEMPLATE = "/admin/plugins/gismap/include/map_gismap.html";
+    private static final String MAP_TEMPLATE = "/admin/plugins/gismap/include/map_gismap.html";
 
-	@Override
-	public View findById(int nKey) {
-		View view = new View();
-		view.setId(nKey);
-		view.setMapTemplateFile(MAP_TEMPLATE);
-		view.setMapParameter(MapParameterHome.findByPrimaryKey(nKey)); 
-		view.setAddressParam(AddressParamHome.getAddressParameters());
-		return view;
-	}
+    @Override
+    public View findById( int nKey )
+    {
+        View view = new View(  );
+        view.setId( nKey );
+        view.setMapTemplateFile( MAP_TEMPLATE );
+        view.setMapParameter( MapParameterHome.findByPrimaryKey( nKey ) );
+        view.setAddressParam( AddressParamHome.getAddressParameters(  ) );
 
-	@Override
-	public View findByCode(String strGismapCode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        return view;
+    }
 
-	@Override
-	public List<View> findAll() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-    
+    @Override
+    public View findByCode( String strGismapCode )
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<View> findAll(  )
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

@@ -54,11 +54,10 @@ import javax.servlet.http.HttpServletRequest;
 public class GismapService
 {
     // Markers
-	public static final String GISMAP_VIEW_INIT = "gismap.view.init";
-	private static final String PARAMETER_MAP_PARAMETER = "map_parameter";
+    public static final String GISMAP_VIEW_INIT = "gismap.view.init";
+    private static final String PARAMETER_MAP_PARAMETER = "map_parameter";
 
     //Templates
-	
     private static GismapService _singleton = new GismapService(  );
 
     /**
@@ -79,25 +78,27 @@ public class GismapService
     {
         return _singleton;
     }
-    
+
     /**
      * Gets the XPage view based on the given GIS code.
-     * 
+     *
      * @param strGisCode
      * @param parameters
      * @param request
      * @return The HTML page
      */
-    public String getMapTemplate(HttpServletRequest request)
-	{
-		Map<String, Object> model = new HashMap<String, Object>(  );
+    public String getMapTemplate( HttpServletRequest request )
+    {
+        Map<String, Object> model = new HashMap<String, Object>(  );
+
         //String strInitView = AppPropertiesService.getProperty( GISMAP_VIEW_INIT );
-        View view = ViewHome.findByPrimaryKey(1);
-        
-        model.put(PARAMETER_MAP_PARAMETER, view.getMapParameter());
-        
-        HtmlTemplate templateList = AppTemplateService.getTemplate( view.getMapTemplateFile(), request.getLocale(), model );
-        
+        View view = ViewHome.findByPrimaryKey( 1 );
+
+        model.put( PARAMETER_MAP_PARAMETER, view.getMapParameter(  ) );
+
+        HtmlTemplate templateList = AppTemplateService.getTemplate( view.getMapTemplateFile(  ), request.getLocale(  ),
+                model );
+
         return templateList.getHtml(  );
-	}
+    }
 }

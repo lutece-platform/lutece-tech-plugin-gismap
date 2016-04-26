@@ -56,10 +56,11 @@ public class GismapJspBean extends PluginAdminPageJspBean
     // Constants
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	// Right
+         *
+         */
+    private static final long serialVersionUID = 1L;
+
+    // Right
     public static final String RIGHT_MANAGE_GISMAP = "GISMAP_MANAGEMENT";
     public static final String RIGHT_DISPLAY_MAP = "GISMAP_MANAGEMENT";
     public static final String GISMAP_VIEW_INIT = "gismap.view.init";
@@ -67,13 +68,11 @@ public class GismapJspBean extends PluginAdminPageJspBean
     // Parameters
     private static final String PARAMETER_MAP = "map";
     private static final String PARAMETER_ADD = "add_parameter";
-    
+
     // I18n
     private static final String PROPERTY_PAGE_TITLE_FEATURES = "gismap.manage_features.pageTitle";
-
     private static final String TEMPLATE_HOME = "/admin/plugins/gismap/manage_gismap.html";
-    
-    
+
     /**
      * Returns the Gismap HTML management page
      *
@@ -88,15 +87,13 @@ public class GismapJspBean extends PluginAdminPageJspBean
         setPageTitleProperty( PROPERTY_PAGE_TITLE_FEATURES );
 
         Map<String, Object> model = new HashMap<String, Object>(  );
-        
+
         //List<Geometry> listGeometry = GeometryHome.getList();
-        
-        model.put(PARAMETER_ADD, AddressParamHome.getAddressParameters());
-        model.put(PARAMETER_MAP, GismapService.getInstance().getMapTemplate(request));
-        
+        model.put( PARAMETER_ADD, AddressParamHome.getAddressParameters(  ) );
+        model.put( PARAMETER_MAP, GismapService.getInstance(  ).getMapTemplate( request ) );
+
         HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_HOME, request.getLocale(  ), model );
 
         return getAdminPage( templateList.getHtml(  ) );
     }
-    
 }

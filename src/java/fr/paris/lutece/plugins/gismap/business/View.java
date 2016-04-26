@@ -33,61 +33,74 @@
  */
 package fr.paris.lutece.plugins.gismap.business;
 
-
 public class View
 {
     private int _nId;
     private String _strMapTemplateFile;
     private MapParameter _mapParameter;
     private AddressParam _addressParam;
-	/**
-	 * @return the _nId
-	 */
-	public int getId() {
-		return _nId;
-	}
-	/**
-	 * @param _nId the _nId to set
-	 */
-	public void setId(int nId) {
-		this._nId = nId;
-	}
-	
-	/**
-	 * @return the _strTemplateFile
-	 */
-	public String getMapTemplateFile() {
-		return _strMapTemplateFile;
-	}
-	/**
-	 * @param _strTemplateFile the _strTemplateFile to set
-	 */
-	public void setMapTemplateFile(String strMapTemplateFile) {
-		this._strMapTemplateFile = strMapTemplateFile;
-	}
-	/**
-	 * @return the _mapParameter
-	 */
-	public MapParameter getMapParameter() {
-		return _mapParameter;
-	}
-	/**
-	 * @param _mapParameter the _mapParameter to set
-	 */
-	public void setMapParameter(MapParameter mapParameter) {
-		this._mapParameter = mapParameter;
-	}
-	/**
-	 * @return the _addressParam
-	 */
-	public AddressParam getAddressParam() {
-		return _addressParam;
-	}
-	/**
-	 * @param _addressParam the _addressParam to set
-	 */
-	public void setAddressParam(AddressParam addressParam) {
-		this._addressParam = addressParam;
-	}
-	
+
+    /**
+     * @return the _nId
+     */
+    public int getId(  )
+    {
+        return _nId;
+    }
+
+    /**
+     * @param _nId the _nId to set
+     */
+    public void setId( int nId )
+    {
+        this._nId = nId;
+    }
+
+    /**
+     * @return the _strTemplateFile
+     */
+    public String getMapTemplateFile(  )
+    {
+        return _strMapTemplateFile;
+    }
+
+    /**
+     * @param _strTemplateFile the _strTemplateFile to set
+     */
+    public void setMapTemplateFile( String strMapTemplateFile )
+    {
+        this._strMapTemplateFile = strMapTemplateFile;
+    }
+
+    /**
+     * @return the _mapParameter
+     */
+    public MapParameter getMapParameter(  )
+    {
+        return _mapParameter;
+    }
+
+    /**
+     * @param _mapParameter the _mapParameter to set
+     */
+    public void setMapParameter( MapParameter mapParameter )
+    {
+        this._mapParameter = mapParameter;
+    }
+
+    /**
+     * @return the _addressParam
+     */
+    public AddressParam getAddressParam(  )
+    {
+        return _addressParam;
+    }
+
+    /**
+     * @param _addressParam the _addressParam to set
+     */
+    public void setAddressParam( AddressParam addressParam )
+    {
+        this._addressParam = addressParam;
+    }
 }

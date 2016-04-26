@@ -38,8 +38,10 @@ import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -62,11 +64,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ProxyGeoServer extends HttpServlet
 {
-    
     public static final String PROXY_PREFIX = "proxyGeoServer";
     public static final String PARAMETER_WHITELIST = ".whitelist";
     public static final String PARAMETER_ENTRY_URL = ".url";
-    
     private ServletContext servletContext;
     private Logger log;
 
@@ -80,13 +80,15 @@ public class ProxyGeoServer extends HttpServlet
     {
         servletContext = servletConfig.getServletContext(  );
         log = Logger.getLogger( ProxyGeoServer.class.getName(  ) );
-        _whiteList = new ArrayList<String>( );
+        _whiteList = new ArrayList<String>(  );
 
         // Get the proxy whitelist entries
         String whitelist = AppPropertiesService.getProperty( PROXY_PREFIX + PARAMETER_WHITELIST );
-        if ( !whitelist.isEmpty( ) )
+
+        if ( !whitelist.isEmpty(  ) )
         {
             String[] whitelistEntries = whitelist.split( "," );
+
             for ( String entry : whitelistEntries )
             {
                 _whiteList.add( AppPropertiesService.getProperty( PROXY_PREFIX + "." + entry + PARAMETER_ENTRY_URL ) );
@@ -124,16 +126,17 @@ public class ProxyGeoServer extends HttpServlet
             urlString += ( ( queryString == null ) ? "" : ( "?" + queryString ) );
             urlString = request.getParameter( "url" );
 
-            if ( !_whiteList.isEmpty( ) && !_whiteList.contains( urlString ) )
+            if ( !_whiteList.isEmpty(  ) && !_whiteList.contains( urlString ) )
             {
                 log.warning( "The given URL is not allowed by proxy : " + urlString );
                 response.sendError( HttpServletResponse.SC_FORBIDDEN );
+
                 return;
             }
 
             URL url = new URL( urlString );
 
-            log.info( "Fetching >" + url.toString( ) );
+            log.info( "Fetching >" + url.toString(  ) );
 
             con = (HttpURLConnection) url.openConnection(  );
 
