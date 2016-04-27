@@ -123,6 +123,7 @@ function LayerRaster(projection, proxy) {
                         })
                     ],
                     url: url+'/tile/{z}/{y}/{x}',
+                    crossOrigin:'anonymous',
                     projection: projData,
                     tileGrid: new ol.tilegrid.TileGrid({
                         origin: origin,
