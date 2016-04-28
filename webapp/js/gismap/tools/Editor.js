@@ -446,8 +446,10 @@ function Editor(interact, layerEdit, fieldName, projection) {
     this.forceValidate = function () {
         var selectFeatures = this.selectInteract.getFeatures().getArray();
         if (selectFeatures.length !== 0) {
+            var selectFeaturesAuth = selectFeatures[0];
             this.writeGeoJSON(selectFeatures[0]);
+            this.selectInteract.getFeatures().push(selectFeaturesAuth);
         }
-        this.selectInteract.getFeatures().clear();
+        //this.selectInteract.getFeatures().clear();
     };
 }
