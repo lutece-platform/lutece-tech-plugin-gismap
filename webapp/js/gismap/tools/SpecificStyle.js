@@ -238,7 +238,7 @@ function SpecificStyle() {
                         }
                     }
                 }
-                if (finalStyle.getText() !== null && feature.get(thematicField3) !== '' && feature.get(thematicField3) !== undefined) {
+                if (finalStyle.getText() !== null && feature.get(thematicField3) !== null && feature.get(thematicField3) !== '' && feature.get(thematicField3) !== undefined) {
                     finalStyle.getText().setText(feature.get(thematicField3).toString());
                 }
                 return finalStyle;
