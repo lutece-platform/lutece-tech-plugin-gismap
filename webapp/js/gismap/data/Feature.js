@@ -101,6 +101,10 @@ function Feature(projection, proxy) {
         var dataUrl = data[3];
         var vectorSource;
         var features = [];
+        var indexlr = dataUrl.lastIndexOf('/');
+        var dataUrlWithPostMethod = dataUrl.substring(0, indexlr) + '/post';
+        var dataForPostMethod = dataUrl.substring(indexlr + 1);
+
         if(dataFormat === 'WKT'){
             for(var i = 2; i < data.length; i++){
                 features.push(wktFormat.readFeatures(dataUrl, {
@@ -130,8 +134,10 @@ function Feature(projection, proxy) {
                 ],
                 loader: function () {
                     $.ajax({
-                        url : dataUrl,
+                        url : dataUrlWithPostMethod,
+                        type : 'POST',
                         dataType: 'jsonp',
+                        data: dataForPostMethod,
                         jsonpCallback: 'callback',
                         success: function (response) {
                             if (response.error) {
