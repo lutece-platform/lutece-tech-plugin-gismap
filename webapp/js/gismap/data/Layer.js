@@ -250,11 +250,11 @@ function Layer(projection, proxy) {
          var ListLayersMap = [];
          this.ListLayers.sort();
          ListLayersMap.push(new ol.layer.Group({
-             title:'Base maps',
+             title:'Fonds de plan',
              layers: this.getLayersRasterMap()
          }));
          ListLayersMap.push(new ol.layer.Group({
-             title:'Layers',
+             title:'Couches',
              layers: this.getLayersFeatureMap()
          }));
          ListLayersMap.push(interact.getDraw().getDrawLayer());

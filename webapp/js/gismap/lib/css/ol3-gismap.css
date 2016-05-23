@@ -63,7 +63,40 @@
     border-radius: 4px;
     padding: 2px;
     position: absolute;
-    width:500px;
+    /*width:500px;*/
     top: 5px;
     left:40px;
+}
+#addressSuggestPoi{
+	
+}
+#idDrawPtButton{
+	
+}
+#idDrawLButton{
+	
+}
+#idDrawPnButton{
+	
+}
+#idMeasureLenButton{
+	
+}
+#idMeasureAreaButton{
+	
+}
+#idEditButton{
+	
+}
+#idSelectButton{
+	
+}
+#idGPSButton{
+	
+}
+#idRubberButton{
+	
+}
+#idIButton{
+	
 }

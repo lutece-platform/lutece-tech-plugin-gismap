@@ -27,6 +27,7 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
             if (parameters['Interacts'][i] === "SuggestPOISearch") {
                 var suggestPoiText = document.createElement('input');
 		        suggestPoiText.setAttribute('type', 'text');
+		        suggestPoiText.setAttribute('placeholder', 'Saisir une adresse...');
                 suggestPoiText.setAttribute('id','addressSuggestPoi');
                 suggestPoiText.setAttribute('name','addressSuggestPoi');
                 suggestPoiText.setAttribute('class','ui-autocomplete-input');
@@ -39,12 +40,15 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
             if (parameters['Interacts'][i] === "Draw") {
                 var buttonDrawPoint = document.createElement('button');
                 buttonDrawPoint.setAttribute('type','button');
+                buttonDrawPoint.setAttribute('id','idDrawPtButton');
                 buttonDrawPoint.innerHTML = 'Pt';
                 var buttonDrawLine = document.createElement('button');
                 buttonDrawLine.setAttribute('type','button');
+                buttonDrawLine.setAttribute('id','idDrawLButton');
                 buttonDrawLine.innerHTML = 'L';
                 var buttonDrawPolygon = document.createElement('button');
                 buttonDrawPolygon.setAttribute('type','button');
+                buttonDrawPolygon.setAttribute('id','idDrawPnButton');
                 buttonDrawPolygon.innerHTML = 'Pn';
                 var handleDrawPoint = function (e) {
                     interfaceValues["interact"].setDrawInteraction('Point');
@@ -68,9 +72,11 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
             if (parameters['Interacts'][i] === 'Measure') {
                 var buttonMeasureLen = document.createElement('button');
                 buttonMeasureLen.setAttribute('type','button');
+                buttonMeasureLen.setAttribute('id','idMeasureLenButton');
                 buttonMeasureLen.innerHTML = 'Len';
                 var buttonMeasureArea = document.createElement('button');
                 buttonMeasureArea.setAttribute('type','button');
+                buttonMeasureArea.setAttribute('id','idMeasureAreaButton');
                 buttonMeasureArea.innerHTML = 'Area';
                 var handleMeasureLen = function (e) {
                     interfaceValues["interact"].setMeasureInteraction('Length');
@@ -88,6 +94,7 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
             if (parameters['Interacts'][i] === 'Edit') {
                 var buttonEdit = document.createElement('button');
                 buttonEdit.setAttribute('type','button');
+                buttonEdit.setAttribute('id','idEditButton');
                 buttonEdit.innerHTML = 'Edit';
                 var handleEdit = function (e) {
                     interfaceValues["interact"].setEditInteraction();
@@ -99,6 +106,7 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
             if (parameters['Interacts'][i] === 'Select') {
                 var buttonSelect = document.createElement('button');
                 buttonSelect.setAttribute('type','button');
+                buttonSelect.setAttribute('id','idSelectButton');
                 buttonSelect.innerHTML = 'Select';
                 var handleSelect = function (e) {
                     interfaceValues["interact"].setSelectInteraction();
@@ -110,6 +118,7 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
             if (parameters['Interacts'][i] === 'GPS') {
                 var buttonGPS = document.createElement('button');
                 buttonGPS.setAttribute('type','button');
+                buttonGPS.setAttribute('id','idGPSButton');
                 buttonGPS.innerHTML = 'GPS';
                 var handleGPS = function (e) {
                     interfaceValues["geoPoint"].manageGPS();
@@ -122,6 +131,7 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
                 if(rulerActive === false) {
                     var buttonRuler = document.createElement('button');
                     buttonRuler.setAttribute('type','button');
+                    buttonRuler.setAttribute('id','idRubberButton');
                     buttonRuler.innerHTML = 'Rubber ';
                     var handleClean = function (e) {
                         interfaceValues["interact"].deleteFeatures();
@@ -136,6 +146,7 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
         if (parameters['Popup'].length !== 0) {
             var buttonInfo = document.createElement('button');
             buttonInfo.setAttribute('type','button');
+            buttonInfo.setAttribute('id','idIButton');
             buttonInfo.innerHTML = 'I';
             var handlePopup = function (e) {
                 interfaceValues["popup"].managePopup('on');
