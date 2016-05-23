@@ -34,11 +34,11 @@ function Filter(layer, projection) {
 
     /**
      * Filter Method
-     * filterLayerGEOSJON apply a filter on the Lutece Web Service
+     * filterLayerGEOJSON apply a filter on the Lutece Web Service
      * @param name the layer name
      * @param urlGeoJson the new url ot filter data
      */
-    this.filterLayerGEOSJON = function(name, urlGeoJson){
+    this.filterLayerGEOJSON = function(name, urlGeoJson){
         var dataProj = this.ListLayers[name].getSource().getProjection();
         var vectorSource = new ol.source.Vector({
             attributions: this.ListLayers[name].getSource().getAttributions(),
