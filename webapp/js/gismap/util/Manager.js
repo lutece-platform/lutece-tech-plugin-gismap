@@ -45,6 +45,12 @@ var Manager = function() {
         var cluster = [];
         var thematic = [];
         var thematicComplex = [];
+        
+        for(var i = 0; i < startParameters['ButtonOrder'].length; i++){
+        	if (startParameters[startParameters['ButtonOrder'][i]] !== false) {
+                interacts.push(startParameters['ButtonOrder'][i]);
+            }
+        }
         if (startParameters['Projection'] !== '') {
             parameters['Projection'] = startParameters['Projection'];
         }
@@ -78,7 +84,7 @@ var Manager = function() {
         if (startParameters['ZoomExtent'] !== false) {
             controls.push('ZoomExtent');
         }
-        if (startParameters['Rotate'] !== false) {
+        /*if (startParameters['Rotate'] !== false) {
             interacts.push('Rotate');
         }
         if (startParameters['ZoomZone'] !== false) {
@@ -92,7 +98,7 @@ var Manager = function() {
         }
         if (startParameters['Measure'] !== false) {
             interacts.push('Measure');
-        }
+        }*/
         if (fieldParameters['TypeEdit'] === 'Point' || fieldParameters['TypeEdit'] === 'LineString' || fieldParameters['TypeEdit'] === 'Polygon'){
             if (startParameters['AutoEdit'] === false) {
                 interacts.push('Edit');
@@ -107,15 +113,15 @@ var Manager = function() {
             interacts.push('ReadOnly');
         }
         if (startParameters['SuggestPOISearch'] !== false) {
-            interacts.push('SuggestPOISearch');
+            //interacts.push('SuggestPOISearch');
             parameters['SuggestPOIParams'] = startParameters['SuggestPOIParams'];
         }
-        if (startParameters['GPS'] !== false) {
+        /*if (startParameters['GPS'] !== false) {
             interacts.push('GPS');
         }
         if (startParameters['Print'] !== false) {
             interacts.push('Print');
-        }
+        }*/
         for(var n = 1; n <= 10; n++) {
             if (startParameters['BackGround'+n] !== '' && startParameters['BackGround'+n] !== undefined ) {
                 background.push(startParameters['BackGround'+n]);

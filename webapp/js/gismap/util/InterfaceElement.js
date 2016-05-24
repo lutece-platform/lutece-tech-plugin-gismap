@@ -27,7 +27,7 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
             if (parameters['Interacts'][i] === "SuggestPOISearch") {
                 var suggestPoiText = document.createElement('input');
 		        suggestPoiText.setAttribute('type', 'text');
-		        suggestPoiText.setAttribute('placeholder', 'Saisir une adresse...');
+		        suggestPoiText.setAttribute('placeholder', parameters['SuggestPOIParams'][3]);
                 suggestPoiText.setAttribute('id','addressSuggestPoi');
                 suggestPoiText.setAttribute('name','addressSuggestPoi');
                 suggestPoiText.setAttribute('class','ui-autocomplete-input');
@@ -122,6 +122,7 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
                 buttonGPS.innerHTML = 'GPS';
                 var handleGPS = function (e) {
                     interfaceValues["geoPoint"].manageGPS();
+                    setTimeout(function(){interfaceValues["geoPoint"].manageGPS();}, 3000);
                 };
                 buttonGPS.addEventListener('click', handleGPS, false);
                 buttonGPS.addEventListener('touchstart', handleGPS, false);
