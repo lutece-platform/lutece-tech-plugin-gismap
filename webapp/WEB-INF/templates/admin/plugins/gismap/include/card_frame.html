@@ -3,18 +3,18 @@
 	<#assign idEntry = entry.idEntry >
 </#if>
 <#assign strValPrint = "false" >
+<#assign strValMapClass = "map" >
+<#assign strValCss = "ol3-gismap.css" >
 <#list map_parameter.parameters?keys as key>
 	<#assign strKey = "'" + key + "'">
 	<#if strKey == "'Print'">
 		<#assign strValPrint = map_parameter.parameters[key] >
 	</#if>
-</#list>
-
-<#assign strValMapClass = "map" >
-<#list map_parameter.parameters?keys as key>
-	<#assign strKey = "'" + key + "'">
 	<#if strKey == "'MapClass'">
 		<#assign strValMapClass = "${map_parameter.parameters[key]}"?split("'")[1] >
+	</#if>
+	<#if strKey == "'Css'">
+		<#assign strValCss = "${map_parameter.parameters[key]}"?split("'")[1] >
 	</#if>
 </#list>
 <#assign strValTypeEdit = "" >
@@ -27,6 +27,7 @@
 	</#if>
 </#list>
 </#if>
+<link rel="stylesheet" href="js/gismap/lib/css/${strValCss}" type="text/css">
 <script src="js/autocomplete/jquery.session.js"></script>
 <div>
 	<input type="hidden" id="${idEntry}_geomCentroidXGeocodage" value=""/>
