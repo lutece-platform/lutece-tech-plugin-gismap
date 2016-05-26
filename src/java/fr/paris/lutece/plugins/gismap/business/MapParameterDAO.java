@@ -47,6 +47,7 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String RMMSHOWCENTROID = "RenderMapManagement.ShowCentoid";
     public static final String BUTTONORDER = "ButtonOrder";
     public static final String CSS = "Css";
+    public static final String DEFAULTMODE = "DefaultMode";
 
     // parameter 1 to 9
     public static final String WMSBASE = "WMS-Base";
@@ -126,6 +127,8 @@ public class MapParameterDAO implements IMapParameterDAO
         fillMapParameter( nKey, BUTTONORDER, mapParameter );
         
         fillMapParameter( nKey, CSS, mapParameter );
+        
+        fillMapParameter( nKey, DEFAULTMODE, mapParameter );
 
         for ( String property : getPropertyList( WMSBASE ) )
         {

@@ -68,6 +68,18 @@ var GisMap = function (idMapInit, idInit) {
                 zoom.initialZoom(fieldParameters['GeomGeoJson']);
             }
         }
+        if(fieldParameters['TypeEdit'] ===  '' || fieldParameters['TypeEdit'] === 'ReadOnly'){
+        	if(startParameters['DefaultMode'] === 'Info'){
+            	var pop = getPopup();
+            	pop.managePopup('on');
+            }
+            if(startParameters['DefaultMode'] === 'Select'){
+            	var inter = getInteract();
+            	inter.setSelectInteraction();
+            }
+        }
+        
+        
     }
 
     /**
