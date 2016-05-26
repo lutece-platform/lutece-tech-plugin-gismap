@@ -3,7 +3,7 @@
     <!-- GIS plugin Informations -->
     <name>gismap</name>
     <class>fr.paris.lutece.plugins.gismap.service.GismapPlugin</class>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <documentation/>
     <installation/>
     <changes/>
