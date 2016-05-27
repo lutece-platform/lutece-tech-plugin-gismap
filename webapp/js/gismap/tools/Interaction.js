@@ -154,7 +154,7 @@ function Interaction(GlobalMap, layer, popup, projection, layerEdit, fieldParame
                 }
                 ListInteractsTemp = [];
             }
-            if (activeInteracts[ctrl] === "Edit" || activeInteracts[ctrl] === "AutoEdit") {
+            if (activeInteracts[ctrl] === "Edit" ) {
                 editorInteracts = editorTools.initEditInteraction('Draw');
                 editorInteracts.forEach(function(val, key){
                     ListInteractsTemp.push(val);

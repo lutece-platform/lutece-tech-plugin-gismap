@@ -79,6 +79,13 @@ var GisMap = function (idMapInit, idInit) {
             }
         }
         
+        if (fieldParameters['TypeEdit'] === 'Point' || fieldParameters['TypeEdit'] === 'LineString' || fieldParameters['TypeEdit'] === 'Polygon'){
+        	if(startParameters['DefaultMode'] === 'Info'){
+        		var inter = getInteract();
+        		inter.setEditInteraction();
+        	}
+        }
+        
         
     }
 

@@ -46,8 +46,6 @@ var Manager = function() {
         var thematic = [];
         var thematicComplex = [];
         
-        interactsPushing(startParameters, interacts, parameters);
-        
         if (startParameters['Projection'] !== '') {
             parameters['Projection'] = startParameters['Projection'];
         }
@@ -81,29 +79,7 @@ var Manager = function() {
         if (startParameters['ZoomExtent'] !== false) {
             controls.push('ZoomExtent');
         }
-        if (startParameters['Rotate'] !== false) {
-            interacts.push('Rotate');
-        }
-        if (startParameters['ZoomZone'] !== false) {
-            interacts.push('ZoomZone');
-        }
-        if (startParameters['Print'] !== false) {
-            interacts.push('Print');
-        }
-        if (fieldParameters['TypeEdit'] === 'Point' || fieldParameters['TypeEdit'] === 'LineString' || fieldParameters['TypeEdit'] === 'Polygon'){
-            if (startParameters['AutoEdit'] === false) {
-                interacts.push('Edit');
-            } else if (startParameters['AutoEdit'] === true) {
-                interacts.push('AutoEdit');
-            }
-        }
-        if (fieldParameters['TypeEdit'] === 'SuggestPOI') {
-            interacts.push('SuggestPOIEdit');
-        }
-        if (fieldParameters['TypeEdit'] === 'ReadOnly') {
-            interacts.push('ReadOnly');
-        }
-        
+       
         for(var n = 1; n <= 10; n++) {
             if (startParameters['BackGround'+n] !== '' && startParameters['BackGround'+n] !== undefined ) {
                 background.push(startParameters['BackGround'+n]);
@@ -149,6 +125,9 @@ var Manager = function() {
                 popup.push(startParameters['Popup'+n]);
             }
         }
+        
+        interactsPushing(startParameters, interacts, parameters, popup, fieldParameters);
+        
         parameters['BackGround'] = background;
         parameters['WMS-Base'] = wmsBase;
         parameters['WMS-Layer'] = wmsLayer;
@@ -263,75 +242,59 @@ var Manager = function() {
     /**
     
      */
-    var interactsPushing = function(startParameters, interacts, parameters){
+    var interactsPushing = function(startParameters, interacts, parameters, popup, fieldParameters){
+    	var autoEdit = true;
     	for(var i = 0; i < startParameters['ButtonOrder'].length; i++){
-    		if (startParameters[startParameters['ButtonOrder'][i]] !== false) {
-    			interacts.push(startParameters['ButtonOrder'][i]);
+    		if (startParameters['ButtonOrder'][i] === 'Select' && startParameters['Select'] !== false) {
+    			interacts.push('Select');
+    		}
+    		if (startParameters['ButtonOrder'][i] === 'Draw' && startParameters['Draw'] !== false) {
+    			interacts.push('Draw');
+    		}
+    		if (startParameters['ButtonOrder'][i] === 'Measure' && startParameters['Measure'] !== false) {
+    			interacts.push('Measure');
+    		}
+    		if (startParameters['ButtonOrder'][i] === 'SuggestPOISearch' && startParameters['SuggestPOISearch'] !== false) {
+    			interacts.push('SuggestPOISearch');
+    			parameters['SuggestPOIParams'] = startParameters['SuggestPOIParams'];
+    		}
+    		if (startParameters['ButtonOrder'][i] === 'GPS' && startParameters['GPS'] !== false) {
+    			interacts.push('GPS');
+    		}
+    		if (startParameters['ButtonOrder'][i] === 'Info' && popup.length !== 0) {
+    			interacts.push('Info');
+    		}
+    		if (startParameters['ButtonOrder'][i] === 'Edit') {
+    			autoEdit = false;
+    			if (fieldParameters['TypeEdit'] === 'Point' || fieldParameters['TypeEdit'] === 'LineString' || fieldParameters['TypeEdit'] === 'Polygon'){
+                	interacts.push('Edit');
+                }
+    			if (fieldParameters['TypeEdit'] === 'SuggestPOI') {
+    	            interacts.push('SuggestPOIEdit');
+    	        }
     		}
     	}
-    	//    alert(interacts[0] + ":" + interacts.length);
-        if (startParameters['Select'] !== false ) {
-        	var inOrder = false;
-        	for(var i = 0; i < interacts.length; i++){
-        		if (interacts[i] === 'Select') {
-        			inOrder = true;
-    	    	}
-    	    }
-        	if( inOrder === false){
-        		interacts.push('Select');
-        	}
-        }
+    	
+    	if (autoEdit && startParameters['DefaultMode'] === 'Edit') {
+			if (fieldParameters['TypeEdit'] === 'Point' || fieldParameters['TypeEdit'] === 'LineString' || fieldParameters['TypeEdit'] === 'Polygon'){
+            	interacts.push('Edit');
+            }
+			if (fieldParameters['TypeEdit'] === 'SuggestPOI') {
+	            interacts.push('SuggestPOIEdit');
+	        }
+		}
         
-        if (startParameters['Draw'] !== false ) {
-        	var inOrder = false;
-        	for(var i = 0; i < interacts.length; i++){
-        		if (interacts[i] === 'Draw') {
-        			inOrder = true;
-    	    	}
-    	    }
-        	if( inOrder === false){
-        		interacts.push('Draw');
-        	}
+        if (startParameters['Rotate'] !== false) {
+            interacts.push('Rotate');
         }
-        
-        if (startParameters['Measure'] !== false ) {
-        	var inOrder = false;
-        	for(var i = 0; i < interacts.length; i++){
-        		if (interacts[i] === 'Measure') {
-        			inOrder = true;
-    	    	}
-    	    }
-        	if( inOrder === false){
-        		interacts.push('Measure');
-        	}
+        if (startParameters['ZoomZone'] !== false) {
+            interacts.push('ZoomZone');
         }
-        
-        if (startParameters['SuggestPOISearch'] !== false ) {
-        	var inOrder = false;
-        	for(var i = 0; i < interacts.length; i++){
-        		if (interacts[i] === 'SuggestPOISearch') {
-        			inOrder = true;
-    	    	}
-    	    }
-        	if( inOrder === false){
-        		interacts.push('SuggestPOISearch');
-        		parameters['SuggestPOIParams'] = startParameters['SuggestPOIParams'];
-        	}
-        	else{
-        		parameters['SuggestPOIParams'] = startParameters['SuggestPOIParams'];
-        	}
+        if (startParameters['Print'] !== false) {
+            interacts.push('Print');
         }
-        
-        if (startParameters['GPS'] !== false ) {
-        	var inOrder = false;
-        	for(var i = 0; i < interacts.length; i++){
-        		if (interacts[i] === 'GPS') {
-        			inOrder = true;
-    	    	}
-    	    }
-        	if( inOrder === false){
-        		interacts.push('GPS');
-        	}
+        if (fieldParameters['TypeEdit'] === 'ReadOnly') {
+            interacts.push('ReadOnly');
         }
     };
 

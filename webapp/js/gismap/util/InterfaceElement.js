@@ -128,6 +128,17 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
                 buttonGPS.addEventListener('touchstart', handleGPS, false);
                 element.appendChild(buttonGPS);
             }
+            if (parameters['Interacts'][i] === 'Info') {
+                var buttonInfo = document.createElement('button');
+                buttonInfo.setAttribute('type','button');
+                buttonInfo.setAttribute('id','idIButton');
+                buttonInfo.innerHTML = 'I';
+                var handlePopup = function (e) {
+                    interfaceValues["popup"].managePopup('on');
+                };
+                buttonInfo.addEventListener('click', handlePopup, false);
+                element.appendChild(buttonInfo);
+            }
             if (parameters['Interacts'][i] === 'Draw' || parameters['Interacts'][i] === 'Measure'|| parameters['Interacts'][i] === 'Edit'|| parameters['Interacts'][i] === 'AutoEdit'){
                 if(rulerActive === false) {
                     var buttonRuler = document.createElement('button');
@@ -144,17 +155,7 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
                 }
             }
         }
-        if (parameters['Popup'].length !== 0) {
-            var buttonInfo = document.createElement('button');
-            buttonInfo.setAttribute('type','button');
-            buttonInfo.setAttribute('id','idIButton');
-            buttonInfo.innerHTML = 'I';
-            var handlePopup = function (e) {
-                interfaceValues["popup"].managePopup('on');
-            };
-            buttonInfo.addEventListener('click', handlePopup, false);
-            element.appendChild(buttonInfo);
-        }
+        
         ol.control.Control.call(this, {
             element: element,
             target: options.target
