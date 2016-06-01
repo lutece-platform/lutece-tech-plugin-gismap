@@ -56,6 +56,51 @@
 </div>
 <script>
 
+$("#${idEntry}_address").autocomplete({
+	source : function(request, reponse){ // les deux arguments représentent les données nécessaires au plugin
+	$.ajax({
+		url : "${add_parameter.url}",
+	    dataType: "jsonp",
+	    data: {
+	    	clientId : "${add_parameter.clientId}",
+			nbResults : ${add_parameter.nbResult}, 
+			types : "${add_parameter.listType}",
+			query : request.term
+			
+	    },
+	    success : function(data){
+            reponse($.map(getResult(data.result), function(objet){
+            	return objet;
+                
+            }));
+        }
+    	});
+	},
+	select : function(event, ui){
+		$('#${idEntry}_x').val(ui.item.x);
+		$('#${idEntry}_y').val(ui.item.y);
+		$('#id_additional_address').val(getAdditionalAdd(ui.item.label));
+		GisMapDisplay${entry.idEntry}.getZoom().zoomSuggestPoi(ui.item.x, ui.item.y);
+		
+    }
+}).focus();
+function getResult(result) {
+	var resultArray = [];
+	var index;
+	for	(index = 0; index < result.length; index++) {
+		var object = new Object();
+		object.value = result[index].libelleTypo;
+		object.label = result[index].libelleTypo;
+		object.x = result[index].x;
+		object.y = result[index].y;
+		object.id = result[index].id;
+		resultArray.push(object);
+	}
+	return resultArray;	
+};
+
+
+
 $( "#${idEntry}_map" )
 .mouseout(function() {
 	var typeEdit   = "${strValTypeEdit}";
@@ -127,8 +172,41 @@ function geocodage${idEntry}(){
         success: function( data ) {
 			var address = data.Adresse_tot+", "+data.Codepostal+" ";
         	$("#${entry.idEntry}_address").val(address);
-			$("#${entry.idEntry}_additional_address").val(getAdditionalAdd(address));
+			$("#id_additional_address").val(getAdditionalAdd(address));
     	}
     });
+};
+
+function getAdditionalAdd (address)
+{
+	var addTab = address.split(",");
+	var addCompTab = addTab[1].split(" ");
+	var additionalAdd = addCompTab[1];
+	var additionalAddress = "";
+	switch ( additionalAdd ) {
+	    case "75001": additionalAddress = "1er arrondissement"; break;
+	    case "75002": additionalAddress = "2e arrondissement"; break;
+	    case "75003": additionalAddress = "3e arrondissement"; break;
+	    case "75004": additionalAddress = "4e arrondissement"; break;
+	    case "75005": additionalAddress = "5e arrondissement"; break;
+	    case "75006": additionalAddress = "6e arrondissement"; break;
+	    case "75007": additionalAddress = "7e arrondissement"; break;
+	    case "75008": additionalAddress = "8e arrondissement"; break;
+	    case "75009": additionalAddress = "9e arrondissement"; break;
+	    case "75010": additionalAddress = "10e arrondissement"; break;
+	    case "75011": additionalAddress = "11e arrondissement"; break;
+	    case "75012": additionalAddress = "12e arrondissement"; break;
+	    case "75013": additionalAddress = "13e arrondissement"; break;
+	    case "75014": additionalAddress = "14e arrondissement"; break;
+	    case "75015": additionalAddress = "15e arrondissement"; break;
+	    case "75016": additionalAddress = "16e arrondissement"; break;
+	    case "75116": additionalAddress = "16e arrondissement"; break;
+	    case "75017": additionalAddress = "17e arrondissement"; break;
+	    case "75018": additionalAddress = "18e arrondissement"; break;
+	    case "75019": additionalAddress = "19e arrondissement"; break;
+	    case "75020": additionalAddress = "20e arrondissement"; break;
+	    default: if(addCompTab[2] == "" ) additionalAddress = addCompTab[1]; else additionalAddress = addCompTab[2];
+	}
+	return additionalAddress;
 };
 </script>
