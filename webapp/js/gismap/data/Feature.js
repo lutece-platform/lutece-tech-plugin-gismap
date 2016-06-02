@@ -97,8 +97,8 @@ function Feature(projection, proxy) {
         var dataNames = [];
         var idLayer = data[0];
         var dataProj = data[1];
-        var dataAttribution = data[2];
-        var dataUrl = data[3];
+        var dataAttribution = data[4];
+        var dataUrl = (data[2] !=='') ? data[2] : data[6];
         var vectorSource;
         var features = [];
         var indexlr = dataUrl.lastIndexOf('/');

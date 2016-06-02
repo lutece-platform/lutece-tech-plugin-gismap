@@ -121,7 +121,7 @@ var GisMap = function (idMapInit, idInit) {
      */
     function dataInitialize(parameters, fieldParameters){
         layer = new Layer(projectionGis, fieldParameters['Proxy']);
-        manager.readAndInitDataParams(layer, parameters);
+        manager.readAndInitDataParams(layer, parameters, fieldParameters);
     }
 
     /**

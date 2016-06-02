@@ -117,7 +117,7 @@ var Manager = function() {
                         }
                     }
                 }
-                if(tempGeoJson.length === 4) {
+                if(tempGeoJson.length === 7) {
                     geoJson.push(tempGeoJson);
                 }
             }
@@ -147,6 +147,7 @@ var Manager = function() {
         parameters['ListLayersVisible'] = startParameters['ListLayersVisible'];
         parameters['ExtentContext'] = startParameters['ExtentContext'];
         parameters['DefaultMode'] = startParameters['DefaultMode'];
+        
         return parameters;
     };
 
@@ -182,7 +183,7 @@ var Manager = function() {
      * @param layer is the reference of the Layer Object
      * @param parameters is the array of data parameters
      */
-    var readAndInitDataParams = function (layer, parameters) {
+    var readAndInitDataParams = function (layer, parameters, fieldParameters) {
         if(parameters['BackGround'] !== '' && parameters['BackGround'] !== undefined){
             for(var background = 0; background < parameters['BackGround'].length; background++){
                 layer.addLayerRaster(parameters['BackGround'][background]);
@@ -209,7 +210,7 @@ var Manager = function() {
                     parameters['Cluster'], parameters['ThematicComplex']);
             }
         }
-        if(parameters['GeoJSON'] !== '' && parameters['GeoJSON'] !== undefined){
+        if(parameters['GeoJSON'] !== '' && parameters['GeoJSON'] !== undefined && ( fieldParameters["TypeEdit"] === '' || fieldParameters["TypeEdit"] === undefined )){
             for(var geoJson = 0; geoJson < parameters['GeoJSON'].length; geoJson++){
                 layer.addLayerVector(parameters['GeoJSON'][geoJson], 'GeoJSON', parameters['HeatMap'],
                     parameters['ThematicSimple'], parameters['Cluster'], parameters['ThematicComplex']);
