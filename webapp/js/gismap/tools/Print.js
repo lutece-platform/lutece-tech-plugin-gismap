@@ -15,7 +15,26 @@ function Print(GlobalMap){
      */
     printMapPng.addEventListener('click', function() {
         GlobalMap.once('postcompose', function(event) {
+            var measure = [];
+            var measures  = document.getElementsByClassName('ol-overlay-container');
             var canvas = event.context.canvas;
+            var contextMeasure= canvas.getContext('2d');
+
+            for (var i = 0; i < measures.length; i++) {
+               if( measures[i].innerText!== "" ){
+                    measure[i] = measures[i].innerText;
+               }
+            }
+            
+            contextMeasure.font = "15px Arial";
+            for (var i =0 ; i < measure.length ; i++) {
+                if(measure[i] !== undefined ){
+                    contextMeasure.textAlign="center";
+                    if(i === 1){
+                        contextMeasure.fillText(measure[i],(canvas.width)/2,(canvas.height)/2);
+                    }
+                }
+            }
             printMapPng.href = canvas.toDataURL('image/png');
         });
         GlobalMap.renderSync();

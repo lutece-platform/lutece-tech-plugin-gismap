@@ -192,6 +192,7 @@ function Measure() {
         this.createMeasureTooltip(map);
 
         measureInteract.on('drawstart', function(evt) {
+            this.cleanMeasureLayer(map);
             geomElement = evt.feature;
             var tooltipCoord = evt.coordinate;
 
