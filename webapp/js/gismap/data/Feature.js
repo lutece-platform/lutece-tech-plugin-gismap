@@ -97,8 +97,10 @@ function Feature(projection, proxy) {
         var dataNames = [];
         var idLayer = data[0];
         var dataProj = data[1];
+        var refreshmode = data[3];
         var dataAttribution = data[4];
-        var dataUrl = (data[2] !=='') ? data[2] : data[6];
+        var dataUrlBbox = data[2];
+        var dataUrl = data[6];
         var vectorSource;
         var features = [];
         var indexlr = dataUrl.lastIndexOf('/');
@@ -126,7 +128,79 @@ function Feature(projection, proxy) {
             });
             dataNames.push( '-'+ idLayer);
         }else if(dataFormat === 'GeoJSON'){
-            vectorSource = new ol.source.Vector({
+        	if(dataUrlBbox !== ''){
+        		if(refreshmode === 'static'){
+        			vectorSource = new ol.source.Vector({
+                        attributions: [
+                            new ol.Attribution({
+                                html: dataAttribution
+                            })
+                        ],
+                        loader: function (extent) {
+                            if(extent[0] === -Infinity){
+                                extent = projection.getExtent();
+                            }
+                            var webService = dataUrlBbox + "?callback=callback"; 
+                            $.ajax({
+                                url: webService,
+                                type: 'GET',
+                                dataType: 'jsonp',
+                                jsonpCallback: 'callback',
+                                success: function (response) {
+                                    if (response.error) {
+                                        console.log(response.error.message + '\n' + response.error.details.join('\n'));
+                                    }else {
+                                        features = geoJSONFormat.readFeatures(response,{
+                                            dataProjection: dataProj,
+                                            featureProjection: projection.getProjection().getCode()
+                                        });
+                                        if (features.length > 0) {
+                                            vectorSource.addFeatures(features);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+        		}
+        		if(refreshmode === 'dynamic'){
+        			vectorSource = new ol.source.Vector({
+                        attributions: [
+                            new ol.Attribution({
+                                html: dataAttribution
+                            })
+                        ],
+                        loader: function (extent) {
+                            if(extent[0] === -Infinity){
+                                extent = projection.getExtent();
+                            }
+                            var webService = dataUrlBbox + "?callback=callback&bbox=" + extent.join(','); 
+                            $.ajax({
+                                url: webService,
+                                type: 'GET',
+                                dataType: 'jsonp',
+                                jsonpCallback: 'callback',
+                                success: function (response) {
+                                    if (response.error) {
+                                        console.log(response.error.message + '\n' + response.error.details.join('\n'));
+                                    }else {
+                                        features = geoJSONFormat.readFeatures(response,{
+                                            dataProjection: dataProj,
+                                            featureProjection: projection.getProjection().getCode()
+                                        });
+                                        if (features.length > 0) {
+                                            vectorSource.addFeatures(features);
+                                        }
+                                    }
+                                }
+                            });
+                        },
+                        strategy: ol.loadingstrategy.bbox
+                    });
+        		}
+        	}
+        	else{
+        		vectorSource = new ol.source.Vector({
                 attributions: [
                     new ol.Attribution({
                         html: dataAttribution
@@ -134,8 +208,8 @@ function Feature(projection, proxy) {
                 ],
                 loader: function () {
                     $.ajax({
-                        url : dataUrlWithPostMethod,
-                        type : 'POST',
+                        url: dataUrlWithPostMethod,
+                        type: 'POST',
                         dataType: 'jsonp',
                         data: dataForPostMethod,
                         jsonpCallback: 'callback',
@@ -155,6 +229,8 @@ function Feature(projection, proxy) {
                     });
                 }
             });
+        	}
+            
             var unknown = true;
             var heatMapLayer = this.createHeatMapLayer(idLayer, vectorSource, heatmap);
             if(heatMapLayer !== null){
@@ -594,6 +670,5 @@ function Feature(projection, proxy) {
         return null;
     };
 }
-
 
 
