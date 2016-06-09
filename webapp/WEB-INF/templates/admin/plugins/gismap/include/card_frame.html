@@ -42,7 +42,7 @@
 	<input type="hidden" id="${idEntry}_visible_layer_val" name="visible_layer_val" value="" >
     
     <div id="${idEntry}_map" class="${strValMapClass}"><div id="popup"></div></div>
-    
+    <div class="hidden"  id="measure"> #i18n{gismap.map.message.measure}</div>
     <button id="zoomSelect" type="button" onClick="GisMapDisplay${idEntry}.getZoom().zoomSelect()">Zoom To</button>
     <#if editModeValue?? && editModeValue=="">
 	    <button id="SelectVia" type="button" onClick="selectObjectLuteceViaMap(GisMapDisplay${idEntry}.getInteract().getSpecificInteract().getSpecificSelectedFeatures())">Select Object lutece via Map</button>

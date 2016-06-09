@@ -31,7 +31,9 @@ function Print(GlobalMap){
                 if(measure[i] !== undefined ){
                     contextMeasure.textAlign="center";
                     if(i === 1){
-                        contextMeasure.fillText(measure[i],(canvas.width)/2,(canvas.height)/2);
+                        var message_measure = document.getElementById('measure');
+                        var message = message_measure.innerText;
+                        contextMeasure.fillText(message +' : '+ measure[i],70,350);
                     }
                 }
             }
