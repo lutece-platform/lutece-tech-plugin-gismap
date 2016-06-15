@@ -49,11 +49,11 @@ function Layer(projection, proxy) {
         var ListVisibleLayers = [];
         var RasterLayer = this.getLayersRasterMap();
         var FeatureLayer = this.getLayersFeatureMap();
-        for(var i = 0; i < RasterLayer.length-1; i++){
+        for(var i = 0; i < RasterLayer.length; i++){
             ListVisibleLayers.push("'"+RasterLayer[i].get('title')+"'");
             ListVisibleLayers.push(RasterLayer[i].getVisible());
         }
-        for(var j = 0; j < FeatureLayer.length-1; j++){
+        for(var j = 0; j < FeatureLayer.length; j++){
             ListVisibleLayers.push("'"+FeatureLayer[j].get('title')+"'");
             ListVisibleLayers.push(FeatureLayer[j].getVisible());
         }
