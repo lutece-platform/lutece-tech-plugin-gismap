@@ -102,6 +102,7 @@ function SpecificInteracts(layer, featureLayer){
      * @param idFeature is an array of the Ids
      */
     this.setSpecificSelectedFeatures = function(idFeatures){
+        this.getSelectedFeatures().clear();
         var features = this.selectInteract.getFeatures();
         var selectableLayers = layer.getSelectableLayers();
         for(var i = 0; i < idFeatures.length; i++) {
