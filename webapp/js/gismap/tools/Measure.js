@@ -111,7 +111,7 @@ function Measure() {
             var coordinates = line.getCoordinates();
             length = 0;
             var sourceProj = map.getView().getProjection();
-            for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
+            for (var i = 0, ii = coordinates.length ; i < ii; ++i) {
                 var c1 = ol.proj.transform(coordinates[i], sourceProj, 'EPSG:4326');
                 var c2 = ol.proj.transform(coordinates[i + 1], sourceProj, 'EPSG:4326');
                 length += geodesicSphere.haversineDistance(c1, c2);

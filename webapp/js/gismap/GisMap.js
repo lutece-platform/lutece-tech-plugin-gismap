@@ -207,7 +207,7 @@ var GisMap = function (idMapInit, idInit) {
      * @param listLayerVisible is an array with name and marker of visibility for each layers
      */
     function setContext(listLayerVisible){
-       for(var i = 0; i < listLayerVisible.length-1; i=i+2){
+       for(var i = 0; i < listLayerVisible.length ; i=i+2){
            layer.showLayer(listLayerVisible[i], listLayerVisible[i+1]);
        }
     }

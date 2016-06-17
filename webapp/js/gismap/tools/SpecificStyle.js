@@ -178,7 +178,7 @@ function SpecificStyle() {
      */
     this.styleThematicApply = function(feature) {
         var array = feature.getKeys();
-        for(var i = 0; i < array.length - 1 ; i++){
+        for(var i = 0; i < array.length ; i++){
             if(thematicSimpleValues[array[i]] !== undefined) {
                 var thematicFieldSimple = thematicSimpleValues[array[i]][0];
                 var thematicMapSimple = thematicSimpleValues[array[i]][1];
@@ -200,7 +200,7 @@ function SpecificStyle() {
      */
     this.styleThematicComplexApply = function(feature){
         var array = feature.getKeys();
-        for(var i = 0; i < array.length - 1 ; i++) {
+        for(var i = 0; i < array.length ; i++) {
             if (thematicComplexValues[array[i]] !== undefined) {
                 var finalStyle = null;
                 var thematicField1= thematicComplexValues[array[i]][0];

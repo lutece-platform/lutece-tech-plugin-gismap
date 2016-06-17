@@ -108,7 +108,7 @@ function Feature(projection, proxy) {
         var dataForPostMethod = dataUrl.substring(indexlr + 1);
 
         if(dataFormat === 'WKT'){
-            for(var i = 2; i < data.length; i++){
+            for(var i = 0; i < data.length; i++){
                 features.push(wktFormat.readFeatures(dataUrl, {
                     dataProjection: dataProj,
                     featureProjection: projection.getProjection().getCode()
