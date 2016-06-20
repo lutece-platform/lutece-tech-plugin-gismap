@@ -33,7 +33,7 @@ function Print(GlobalMap){
                     if(i === 1){
                         var message_measure = document.getElementById('measure');
                         var message = message_measure.innerText;
-                        contextMeasure.fillText(message +' : '+ measure[i],70,350);
+                        contextMeasure.fillText(message +' : '+ measure[i],70,canvas.height - 10);
                     }
                 }
             }
@@ -41,10 +41,9 @@ function Print(GlobalMap){
                 printMapPng.href = canvas.toDataURL('image/png');
             }
             else {
-                var win = window.open("", "MsgWindow", "fullscreen=no,toolbar=no,menubar=no,location=no,titlebar=no,status=no,scrollbars=yes,resizable=yes,top=100,left=100,width=400,height=300");
+                var win = window.open("", "MsgWindow", "fullscreen=no,toolbar=no,menubar=no,location=no,titlebar=no,status=no,scrollbars=yes,resizable=yes,top=100,left=100,width=" + canvas.width + ",height=" + canvas.height);
                 var img = canvas.toDataURL("image/png");
                 win.document.body.innerHTML= "<img src='" + img + "'></img>";
-                win.resizeBy(img.width, img.height);
                 win.print();
                 win.close();
             }
