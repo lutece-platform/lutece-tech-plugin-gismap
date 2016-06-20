@@ -45,6 +45,8 @@ function Print(GlobalMap){
                 var img = canvas.toDataURL("image/png");
                 win.document.body.innerHTML= "<img src='" + img + "'></img>";
                 win.resizeBy(img.width, img.height);
+                win.print();
+                win.close();
             }
         });
         GlobalMap.renderSync();
