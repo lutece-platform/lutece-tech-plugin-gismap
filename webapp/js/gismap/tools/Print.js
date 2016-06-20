@@ -37,7 +37,15 @@ function Print(GlobalMap){
                     }
                 }
             }
-            printMapPng.href = canvas.toDataURL('image/png');
+            if ('download' in printMapPng) {
+                printMapPng.href = canvas.toDataURL('image/png');
+            }
+            else {
+                var win = window.open("", "MsgWindow", "fullscreen=no,toolbar=no,menubar=no,location=no,titlebar=no,status=no,scrollbars=yes,resizable=yes,top=100,left=100,width=400,height=300");
+                var img = canvas.toDataURL("image/png");
+                win.document.body.innerHTML= "<img src='" + img + "'></img>";
+                win.resizeBy(img.width, img.height);
+            }
         });
         GlobalMap.renderSync();
     }, false);
