@@ -9,6 +9,19 @@ div.map {
 	margin-right:auto;
 }
 
+div.map:-webkit-full-screen {
+   height: 100%;
+}
+div.map:-moz-full-screen {
+   height: 100%;
+}
+div.map:-ms-fullscreen {
+   height: 100%;
+}
+div.map:fullscreen {
+   height: 100%;
+}
+
 .olControlScaleLineBottom {
    display: none;
 }
