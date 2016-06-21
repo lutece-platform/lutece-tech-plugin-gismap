@@ -140,7 +140,7 @@ function Feature(projection, proxy) {
                             if(extent[0] === -Infinity){
                                 extent = projection.getExtent();
                             }
-                            var webService = dataUrlBbox + "?callback=callback"; 
+                            var webService = dataUrlBbox;
                             $.ajax({
                                 url: webService,
                                 type: 'GET',
@@ -174,7 +174,7 @@ function Feature(projection, proxy) {
                             if(extent[0] === -Infinity){
                                 extent = projection.getExtent();
                             }
-                            var webService = dataUrlBbox + "?callback=callback&bbox=" + extent.join(','); 
+                            var webService = dataUrlBbox + "?bbox=" + extent.join(','); 
                             $.ajax({
                                 url: webService,
                                 type: 'GET',
