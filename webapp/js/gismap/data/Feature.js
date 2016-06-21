@@ -136,10 +136,7 @@ function Feature(projection, proxy) {
                                 html: dataAttribution
                             })
                         ],
-                        loader: function (extent) {
-                            if(extent[0] === -Infinity){
-                                extent = projection.getExtent();
-                            }
+                        loader: function () {
                             var webService = dataUrlBbox;
                             $.ajax({
                                 url: webService,
