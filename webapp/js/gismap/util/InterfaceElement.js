@@ -21,7 +21,7 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
     app.CmdControl = function(interfaceValues, parameters, opt_options) {
         var options = opt_options || {};
         var element = document.createElement('div');
-        var rulerActive = false;
+        var rubberActive = false;
         element.className = 'ol-unselectable ol-mycontrol';
         for (var i = 0; i < parameters['Interacts'].length; i++) {
             if (parameters['Interacts'][i] === "SuggestPOISearch") {
@@ -140,18 +140,18 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
                 element.appendChild(buttonInfo);
             }
             if (parameters['Interacts'][i] === 'Draw' || parameters['Interacts'][i] === 'Measure'|| parameters['Interacts'][i] === 'Edit'|| parameters['Interacts'][i] === 'AutoEdit'){
-                if(rulerActive === false) {
-                    var buttonRuler = document.createElement('button');
-                    buttonRuler.setAttribute('type','button');
-                    buttonRuler.setAttribute('id','idRubberButton');
-                    buttonRuler.innerHTML = 'Rubber ';
+                if(rubberActive === false) {
+                    var buttonRubber = document.createElement('button');
+                    buttonRubber.setAttribute('type','button');
+                    buttonRubber.setAttribute('id','idRubberButton');
+                    buttonRubber.innerHTML = 'Rubber ';
                     var handleClean = function (e) {
                         interfaceValues["interact"].deleteFeatures();
                     };
-                    buttonRuler.addEventListener('click', handleClean, false);
-                    buttonRuler.addEventListener('touchstart', handleClean, false);
-                    element.appendChild(buttonRuler);
-                    rulerActive = true;
+                    buttonRubber.addEventListener('click', handleClean, false);
+                    buttonRubber.addEventListener('touchstart', handleClean, false);
+                    element.appendChild(buttonRubber);
+                    rubberActive = true;
                 }
             }
         }
