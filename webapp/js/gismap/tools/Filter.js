@@ -37,36 +37,75 @@ function Filter(layer, projection) {
      * filterLayerGEOJSON apply a filter on the Lutece Web Service
      * @param name the layer name
      * @param urlGeoJson the new url ot filter data
+     * @param refreshmode 
      */
-    this.filterLayerGEOJSON = function(name, urlGeoJson){
+    this.filterLayerGEOJSON = function(name, urlGeoJson, refreshmode){
         var dataProj = this.ListLayers[name].getSource().getProjection();
-        var vectorSource = new ol.source.Vector({
-            attributions: this.ListLayers[name].getSource().getAttributions(),
-            loader: function () {
-                $.ajax({
-                    url : urlGeoJson,
-                    dataType: 'jsonp',
-                    jsonpCallback: 'callback',
-                    success: function (response) {
-                        if (response.error) {
-                            console.log(response.error.message + '\n' + response.error.details.join('\n'));
-                        }else {
-                            var features = geoJSONFormat.readFeatures(response,{
-                                dataProjection: dataProj,
-                                featureProjection: projection.getProjection().getCode()
-                            });
-                            if (features.length > 0) {
-                                if(vectorSource instanceof ol.source.Cluster) {
-                                    vectorSource.getSource().addFeatures(features);
-                                }else{
-                                    vectorSource.addFeatures(features);
+        var vectorSource;
+        if(refreshmode === 'dynamic'){
+            vectorSource = new ol.source.Vector({
+                attributions: this.ListLayers[name].getSource().getAttributions(),
+                loader: function (extent) {
+                    if(extent[0] === -Infinity){
+                       extent = projection.getExtent();
+                            }
+                    $.ajax({
+                        url : urlGeoJson,
+                        type : 'GET'
+                        dataType: 'jsonp',
+                        jsonpCallback: 'callback',
+                        bbox: extent.join(','),
+                        success: function (response) {
+                            if (response.error) {
+                                console.log(response.error.message + '\n' + response.error.details.join('\n'));
+                            } else {
+                                var features = geoJSONFormat.readFeatures(response,{
+                                    dataProjection: dataProj,
+                                    featureProjection: projection.getProjection().getCode()
+                                });
+                                if (features.length > 0) {
+                                    if(vectorSource instanceof ol.source.Cluster) {
+                                        vectorSource.getSource().addFeatures(features);
+                                    } else{
+                                        vectorSource.addFeatures(features);
+                                    }
                                 }
                             }
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        }
+        if(refreshmode === 'static'){
+            vectorSource = new ol.source.Vector({
+                attributions: this.ListLayers[name].getSource().getAttributions(),
+                loader: function () {
+                    $.ajax({
+                        url : urlGeoJson,
+                        type : 'GET'
+                        dataType: 'jsonp',
+                        jsonpCallback: 'callback',
+                        success: function (response) {
+                            if (response.error) {
+                                console.log(response.error.message + '\n' + response.error.details.join('\n'));
+                            } else {
+                                var features = geoJSONFormat.readFeatures(response,{
+                                    dataProjection: dataProj,
+                                    featureProjection: projection.getProjection().getCode()
+                                });
+                                if (features.length > 0) {
+                                    if(vectorSource instanceof ol.source.Cluster) {
+                                        vectorSource.getSource().addFeatures(features);
+                                    } else{
+                                        vectorSource.addFeatures(features);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        }
         var clusterLayer = featureLayer.getClusterLayers();
         for(var i = 0; i < clusterLayer.length; i++) {
             if (clusterLayer[i].get('title') === name) {
@@ -78,8 +117,8 @@ function Filter(layer, projection) {
             }
         }
         this.ListLayers[name].setSource(vectorSource);
-    };
-
+    };	   
+	   
     /**
      * Filter Method
      * filterLayerWFS apply a filter on the all Web Service
@@ -247,3 +286,4 @@ function Filter(layer, projection) {
         this.ListLayers[name].setSource(vectorSource);
     };
 }
+
