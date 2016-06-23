@@ -49,10 +49,10 @@ function Filter(layer, projection) {
                 loader: function (extent) {
                     if(extent[0] === -Infinity){
                        extent = projection.getExtent();
-                            }
+                    }
                     $.ajax({
                         url : urlGeoJson,
-                        type : 'GET'
+                        type : 'GET',
                         dataType: 'jsonp',
                         jsonpCallback: 'callback',
                         bbox: extent.join(','),
@@ -83,7 +83,7 @@ function Filter(layer, projection) {
                 loader: function () {
                     $.ajax({
                         url : urlGeoJson,
-                        type : 'GET'
+                        type : 'GET',
                         dataType: 'jsonp',
                         jsonpCallback: 'callback',
                         success: function (response) {
