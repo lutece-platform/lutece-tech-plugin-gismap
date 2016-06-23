@@ -45,6 +45,7 @@ function Filter(layer, projection) {
         if(refreshmode === 'dynamic'){
             vectorSource = new ol.source.Vector({
                 attributions: this.ListLayers[name].getSource().getAttributions(),
+                strategy: ol.loadingstrategy.bbox,
                 loader: function (extent) {
                     if(extent[0] === -Infinity){
                        extent = projection.getExtent();
