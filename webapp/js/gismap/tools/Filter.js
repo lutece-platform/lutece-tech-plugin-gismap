@@ -55,7 +55,9 @@ function Filter(layer, projection) {
                         type : 'GET',
                         dataType: 'jsonp',
                         jsonpCallback: 'callback',
-                        bbox: extent.join(','),
+                        data: {
+                            bbox: extent.join(',')
+                        }, 
                         success: function (response) {
                             if (response.error) {
                                 console.log(response.error.message + '\n' + response.error.details.join('\n'));
