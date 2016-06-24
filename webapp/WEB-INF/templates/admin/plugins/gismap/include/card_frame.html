@@ -85,7 +85,7 @@ $("#${idEntry}_address").autocomplete({
 		$('#${idEntry}_x').val(ui.item.x);
 		$('#${idEntry}_y').val(ui.item.y);
 		$('#id_additional_address').val(getAdditionalAdd(ui.item.label));
-		GisMapDisplay${entry.idEntry}.getZoom().zoomSuggestPoi(ui.item.x, ui.item.y);
+		GisMapDisplay${idEntry}.getZoom().zoomSuggestPoi(ui.item.x, ui.item.y);
 	    }
 }).focus();
 function getResult(result) {
@@ -165,15 +165,15 @@ function inIdSelected(id, idSelected){
 };
 function geocodage${idEntry}(){
 	var webappURL = $('#webapp_url').val();
-	var valX = $('#${entry.idEntry}_geomCentroidXGeocodage').val();
-	var valY = $('#${entry.idEntry}_geomCentroidYGeocodage').val();
+	var valX = $('#${idEntry}_geomCentroidXGeocodage').val();
+	var valY = $('#${idEntry}_geomCentroidYGeocodage').val();
 	$.ajax({
 		url: webappURL + "rest/gismap/xy/" + valX + "," + valY,
         dataType: "jsonp",
 	    jsonpCallback: 'callback',
         success: function( data ) {
 			var address = data.Adresse_tot+", "+data.Codepostal+" ";
-        	$("#${entry.idEntry}_address").val(address);
+        	$("#${idEntry}_address").val(address);
 			$("#id_additional_address").val(getAdditionalAdd(address));
     	}
     });
