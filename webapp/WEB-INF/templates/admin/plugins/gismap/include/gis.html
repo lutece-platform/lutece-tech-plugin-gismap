@@ -48,6 +48,7 @@ ol.proj.setProj4(proj4);
 </#if>
 
 var GisMapDisplay${idEntry} = new GisMap(idMap${idEntry}, ${idEntry});
+parameters${idEntry}.push(parameters${idEntry}['current_zoom'] = $.session.get("current_zoom"));
 GisMapDisplay${idEntry}.initGisMap(parameters${idEntry}, fieldParameters${idEntry});
 
 </script>

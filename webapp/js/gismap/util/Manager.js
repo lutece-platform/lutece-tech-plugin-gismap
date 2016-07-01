@@ -58,6 +58,9 @@ var Manager = function() {
         if (startParameters['ZoomSelect'] !== '') {
             parameters['ZoomSelect'] = startParameters['ZoomSelect'];
         }
+        if (startParameters['current_zoom'] !== '') {
+            parameters['current_zoom'] = startParameters['current_zoom'];
+        }
         if (startParameters['DefaultBackGround'] !== '') {
             parameters['DefaultBackGround'] = startParameters['DefaultBackGround'];
         }

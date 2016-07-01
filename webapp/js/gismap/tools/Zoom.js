@@ -19,6 +19,11 @@ var Zoom = function(GlobalMap, projection, viewGisMap) {
         interact = newInteract;
     };
 
+    var getCurrentZoom = function(){
+        var current_zoom = viewGisMap.getView().getZoom();
+        return current_zoom;
+    };
+
     /**
      * Zoom Method
      * zoomSuggestPoi is a method to call an action to go on a specific area in function of selected elements
@@ -79,6 +84,7 @@ var Zoom = function(GlobalMap, projection, viewGisMap) {
         setInteract: setInteract,
         zoomSuggestPoi: zoomSuggestPoi,
         zoomSelect: zoomSelect,
-        initialZoom: initialZoom
+        initialZoom: initialZoom,
+        getCurrentZoom: getCurrentZoom
     };
 };
