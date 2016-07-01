@@ -56,6 +56,7 @@ var GisMap = function (idMapInit, idInit) {
         }
         if(parameters['ExtentContext'] !== '' && parameters['ExtentContext'] !== undefined) {
             viewGisMap.getView().fit(parameters['ExtentContext'], GlobalMap.getSize());
+            viewGisMap.getView().setZoom(parameters['current_zoom']);
         }else if(manager.getSpecificExtent().length > 1 ){
             viewGisMap.getView().fit(manager.extentDefine, GlobalMap.getSize());
         }else {

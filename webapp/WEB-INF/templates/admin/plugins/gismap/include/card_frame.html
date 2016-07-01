@@ -120,6 +120,7 @@ $( "#${idEntry}_map" )
 		if(varExtendCurrent != "" && varVisibleLayer != ""){
 			$.session.set("extent_current", varExtendCurrent);
 			$.session.set("visible_layer", varVisibleLayer);
+			$.session.set("current_zoom", GisMapDisplay${idEntry}.getZoom().getCurrentZoom());
 		}
 		
 		$("#${idEntry}_extent_current_val").val($.session.get("extent_current"));
