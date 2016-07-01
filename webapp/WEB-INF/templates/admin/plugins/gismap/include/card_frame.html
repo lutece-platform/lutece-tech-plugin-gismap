@@ -1,6 +1,8 @@
-<#assign idEntry = "">
-<#if entry?? && entry.idEntry?has_content >
-	<#assign idEntry = entry.idEntry >
+
+<#if idEntry?? && idEntry?has_content >
+	<#assign idEntry = idEntry >
+<#else>
+	<#assign idEntry = "1" >
 </#if>
 <#assign strValPrint = "false" >
 <#assign strValMapClass = "map" >
@@ -124,9 +126,7 @@ $( "#${idEntry}_map" )
 		
 		$("#${idEntry}_extent_current_val").val($.session.get("extent_current"));
 		$("#${idEntry}_visible_layer_val").val($.session.get("visible_layer"));
-
 	}
-	
 });
 
 function selectObjectLuteceViaMap( idSelected ){

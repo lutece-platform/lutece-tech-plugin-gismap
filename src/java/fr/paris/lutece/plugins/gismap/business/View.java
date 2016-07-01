@@ -39,7 +39,7 @@ public class View
     private String _strMapTemplateFile;
     private MapParameter _mapParameter;
     private AddressParam _addressParam;
-
+    
     /**
      * @return the _nId
      */
