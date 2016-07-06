@@ -1,9 +1,8 @@
 <script src="js/autocomplete/jquery.session.js"></script>
 <script>
-<#if idEntry?? && idEntry?has_content >
-	<#assign idEntry = idEntry >
-<#else>
-	<#assign idEntry = "1" >
+<#assign idEntry = "">
+<#if entry?? && entry.idEntry?has_content >
+        <#assign idEntry = entry.idEntry >
 </#if>
 var idMap${idEntry} = '${idEntry}_map';
 var parameters${idEntry} = [];

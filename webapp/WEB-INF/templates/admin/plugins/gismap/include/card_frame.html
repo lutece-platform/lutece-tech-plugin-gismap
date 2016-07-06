@@ -1,8 +1,7 @@
 
-<#if idEntry?? && idEntry?has_content >
-	<#assign idEntry = idEntry >
-<#else>
-	<#assign idEntry = "1" >
+<#assign idEntry = "">
+<#if entry?? && entry.idEntry?has_content >
+	<#assign idEntry = entry.idEntry >
 </#if>
 <#assign strValPrint = "false" >
 <#assign strValMapClass = "map" >
