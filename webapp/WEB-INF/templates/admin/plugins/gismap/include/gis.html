@@ -47,7 +47,18 @@ ol.proj.setProj4(proj4);
 </#if>
 
 var GisMapDisplay${idEntry} = new GisMap(idMap${idEntry}, ${idEntry});
-parameters${idEntry}.push(parameters${idEntry}['current_zoom'] = $.session.get("current_zoom"));
+if ($.session.get("current_zoom") !== undefined){
+        parameters${idEntry}.push(parameters${idEntry}['current_zoom'] = $.session.get("current_zoom"));
+}
+if ($.session.get("extent_current") !== undefined){
+        var arrayExtentCurrent = $.session.get("extent_current");
+        parameters${idEntry}.push(parameters${idEntry}['ExtentContext'] = JSON.parse(arrayExtentCurrent));
+}
+if ($.session.get("visible_layer") !== undefined){
+        var arrayListVisibleLayers = $.session.get("visible_layer");
+        var arrayListVisibleLayersStr = arrayListVisibleLayers.replace(/'/g, '"');
+        parameters${idEntry}.push(parameters${idEntry}['ListLayersVisible'] = JSON.parse(arrayListVisibleLayersStr));
+}
 GisMapDisplay${idEntry}.initGisMap(parameters${idEntry}, fieldParameters${idEntry});
 
 </script>
