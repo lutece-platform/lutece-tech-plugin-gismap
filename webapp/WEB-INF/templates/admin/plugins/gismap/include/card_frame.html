@@ -2,6 +2,8 @@
 <#assign idEntry = "">
 <#if entry?? && entry.idEntry?has_content >
 	<#assign idEntry = entry.idEntry >
+<#else>
+	<#assign idEntry = "${default_view}" >
 </#if>
 <#assign strValPrint = "false" >
 <#assign strValMapClass = "map" >
@@ -56,7 +58,7 @@
     <!-- <script src="js/Gis.js" type="text/javascript"></script> </script> -->
 </div>
 <script>
-$("#${idEntry}_address").autocomplete({
+$("#address").autocomplete({
 	source : function(request, reponse){ // les deux arguments représentent les données nécessaires au plugin
 	$.ajax({
 		url : "${add_parameter.url}",
@@ -107,7 +109,7 @@ function getResult(result) {
 $( "#${idEntry}_map" )
 .mouseout(function() {
 	var typeEdit   = "${strValTypeEdit}";
-	if(typeEdit != "''"){
+	if(typeEdit != ""){
 	var varX = $("#${idEntry}_x").val();
 	var varY = $("#${idEntry}_y").val();
 		if(varX != "" && varY != ""){

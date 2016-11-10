@@ -3,6 +3,8 @@
 <#assign idEntry = "">
 <#if entry?? && entry.idEntry?has_content >
         <#assign idEntry = entry.idEntry >
+<#else>
+<#assign idEntry = "${default_view}" >
 </#if>
 var idMap${idEntry} = '${idEntry}_map';
 var parameters${idEntry} = [];

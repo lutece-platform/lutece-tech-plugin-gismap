@@ -33,8 +33,8 @@ var GisMap = function (idMapInit, idInit) {
         interactions: ol.interaction.defaults({doubleClickZoom :false})
     });
 
-    var fieldExtent;
-    var fieldLayerVisible;
+    var fieldExtent = [];
+    var fieldLayerVisible = [];
 
 
     /**
@@ -198,8 +198,8 @@ var GisMap = function (idMapInit, idInit) {
      * getContext is a method to stock in hidden field the current context of the map
      */
     function getContext(){
-        fieldExtent.value = '['+GlobalMap.getView().calculateExtent(GlobalMap.getSize())+']';
-        fieldLayerVisible.value = '['+layer.getVisibleLayers()+']';
+        fieldExtent = '['+GlobalMap.getView().calculateExtent(GlobalMap.getSize())+']';
+        fieldLayerVisible = '['+layer.getVisibleLayers()+']';
     }
 
     /**

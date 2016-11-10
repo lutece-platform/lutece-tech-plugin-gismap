@@ -53,9 +53,13 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class GismapService
 {
+    public static final String GISMAP__DEFAULT_VIEW_PROPERTIES = "gismap.mainmap.defaultview";
+    
     // Markers
     public static final String GISMAP_VIEW_INIT = "gismap.view.init";
     private static final String PARAMETER_MAP_PARAMETER = "map_parameter";
+    private static final String PARAMETER_ADD_PARAMETER = "add_parameter";
+    private static final String PARAMETER_DEFAULT_VIEW = "default_view";
 
     //Templates
     private static GismapService _singleton = new GismapService(  );
@@ -95,6 +99,10 @@ public class GismapService
         View view = ViewHome.findByPrimaryKey( 1 );
 
         model.put( PARAMETER_MAP_PARAMETER, view.getMapParameter(  ) );
+        model.put( PARAMETER_ADD_PARAMETER, view.getAddressParam(  ) );
+        model.put( PARAMETER_DEFAULT_VIEW, AppPropertiesService.getProperty( GISMAP__DEFAULT_VIEW_PROPERTIES ) );
+        
+        
 
         HtmlTemplate templateList = AppTemplateService.getTemplate( view.getMapTemplateFile(  ), request.getLocale(  ),
                 model );
