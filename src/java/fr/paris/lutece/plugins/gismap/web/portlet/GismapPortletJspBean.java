@@ -38,23 +38,20 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 
 import fr.paris.lutece.plugins.gismap.business.View;
-import fr.paris.lutece.plugins.gismap.business.ViewHome;
 import fr.paris.lutece.plugins.gismap.business.portlet.GismapPortlet;
 import fr.paris.lutece.plugins.gismap.business.portlet.GismapPortletHome;
+import fr.paris.lutece.plugins.gismap.utils.GismapUtils;
 import fr.paris.lutece.plugins.gismap.web.GismapJspBean;
-import fr.paris.lutece.portal.business.portlet.PortletType;
-import fr.paris.lutece.portal.business.portlet.PortletTypeHome;
+import fr.paris.lutece.portal.business.portlet.PortletHome;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
-import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.web.portlet.PortletJspBean;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
 /**
- * This class provides the user interface to manage form Portlet
+ * This class provides the user interface to manage view Portlet
  */
 public class GismapPortletJspBean extends PortletJspBean
 {
@@ -63,52 +60,69 @@ public class GismapPortletJspBean extends PortletJspBean
     /**
      * Right to manage gismap
      */
-    public static final String  RIGHT_MANAGE_GISMAP            = GismapJspBean.RIGHT_MANAGE_GISMAP;
+    public static final String  RIGHT_MANAGE_GISMAP                 = GismapJspBean.RIGHT_MANAGE_GISMAP;
 
-    private static final long   serialVersionUID               = -2619049973871862337L;
-    private static final String MARK_ID_FORM                   = "id_form";
-    private static final String MARK_GISMAP_LIST               = "gismap_list";
-    private static final String PARAMETER_ID_DIRECTORY         = "id_directory";
-    private static final String MESSAGE_YOU_MUST_CHOOSE_A_FORM = "form.message.mandatory.form";
+    private static final long   serialVersionUID                    = -2619049973871862337L;
+    private static final String MARK_ID_VIEW                        = "id_view";
+    private static final String MARK_GISMAP_LIST                    = "gismap_list";
+    private static final String PARAMETER_ID_DIRECTORY              = "id_directory";
+    private static final String MESSAGE_YOU_MUST_CHOOSE_A_DIRECTORY = "gismap.message.mandatory.directory";
 
     // //////////////////////////////////////////////////////////////////////////
     // Class attributes
 
     /**
-     * Returns the Download portlet creation form
+     * Returns the Download portlet creation view
      *
      * @param request The HTTP request
-     * @return The HTML form
+     * @return The HTML view
      */
     @Override
     public String getCreate( HttpServletRequest request )
     {
-        HashMap<String, Object> model = new HashMap<String, Object>( );
+        HashMap<String, Object> model = new HashMap<>( );
         String strIdPage = request.getParameter( PARAMETER_PAGE_ID );
         String strIdPortletType = request.getParameter( PARAMETER_PORTLET_TYPE_ID );
-        PortletType portletType = PortletTypeHome.findByPrimaryKey( strIdPortletType );
-        Plugin plugin = PluginService.getPlugin( portletType.getPluginName( ) );
-        View listView = ViewHome.findByPrimaryKey( 1 );
 
-        ReferenceList refList = null;
-
+        ReferenceList refList = GismapUtils.getViewList( );
         model.put( MARK_GISMAP_LIST, refList );
-
         HtmlTemplate template = getCreateTemplate( strIdPage, strIdPortletType, model );
 
         return template.getHtml( );
     }
 
     /**
-     * Returns the Download portlet modification form
+     * Returns the Download portlet modification view
      *
      * @param request The Http request
-     * @return The HTML form
+     * @return The HTML view
      */
     @Override
     public String getModify( HttpServletRequest request )
     {
-        return null;
+        View view;
+        HashMap<String, Object> model = new HashMap<>( );
+        String strPortletId = request.getParameter( PARAMETER_PORTLET_ID );
+        int nPortletId = -1;
+
+        try
+        {
+            nPortletId = Integer.parseInt( strPortletId );
+        } catch ( NumberFormatException ne )
+        {
+            AppLogService.error( ne );
+        }
+
+        GismapPortlet portlet = ( GismapPortlet ) PortletHome.findByPrimaryKey( nPortletId );
+        view = GismapPortletHome.getViewByPortletId( nPortletId );
+
+        ReferenceList refList = GismapUtils.getViewList( );
+        model.put( MARK_GISMAP_LIST, refList );
+        model.put( MARK_ID_VIEW, view.getId( ) );
+
+        HtmlTemplate template = getModifyTemplate( portlet, model );
+
+        return template.getHtml( );
     }
 
     /**
@@ -140,7 +154,7 @@ public class GismapPortletJspBean extends PortletJspBean
 
         if ( ( strErrorUrl == null ) && ( nDirectoryId == -1 ) )
         {
-            strErrorUrl = AdminMessageService.getMessageUrl( request, MESSAGE_YOU_MUST_CHOOSE_A_FORM, AdminMessage.TYPE_STOP );
+            strErrorUrl = AdminMessageService.getMessageUrl( request, MESSAGE_YOU_MUST_CHOOSE_A_DIRECTORY, AdminMessage.TYPE_STOP );
         }
 
         if ( strErrorUrl != null )
@@ -167,6 +181,41 @@ public class GismapPortletJspBean extends PortletJspBean
     @Override
     public String doModify( HttpServletRequest request )
     {
-        return null;
+        // recovers portlet attributes
+        String strPortletId = request.getParameter( PARAMETER_PORTLET_ID );
+        String strDirectoryId = request.getParameter( PARAMETER_ID_DIRECTORY );
+        int nPortletId = -1;
+        int nDirectoryId = -1;
+
+        try
+        {
+            nPortletId = Integer.parseInt( strPortletId );
+            nDirectoryId = Integer.parseInt( strDirectoryId );
+        } catch ( NumberFormatException ne )
+        {
+            AppLogService.error( ne );
+        }
+
+        GismapPortlet portlet = ( GismapPortlet ) PortletHome.findByPrimaryKey( nPortletId );
+
+        // retrieve portlet common attributes
+        String strErrorUrl = setPortletCommonData( request, portlet );
+
+        if ( ( strErrorUrl == null ) && ( nDirectoryId == -1 ) )
+        {
+            strErrorUrl = AdminMessageService.getMessageUrl( request, MESSAGE_YOU_MUST_CHOOSE_A_DIRECTORY, AdminMessage.TYPE_STOP );
+        }
+
+        if ( strErrorUrl != null )
+        {
+            return strErrorUrl;
+        }
+
+        portlet.setDirectoryId( nDirectoryId );
+        // updates the portlet
+        portlet.update( );
+
+        // displays the page withe the potlet updated
+        return getPageUrl( portlet.getPageId( ) );
     }
 }

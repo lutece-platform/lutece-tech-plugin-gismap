@@ -73,7 +73,10 @@ public class GismapPortlet extends Portlet
     @Override
     public String getXml( HttpServletRequest request )
     {
-        return null;
+        // TODO ajouter la view
+        String str = "coucou";
+
+        return str;
     }
 
     /**

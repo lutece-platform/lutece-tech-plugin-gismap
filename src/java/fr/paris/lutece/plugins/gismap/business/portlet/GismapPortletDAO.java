@@ -41,11 +41,11 @@ import fr.paris.lutece.util.sql.DAOUtil;
  */
 public final class GismapPortletDAO implements IGismapPortletDAO
 {
-    private static final String SQL_QUERY_INSERT                          = "INSERT INTO form_portlet ( id_portlet , id_form ) VALUES ( ? , ? )";
-    private static final String SQL_QUERY_SELECT                          = "SELECT id_portlet , id_form FROM form_portlet WHERE id_portlet = ? ";
+    private static final String SQL_QUERY_INSERT                          = "INSERT INTO gismap_portlet ( id_portlet , id_directory ) VALUES ( ? , ? )";
+    private static final String SQL_QUERY_SELECT                          = "SELECT id_portlet , id_directory FROM gismap_portlet WHERE id_portlet = ? ";
     private static final String SQL_QUERY_SELECT_COUNT_PORTLET_BY_ID_FORM = "SELECT COUNT(id_portlet )FROM form_portlet WHERE id_form = ? ";
-    private static final String SQL_QUERY_UPDATE                          = "UPDATE form_portlet SET id_portlet = ?, id_form = ? WHERE id_portlet = ? ";
-    private static final String SQL_QUERY_DELETE                          = "DELETE FROM form_portlet WHERE id_portlet= ? ";
+    private static final String SQL_QUERY_UPDATE                          = "UPDATE gismap_portlet SET id_portlet = ?, id_directory = ? WHERE id_portlet = ? ";
+    private static final String SQL_QUERY_DELETE                          = "DELETE FROM gismap_portlet WHERE id_portlet= ? ";
 
     // /////////////////////////////////////////////////////////////////////////////////////
     // Access methods to data
@@ -63,7 +63,7 @@ public final class GismapPortletDAO implements IGismapPortletDAO
 
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT );
         daoUtil.setInt( 1, p.getId( ) );
-        daoUtil.setInt( 2, p.getFormId( ) );
+        daoUtil.setInt( 2, p.getDirectoryId( ) );
 
         daoUtil.executeUpdate( );
         daoUtil.free( );
@@ -103,7 +103,7 @@ public final class GismapPortletDAO implements IGismapPortletDAO
         if ( daoUtil.next( ) )
         {
             portlet.setId( daoUtil.getInt( 1 ) );
-            portlet.setFormId( daoUtil.getInt( 2 ) );
+            portlet.setDirectoryId( daoUtil.getInt( 2 ) );
         }
 
         daoUtil.free( );
@@ -118,11 +118,11 @@ public final class GismapPortletDAO implements IGismapPortletDAO
      */
     /*
      * @Override public int selectCountPortletByIdForm( int nIdForm ) { int nCountPortlet = 0; DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_COUNT_PORTLET_BY_ID_FORM ); daoUtil.setInt( 1, nIdForm ); daoUtil.executeQuery( );
-     * 
+     *
      * if ( daoUtil.next( ) ) { nCountPortlet = daoUtil.getInt( 1 ); }
-     * 
+     *
      * daoUtil.free( );
-     * 
+     *
      * return nCountPortlet; }
      */
 
@@ -138,7 +138,7 @@ public final class GismapPortletDAO implements IGismapPortletDAO
         GismapPortlet p = ( GismapPortlet ) portlet;
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE );
         daoUtil.setInt( 1, p.getId( ) );
-        daoUtil.setInt( 2, p.getFormId( ) );
+        daoUtil.setInt( 2, p.getDirectoryId( ) );
         daoUtil.setInt( 3, p.getId( ) );
         daoUtil.executeUpdate( );
         daoUtil.free( );

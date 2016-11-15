@@ -33,8 +33,10 @@
  */
 package fr.paris.lutece.plugins.gismap.business;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import fr.paris.lutece.plugins.gismap.utils.GismapUtils;
 
 /**
  * This class provides Data Access methods for View objects
@@ -46,11 +48,11 @@ public final class ViewDAO implements IViewDAO
     @Override
     public View findById( int nKey )
     {
-        View view = new View(  );
+        View view = new View( );
         view.setId( nKey );
         view.setMapTemplateFile( MAP_TEMPLATE );
         view.setMapParameter( MapParameterHome.findByPrimaryKey( nKey ) );
-        view.setAddressParam( AddressParamHome.getAddressParameters(  ) );
+        view.setAddressParam( AddressParamHome.getAddressParameters( ) );
 
         return view;
     }
@@ -63,9 +65,15 @@ public final class ViewDAO implements IViewDAO
     }
 
     @Override
-    public List<View> findAll(  )
+    public List<View> findAll( )
     {
-        // TODO Auto-generated method stub
-        return null;
+        List<View> listView = new ArrayList<>( );
+        List<String> listIdMap = GismapUtils.getListIdView( );
+
+        for ( String idMap : listIdMap )
+        {
+            listView.add( findById( Integer.parseInt( idMap ) ) );
+        }
+        return listView;
     }
 }

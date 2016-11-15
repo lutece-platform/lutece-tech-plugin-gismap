@@ -33,7 +33,10 @@
  */
 package fr.paris.lutece.plugins.gismap.business.portlet;
 
+import fr.paris.lutece.plugins.gismap.business.View;
+import fr.paris.lutece.plugins.gismap.business.ViewHome;
 import fr.paris.lutece.portal.business.portlet.IPortletInterfaceDAO;
+import fr.paris.lutece.portal.business.portlet.Portlet;
 import fr.paris.lutece.portal.business.portlet.PortletHome;
 import fr.paris.lutece.portal.business.portlet.PortletTypeHome;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
@@ -47,7 +50,7 @@ public class GismapPortletHome extends PortletHome
     // ///////////////////////////////////////////////////////////////////////////////
     // Constants
     // Static variable pointed at the DAO instance
-    private static IGismapPortletDAO _dao = SpringContextService.getBean( "form.formPortletDAO" );
+    private static IGismapPortletDAO _dao = SpringContextService.getBean( "gismapPortletDAO" );
 
     /* This class implements the Singleton design pattern. */
     private static GismapPortletHome _singleton;
@@ -101,5 +104,20 @@ public class GismapPortletHome extends PortletHome
     public IPortletInterfaceDAO getDAO( )
     {
         return _dao;
+    }
+
+    /**
+     * Gets the view by portlet id.
+     *
+     * @param nPortletId the n portlet id
+     * @return the view by portlet id
+     */
+    public static View getViewByPortletId( int nPortletId )
+    {
+        Portlet portlet = PortletHome.findByPrimaryKey( nPortletId );
+        GismapPortlet formPortlet = ( GismapPortlet ) _dao.load( nPortletId );
+        View view = ViewHome.findByPrimaryKey( formPortlet.getDirectoryId( ) );
+
+        return view;
     }
 }

@@ -17,5 +17,6 @@
     <bean id="mapParameterDAO"  class="fr.paris.lutece.plugins.gismap.business.MapParameterDAO" /> 
     <bean id="gismapReverseGeocoding"  class="fr.paris.lutece.plugins.gismap.business.ReverseGeocoding" /> 
     <bean id="gismapGisProxy"  class="fr.paris.lutece.plugins.gismap.web.rs.GisProxy" /> 
+    <bean id="gismapPortletDAO"  class="fr.paris.lutece.plugins.gismap.business.portlet.GismapPortletDAO" />
 
 </beans>
