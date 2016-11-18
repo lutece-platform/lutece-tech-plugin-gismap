@@ -33,18 +33,16 @@
  */
 package fr.paris.lutece.plugins.gismap.service;
 
-import fr.paris.lutece.plugins.gismap.business.View;
-import fr.paris.lutece.plugins.gismap.business.ViewHome;
-import fr.paris.lutece.portal.service.template.AppTemplateService;
-import fr.paris.lutece.portal.service.util.AppPathService;
-import fr.paris.lutece.portal.service.util.AppPropertiesService;
-import fr.paris.lutece.util.html.HtmlTemplate;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import fr.paris.lutece.plugins.gismap.business.View;
+import fr.paris.lutece.plugins.gismap.business.ViewHome;
+import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.util.AppPropertiesService;
+import fr.paris.lutece.util.html.HtmlTemplate;
 
 /**
  *
@@ -53,24 +51,24 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class GismapService
 {
-    public static final String GISMAP__DEFAULT_VIEW_PROPERTIES = "gismap.mainmap.defaultview";
-    
-    // Markers
-    public static final String GISMAP_VIEW_INIT = "gismap.view.init";
-    private static final String PARAMETER_MAP_PARAMETER = "map_parameter";
-    private static final String PARAMETER_ADD_PARAMETER = "add_parameter";
-    private static final String PARAMETER_DEFAULT_VIEW = "default_view";
+    public static final String   GISMAP__DEFAULT_VIEW_PROPERTIES = "gismap.mainmap.defaultview";
 
-    //Templates
-    private static GismapService _singleton = new GismapService(  );
+    // Markers
+    public static final String   GISMAP_VIEW_INIT                = "gismap.view.init";
+    private static final String  PARAMETER_MAP_PARAMETER         = "map_parameter";
+    private static final String  PARAMETER_ADD_PARAMETER         = "add_parameter";
+    private static final String  PARAMETER_DEFAULT_VIEW          = "default_view";
+
+    // Templates
+    private static GismapService _singleton                      = new GismapService( );
 
     /**
      * Initialize the GISMAP service
      *
      */
-    public void init(  )
+    public void init( )
     {
-        //TODO
+        // TODO
     }
 
     /**
@@ -78,7 +76,7 @@ public class GismapService
      *
      * @return The instance of the singleton
      */
-    public static GismapService getInstance(  )
+    public static GismapService getInstance( )
     {
         return _singleton;
     }
@@ -93,20 +91,17 @@ public class GismapService
      */
     public String getMapTemplate( HttpServletRequest request )
     {
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
 
-        //String strInitView = AppPropertiesService.getProperty( GISMAP_VIEW_INIT );
-        View view = ViewHome.findByPrimaryKey( 1 );
+        // String strInitView = AppPropertiesService.getProperty( GISMAP_VIEW_INIT );
+        View view = ViewHome.findByPrimaryKey( Integer.parseInt( AppPropertiesService.getProperty( GISMAP__DEFAULT_VIEW_PROPERTIES ) ) );
 
-        model.put( PARAMETER_MAP_PARAMETER, view.getMapParameter(  ) );
-        model.put( PARAMETER_ADD_PARAMETER, view.getAddressParam(  ) );
+        model.put( PARAMETER_MAP_PARAMETER, view.getMapParameter( ) );
+        model.put( PARAMETER_ADD_PARAMETER, view.getAddressParam( ) );
         model.put( PARAMETER_DEFAULT_VIEW, AppPropertiesService.getProperty( GISMAP__DEFAULT_VIEW_PROPERTIES ) );
-        
-        
 
-        HtmlTemplate templateList = AppTemplateService.getTemplate( view.getMapTemplateFile(  ), request.getLocale(  ),
-                model );
+        HtmlTemplate templateList = AppTemplateService.getTemplate( view.getMapTemplateFile( ), request.getLocale( ), model );
 
-        return templateList.getHtml(  );
+        return templateList.getHtml( );
     }
 }

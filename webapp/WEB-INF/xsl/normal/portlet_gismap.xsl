@@ -3,15 +3,15 @@
 <xsl:output method="html" indent="yes"/>
 <xsl:template match="portlet">
 	<div class="portlet -lutece-border-radius append-bottom">
-		<xsl:apply-templates select="form-portlet" />
+		<xsl:apply-templates select="gismap-portlet" />
 	</div>
 </xsl:template>
 
-<xsl:template match="form-portlet">
-	<xsl:apply-templates select="form-portlet-content" />
+<xsl:template match="gismap-portlet">
+	<xsl:apply-templates select="gismap-portlet-content" />
 </xsl:template>
 
-<xsl:template match="form-portlet-content">
+<xsl:template match="gismap-portlet-content">
 	<xsl:value-of disable-output-escaping="yes" select="." />
 </xsl:template>
 

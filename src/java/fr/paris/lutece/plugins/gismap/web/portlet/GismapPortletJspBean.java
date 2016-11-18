@@ -37,14 +37,15 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
-import fr.paris.lutece.plugins.gismap.business.View;
+import fr.paris.lutece.plugins.directory.business.DirectoryHome;
+import fr.paris.lutece.plugins.directory.service.DirectoryPlugin;
 import fr.paris.lutece.plugins.gismap.business.portlet.GismapPortlet;
 import fr.paris.lutece.plugins.gismap.business.portlet.GismapPortletHome;
-import fr.paris.lutece.plugins.gismap.utils.GismapUtils;
 import fr.paris.lutece.plugins.gismap.web.GismapJspBean;
 import fr.paris.lutece.portal.business.portlet.PortletHome;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
+import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 import fr.paris.lutece.portal.web.portlet.PortletJspBean;
 import fr.paris.lutece.util.ReferenceList;
@@ -64,7 +65,7 @@ public class GismapPortletJspBean extends PortletJspBean
 
     private static final long   serialVersionUID                    = -2619049973871862337L;
     private static final String MARK_ID_VIEW                        = "id_view";
-    private static final String MARK_GISMAP_LIST                    = "gismap_list";
+    private static final String MARK_DIRECTORY_LIST                 = "directory_list";
     private static final String PARAMETER_ID_DIRECTORY              = "id_directory";
     private static final String MESSAGE_YOU_MUST_CHOOSE_A_DIRECTORY = "gismap.message.mandatory.directory";
 
@@ -84,8 +85,8 @@ public class GismapPortletJspBean extends PortletJspBean
         String strIdPage = request.getParameter( PARAMETER_PAGE_ID );
         String strIdPortletType = request.getParameter( PARAMETER_PORTLET_TYPE_ID );
 
-        ReferenceList refList = GismapUtils.getViewList( );
-        model.put( MARK_GISMAP_LIST, refList );
+        ReferenceList refDirectory = DirectoryHome.getDirectoryList( PluginService.getPlugin( DirectoryPlugin.PLUGIN_NAME ) );
+        model.put( MARK_DIRECTORY_LIST, refDirectory );
         HtmlTemplate template = getCreateTemplate( strIdPage, strIdPortletType, model );
 
         return template.getHtml( );
@@ -100,7 +101,6 @@ public class GismapPortletJspBean extends PortletJspBean
     @Override
     public String getModify( HttpServletRequest request )
     {
-        View view;
         HashMap<String, Object> model = new HashMap<>( );
         String strPortletId = request.getParameter( PARAMETER_PORTLET_ID );
         int nPortletId = -1;
@@ -114,11 +114,9 @@ public class GismapPortletJspBean extends PortletJspBean
         }
 
         GismapPortlet portlet = ( GismapPortlet ) PortletHome.findByPrimaryKey( nPortletId );
-        view = GismapPortletHome.getViewByPortletId( nPortletId );
 
-        ReferenceList refList = GismapUtils.getViewList( );
-        model.put( MARK_GISMAP_LIST, refList );
-        model.put( MARK_ID_VIEW, view.getId( ) );
+        ReferenceList refDirectory = DirectoryHome.getDirectoryList( PluginService.getPlugin( DirectoryPlugin.PLUGIN_NAME ) );
+        model.put( MARK_DIRECTORY_LIST, refDirectory );
 
         HtmlTemplate template = getModifyTemplate( portlet, model );
 

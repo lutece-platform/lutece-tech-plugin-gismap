@@ -35,7 +35,13 @@ package fr.paris.lutece.plugins.gismap.business.portlet;
 
 import javax.servlet.http.HttpServletRequest;
 
+import fr.paris.lutece.plugins.directory.business.Directory;
+import fr.paris.lutece.plugins.directory.business.DirectoryHome;
+import fr.paris.lutece.plugins.directory.service.DirectoryPlugin;
+import fr.paris.lutece.plugins.gismap.service.GismapService;
 import fr.paris.lutece.portal.business.portlet.Portlet;
+import fr.paris.lutece.portal.business.portlet.PortletHome;
+import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.util.xml.XmlUtil;
 
 /**
@@ -45,11 +51,11 @@ public class GismapPortlet extends Portlet
 {
     // ///////////////////////////////////////////////////////////////////////////////
     // Xml Tags
-    private static final String TAG_FORM_PORTLET         = "form-portlet";
-    private static final String TAG_FORM_PORTLET_CONTENT = "form-portlet-content";
+    private static final String TAG_GISMAP_PORTLET         = "gismap-portlet";
+    private static final String TAG_GISMAP_PORTLET_CONTENT = "gismap-portlet-content";
 
     // ///////////////////////////////////////////////////////////////////////////////
-    private static final String JSP_DO_SUBMIT_FORM       = "jsp/site/Portal.jsp?page=form";
+    private static final String JSP_DO_SUBMIT_FORM         = "jsp/site/Portal.jsp?page=form";
 
     // Constants
     private int                 _nPortletId;
@@ -73,10 +79,21 @@ public class GismapPortlet extends Portlet
     @Override
     public String getXml( HttpServletRequest request )
     {
-        // TODO ajouter la view
-        String str = "coucou";
+        // getId( ) -> 97 (portlet)
+        // Id directory via id portlet
+        // Récupération urlgeojson du directory
+        // Récupération de la vue du directory
+        GismapPortlet portlet = ( GismapPortlet ) PortletHome.findByPrimaryKey( getId( ) );
 
-        return str;
+        Directory directory = DirectoryHome.findByPrimaryKey( portlet.getDirectoryId( ), PluginService.getPlugin( DirectoryPlugin.PLUGIN_NAME ) );
+        StringBuffer strXml = new StringBuffer( );
+        XmlUtil.beginElement( strXml, TAG_GISMAP_PORTLET );
+        XmlUtil.addElementHtml( strXml, TAG_GISMAP_PORTLET_CONTENT, GismapService.getInstance( ).getMapTemplate( request ) );
+        // GismapService.getInstance( ).getMapTemplate( request )
+
+        XmlUtil.endElement( strXml, TAG_GISMAP_PORTLET );
+
+        return addPortletTags( strXml );
     }
 
     /**

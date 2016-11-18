@@ -36,7 +36,6 @@ package fr.paris.lutece.plugins.gismap.business.portlet;
 import fr.paris.lutece.plugins.gismap.business.View;
 import fr.paris.lutece.plugins.gismap.business.ViewHome;
 import fr.paris.lutece.portal.business.portlet.IPortletInterfaceDAO;
-import fr.paris.lutece.portal.business.portlet.Portlet;
 import fr.paris.lutece.portal.business.portlet.PortletHome;
 import fr.paris.lutece.portal.business.portlet.PortletTypeHome;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
@@ -90,9 +89,7 @@ public class GismapPortletHome extends PortletHome
     public String getPortletTypeId( )
     {
         String strCurrentClassName = this.getClass( ).getName( );
-        String strPortletTypeId = PortletTypeHome.getPortletTypeId( strCurrentClassName );
-
-        return strPortletTypeId;
+        return PortletTypeHome.getPortletTypeId( strCurrentClassName );
     }
 
     /**
@@ -114,10 +111,7 @@ public class GismapPortletHome extends PortletHome
      */
     public static View getViewByPortletId( int nPortletId )
     {
-        Portlet portlet = PortletHome.findByPrimaryKey( nPortletId );
         GismapPortlet formPortlet = ( GismapPortlet ) _dao.load( nPortletId );
-        View view = ViewHome.findByPrimaryKey( formPortlet.getDirectoryId( ) );
-
-        return view;
+        return ViewHome.findByPrimaryKey( formPortlet.getDirectoryId( ) );
     }
 }
