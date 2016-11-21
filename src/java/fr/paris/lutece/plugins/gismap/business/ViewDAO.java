@@ -37,13 +37,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.paris.lutece.plugins.gismap.utils.GismapUtils;
+import fr.paris.lutece.util.sql.DAOUtil;
 
 /**
  * This class provides Data Access methods for View objects
  */
 public final class ViewDAO implements IViewDAO
 {
-    private static final String MAP_TEMPLATE = "/admin/plugins/gismap/include/map_gismap.html";
+    private static final String MAP_TEMPLATE                  = "/admin/plugins/gismap/include/map_gismap.html";
+    private static final String SQL_QUERY_SELECT_RECORD_FIELD = "select id_record_field " + "from directory_record_field field "
+            + "inner join directory_record reccord on reccord.id_record = field.id_record " + "where reccord.id_directory=? ";
 
     @Override
     public View findById( int nKey )
@@ -76,4 +79,20 @@ public final class ViewDAO implements IViewDAO
         }
         return listView;
     }
+
+    @Override
+    public List<String> findListRecordField( int directoryId )
+    {
+        List<String> listRecordField = new ArrayList<>( );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_RECORD_FIELD );
+        daoUtil.setInt( 1, directoryId );
+        daoUtil.executeQuery( );
+
+        while ( daoUtil.next( ) )
+        {
+            listRecordField.add( Integer.toString( daoUtil.getInt( 1 ) ) );
+        }
+        return listRecordField;
+    }
+
 }

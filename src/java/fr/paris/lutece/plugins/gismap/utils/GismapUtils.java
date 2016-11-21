@@ -38,18 +38,37 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
+import fr.paris.lutece.plugins.directory.business.Directory;
+import fr.paris.lutece.plugins.directory.business.DirectoryHome;
+import fr.paris.lutece.plugins.directory.business.EntryFilter;
+import fr.paris.lutece.plugins.directory.business.EntryHome;
+import fr.paris.lutece.plugins.directory.business.Field;
+import fr.paris.lutece.plugins.directory.business.IEntry;
+import fr.paris.lutece.plugins.directory.service.DirectoryPlugin;
+import fr.paris.lutece.plugins.gismap.business.IViewDAO;
 import fr.paris.lutece.plugins.gismap.business.View;
 import fr.paris.lutece.plugins.gismap.business.ViewHome;
+import fr.paris.lutece.plugins.gismap.service.GismapPlugin;
+import fr.paris.lutece.portal.service.plugin.PluginService;
+import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.ReferenceList;
 
+// TODO: Auto-generated Javadoc
 /**
- * Utility class for plugin Gismap
+ * Utility class for plugin Gismap.
  */
 public final class GismapUtils
 {
+
+    /** The Constant GISMAP_VIEW. */
     public static final String GISMAP_VIEW      = "gismap.view.";
+
+    /** The Constant GISMAP_PARAMETER. */
     public static final String GISMAP_PARAMETER = ".parameter";
+
+    // Static variable pointed at the DAO instance
+    private static IViewDAO    _dao             = ( IViewDAO ) SpringContextService.getPluginBean( GismapPlugin.PLUGIN_NAME, "viewDAO" );
 
     /**
      * GismapUtils.
@@ -59,7 +78,7 @@ public final class GismapUtils
     }
 
     /**
-     * Récupère la liste des vues présentes dans les fichiers de properties
+     * Récupère la liste des vues présentes dans les fichiers de properties.
      *
      * @return the list id view
      */
@@ -80,7 +99,8 @@ public final class GismapUtils
     }
 
     /**
-     * Load the data of all view
+     * Load the data of all view.
+     *
      * @return a reference list of view
      */
     public static ReferenceList getViewList( )
@@ -95,5 +115,83 @@ public final class GismapUtils
         }
 
         return refListViews;
+    }
+
+    /**
+     * Gets the nb view by directory id.
+     *
+     * @param directoryId the directory id
+     * @return the nb view by directory id
+     */
+    public static String getNbViewByDirectoryId( int directoryId )
+    {
+        String nbView = "";
+
+        Directory directory = DirectoryHome.findByPrimaryKey( directoryId, PluginService.getPlugin( DirectoryPlugin.PLUGIN_NAME ) );
+        EntryFilter filter = new EntryFilter( );
+        filter.setIdDirectory( directory.getIdDirectory( ) );
+        filter.setIsComment( EntryFilter.FILTER_FALSE );
+        filter.setIsEntryParentNull( EntryFilter.FILTER_TRUE );
+
+        List<IEntry> listEntry = new ArrayList<>( );
+
+        List<IEntry> listEntryFirstLevel = EntryHome.getEntryList( filter, PluginService.getPlugin( DirectoryPlugin.PLUGIN_NAME ) );
+
+        filter.setIsEntryParentNull( EntryFilter.ALL_INT );
+
+        for ( IEntry entry : listEntryFirstLevel )
+        {
+            if ( !entry.getEntryType( ).getGroup( ) )
+            {
+                listEntry.add( EntryHome.findByPrimaryKey( entry.getIdEntry( ), PluginService.getPlugin( DirectoryPlugin.PLUGIN_NAME ) ) );
+            }
+
+            filter.setIdEntryParent( entry.getIdEntry( ) );
+
+            List<IEntry> listChildren = EntryHome.getEntryList( filter, PluginService.getPlugin( DirectoryPlugin.PLUGIN_NAME ) );
+
+            for ( IEntry entryChild : listChildren )
+            {
+                listEntry.add( EntryHome.findByPrimaryKey( entryChild.getIdEntry( ), PluginService.getPlugin( DirectoryPlugin.PLUGIN_NAME ) ) );
+            }
+        }
+
+        for ( IEntry entry : listEntry )
+        {
+            if ( "fr.paris.lutece.plugins.directory.business.EntryTypeGeolocation".equals( entry.getEntryType( ).getClassName( ) ) )
+            {
+                for ( Field field : entry.getFields( ) )
+                {
+                    if ( "viewNumberGes".equals( field.getTitle( ) ) )
+                    {
+                        nbView = field.getValue( );
+                    }
+                }
+            }
+        }
+        return nbView;
+    }
+
+    /**
+     * Gets the record field.
+     *
+     * @param directoryId the directory id
+     * @return the record field
+     */
+    public static String getRecordField( int directoryId )
+    {
+        String recordFields = "";
+        List<String> listRecordField = _dao.findListRecordField( directoryId );
+        for ( String recordField : listRecordField )
+        {
+            if ( "".equals( recordFields ) )
+            {
+                recordFields = recordField;
+            } else
+            {
+                recordFields += "," + recordField;
+            }
+        }
+        return recordFields;
     }
 }

@@ -35,13 +35,10 @@ package fr.paris.lutece.plugins.gismap.business.portlet;
 
 import javax.servlet.http.HttpServletRequest;
 
-import fr.paris.lutece.plugins.directory.business.Directory;
-import fr.paris.lutece.plugins.directory.business.DirectoryHome;
-import fr.paris.lutece.plugins.directory.service.DirectoryPlugin;
 import fr.paris.lutece.plugins.gismap.service.GismapService;
+import fr.paris.lutece.plugins.gismap.utils.GismapUtils;
 import fr.paris.lutece.portal.business.portlet.Portlet;
 import fr.paris.lutece.portal.business.portlet.PortletHome;
-import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.util.xml.XmlUtil;
 
 /**
@@ -79,16 +76,12 @@ public class GismapPortlet extends Portlet
     @Override
     public String getXml( HttpServletRequest request )
     {
-        // getId( ) -> 97 (portlet)
-        // Id directory via id portlet
-        // Récupération urlgeojson du directory
-        // Récupération de la vue du directory
         GismapPortlet portlet = ( GismapPortlet ) PortletHome.findByPrimaryKey( getId( ) );
+        String viewId = GismapUtils.getNbViewByDirectoryId( portlet.getDirectoryId( ) );
 
-        Directory directory = DirectoryHome.findByPrimaryKey( portlet.getDirectoryId( ), PluginService.getPlugin( DirectoryPlugin.PLUGIN_NAME ) );
         StringBuffer strXml = new StringBuffer( );
         XmlUtil.beginElement( strXml, TAG_GISMAP_PORTLET );
-        XmlUtil.addElementHtml( strXml, TAG_GISMAP_PORTLET_CONTENT, GismapService.getInstance( ).getMapTemplate( request ) );
+        XmlUtil.addElementHtml( strXml, TAG_GISMAP_PORTLET_CONTENT, GismapService.getInstance( ).getMapTemplateWithDirectoryParam( request, portlet.getDirectoryId( ), viewId ) );
         // GismapService.getInstance( ).getMapTemplate( request )
 
         XmlUtil.endElement( strXml, TAG_GISMAP_PORTLET );

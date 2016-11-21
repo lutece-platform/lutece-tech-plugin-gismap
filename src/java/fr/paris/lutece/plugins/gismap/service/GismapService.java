@@ -38,9 +38,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import fr.paris.lutece.plugins.gismap.business.MapParameter;
 import fr.paris.lutece.plugins.gismap.business.View;
 import fr.paris.lutece.plugins.gismap.business.ViewHome;
+import fr.paris.lutece.plugins.gismap.utils.GismapUtils;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
@@ -61,6 +64,12 @@ public class GismapService
 
     // Templates
     private static GismapService _singleton                      = new GismapService( );
+
+    // Constant
+    public static final String   GISMAP_URL_REST                 = "rest/directory-gismap/listRecordField/";
+    public static final String   PARAM_VIEW_URLGEOJSON           = "UrlGeoJSON1";
+    public static final String   PARAM_VIEW_GEOJSON1             = "GeoJSON1";
+    public static final String   PARAM_VIEW_THEMATICSIMPLE1      = "ThematicSimple1";
 
     /**
      * Initialize the GISMAP service
@@ -95,6 +104,31 @@ public class GismapService
 
         // String strInitView = AppPropertiesService.getProperty( GISMAP_VIEW_INIT );
         View view = ViewHome.findByPrimaryKey( Integer.parseInt( AppPropertiesService.getProperty( GISMAP__DEFAULT_VIEW_PROPERTIES ) ) );
+
+        model.put( PARAMETER_MAP_PARAMETER, view.getMapParameter( ) );
+        model.put( PARAMETER_ADD_PARAMETER, view.getAddressParam( ) );
+        model.put( PARAMETER_DEFAULT_VIEW, AppPropertiesService.getProperty( GISMAP__DEFAULT_VIEW_PROPERTIES ) );
+
+        HtmlTemplate templateList = AppTemplateService.getTemplate( view.getMapTemplateFile( ), request.getLocale( ), model );
+
+        return templateList.getHtml( );
+    }
+
+    public String getMapTemplateWithDirectoryParam( HttpServletRequest request, int directoryId, String viewId )
+    {
+        Map<String, Object> model = new HashMap<>( );
+
+        // Récupération de la vue par défaut
+        View view = ViewHome.findByPrimaryKey( Integer.parseInt( AppPropertiesService.getProperty( GISMAP__DEFAULT_VIEW_PROPERTIES ) ) );
+
+        // Récupération des paramètres GeoJSON1 et ThematicSimple1 de la vue du directory
+        View viewDirectory = ViewHome.findByPrimaryKey( Integer.parseInt( viewId ) );
+        String paramGeojson = view.getMapParameter( ).getParameters( PARAM_VIEW_GEOJSON1 );
+
+        // Ajout de la couche GeoJSON du directory
+        MapParameter tmp = view.getMapParameter( );
+        tmp.setParameters( PARAM_VIEW_URLGEOJSON, AppPathService.getBaseUrl( request ) + GISMAP_URL_REST + GismapUtils.getRecordField( directoryId ) );
+        view.setMapParameter( tmp );
 
         model.put( PARAMETER_MAP_PARAMETER, view.getMapParameter( ) );
         model.put( PARAMETER_ADD_PARAMETER, view.getAddressParam( ) );

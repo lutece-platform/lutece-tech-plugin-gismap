@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.gismap.business;
 
 import java.util.List;
 
-
 /**
  * IViewDAO Interface
  */
@@ -45,5 +44,8 @@ public interface IViewDAO
 
     public View findByCode( String strGismapCode );
 
-    public List<View> findAll(  );
+    public List<View> findAll( );
+
+    public List<String> findListRecordField( int directoryId );
+
 }
