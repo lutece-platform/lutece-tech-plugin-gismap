@@ -81,8 +81,8 @@ public class GismapPortlet extends Portlet
 
         StringBuffer strXml = new StringBuffer( );
         XmlUtil.beginElement( strXml, TAG_GISMAP_PORTLET );
+        XmlUtil.addElementHtml( strXml, TAG_GISMAP_PORTLET_CONTENT, "<h3>" + portlet.getName( ) + "</h3>" );
         XmlUtil.addElementHtml( strXml, TAG_GISMAP_PORTLET_CONTENT, GismapService.getInstance( ).getMapTemplateWithDirectoryParam( request, portlet.getDirectoryId( ), viewId ) );
-        // GismapService.getInstance( ).getMapTemplate( request )
 
         XmlUtil.endElement( strXml, TAG_GISMAP_PORTLET );
 

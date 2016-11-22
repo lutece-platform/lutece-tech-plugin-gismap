@@ -235,3 +235,7 @@ img.olTileImage {
 .olMap img {
   max-width: none !important;
 }
+
+.map .ol-popup-content {
+	color:black;
+}

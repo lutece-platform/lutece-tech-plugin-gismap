@@ -45,6 +45,12 @@
 			<artifactId>postgresql</artifactId>
 			<version>9.0-801.jdbc4</version>
 		</dependency>
+		<dependency> 
+		  <groupId>fr.paris.lutece.plugins</groupId> 
+		  <artifactId>plugin-directory</artifactId> 
+		  <version>4.0.7-SNAPSHOT</version> 
+		  <type>lutece-plugin</type> 
+		</dependency> 
 		
     </dependencies>
 
