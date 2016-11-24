@@ -33,45 +33,41 @@
  */
 package fr.paris.lutece.plugins.gismap.web;
 
-import fr.paris.lutece.plugins.gismap.business.AddressParamHome;
-import fr.paris.lutece.plugins.gismap.business.View;
-import fr.paris.lutece.plugins.gismap.business.ViewHome;
-import fr.paris.lutece.plugins.gismap.service.GismapService;
-import fr.paris.lutece.portal.service.message.SiteMessageException;
-import fr.paris.lutece.portal.service.security.UserNotSignedException;
-import fr.paris.lutece.portal.service.template.AppTemplateService;
-import fr.paris.lutece.portal.service.util.AppPropertiesService;
-import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
-import fr.paris.lutece.util.html.HtmlTemplate;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import fr.paris.lutece.plugins.gismap.business.AddressParamHome;
+import fr.paris.lutece.plugins.gismap.service.GismapService;
+import fr.paris.lutece.portal.service.message.SiteMessageException;
+import fr.paris.lutece.portal.service.security.UserNotSignedException;
+import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
+import fr.paris.lutece.util.html.HtmlTemplate;
 
 public class GismapJspBean extends PluginAdminPageJspBean
 {
-    ////////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////////
     // Constants
 
     /**
-         *
-         */
-    private static final long serialVersionUID = 1L;
+     *
+     */
+    private static final long   serialVersionUID             = 1L;
 
     // Right
-    public static final String RIGHT_MANAGE_GISMAP = "GISMAP_MANAGEMENT";
-    public static final String RIGHT_DISPLAY_MAP = "GISMAP_MANAGEMENT";
-    public static final String GISMAP_VIEW_INIT = "gismap.view.init";
+    public static final String  RIGHT_MANAGE_GISMAP          = "GISMAP_MANAGEMENT";
+    public static final String  RIGHT_DISPLAY_MAP            = "GISMAP_MANAGEMENT";
+    public static final String  GISMAP_VIEW_INIT             = "gismap.view.init";
 
     // Parameters
-    private static final String PARAMETER_MAP = "map";
-    private static final String PARAMETER_ADD = "add_parameter";
+    private static final String PARAMETER_MAP                = "map";
+    private static final String PARAMETER_ADD                = "add_parameter";
 
     // I18n
     private static final String PROPERTY_PAGE_TITLE_FEATURES = "gismap.manage_features.pageTitle";
-    private static final String TEMPLATE_HOME = "/admin/plugins/gismap/manage_gismap.html";
+    private static final String TEMPLATE_HOME                = "/admin/plugins/gismap/manage_gismap.html";
 
     /**
      * Returns the Gismap HTML management page
@@ -86,14 +82,14 @@ public class GismapJspBean extends PluginAdminPageJspBean
     {
         setPageTitleProperty( PROPERTY_PAGE_TITLE_FEATURES );
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
 
-        //List<Geometry> listGeometry = GeometryHome.getList();
-        model.put( PARAMETER_ADD, AddressParamHome.getAddressParameters(  ) );
-        model.put( PARAMETER_MAP, GismapService.getInstance(  ).getMapTemplate( request ) );
+        // List<Geometry> listGeometry = GeometryHome.getList();
+        model.put( PARAMETER_ADD, AddressParamHome.getAddressParameters( ) );
+        model.put( PARAMETER_MAP, GismapService.getInstance( ).getMapTemplate( request ) );
 
-        HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_HOME, request.getLocale(  ), model );
+        HtmlTemplate templateList = AppTemplateService.getTemplate( TEMPLATE_HOME, request.getLocale( ), model );
 
-        return getAdminPage( templateList.getHtml(  ) );
+        return getAdminPage( templateList.getHtml( ) );
     }
 }
