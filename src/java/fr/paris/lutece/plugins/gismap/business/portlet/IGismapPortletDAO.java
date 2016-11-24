@@ -31,21 +31,13 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.gismap.business;
+package fr.paris.lutece.plugins.gismap.business.portlet;
 
-import java.util.List;
+import fr.paris.lutece.portal.business.portlet.IPortletInterfaceDAO;
 
 /**
- * IViewDAO Interface
+ * IFormPortletDAO
  */
-public interface IViewDAO
+public interface IGismapPortletDAO extends IPortletInterfaceDAO
 {
-    public View findById( int nKey );
-
-    public View findByCode( String strGismapCode );
-
-    public List<View> findAll( );
-
-    public List<String> findListRecordField( int directoryId );
-
 }

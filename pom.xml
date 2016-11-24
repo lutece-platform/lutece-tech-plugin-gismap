@@ -10,7 +10,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>plugin-gismap</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>1.1.1</version>
+    <version>1.1.2-SNAPSHOT</version>
     <name>Lutece gismap plugin</name>
 
     <repositories>
@@ -45,6 +45,12 @@
 			<artifactId>postgresql</artifactId>
 			<version>9.0-801.jdbc4</version>
 		</dependency>
+		<dependency> 
+		  <groupId>fr.paris.lutece.plugins</groupId> 
+		  <artifactId>plugin-directory</artifactId> 
+		  <version>4.0.7-SNAPSHOT</version> 
+		  <type>lutece-plugin</type> 
+		</dependency> 
 		
     </dependencies>
 
@@ -58,6 +64,6 @@
         <connection>scm:git:https://github.com/lutece-platform/lutece-tech-plugin-gismap.git</connection>
         <developerConnection>scm:git:https://github.com/lutece-platform/lutece-tech-plugin-gismap.git</developerConnection>
         <url>https://github.com/lutece-platform/lutece-tech-plugin-gismap.git</url>
-        <tag>lutece-tech-plugin-gismap-1.1.1</tag>
+        <tag>HEAD</tag>
     </scm>
 </project>

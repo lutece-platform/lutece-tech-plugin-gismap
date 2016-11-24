@@ -1,0 +1,8 @@
+<div class="form-group">
+    <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3 col-xs-12 col-sm-12 col-md-3" for="id_form">#i18n{gismap.listDirectory.labelDirectory} * :</label>
+    <div class="col-xs-12 col-sm-12 col-md-6">
+    	<#if directory_list?exists>
+        <@combo name="id_directory" items=directory_list default_value=0 />
+        </#if>
+    </div>   	  
+</div>
