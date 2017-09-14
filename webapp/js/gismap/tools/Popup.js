@@ -252,7 +252,7 @@ var Popup = function(GlobalMap, idMap, parameters) {
         if(value === 'off'){
             overlay.hide();
             GlobalMap.removeOverlay(overlay);
-            GlobalMap.unByKey(popupKey);
+            ol.Observable.unByKey(popupKey);
         }else if(value === 'on'){
             interact.manageActiveInteraction();
             GlobalMap.addOverlay(overlay);
