@@ -58,7 +58,7 @@
     <!-- <script src="js/Gis.js" type="text/javascript"></script> </script> -->
 </div>
 <script>
-$("#address").autocomplete({
+$("#${idEntry}_address").autocomplete({
 	source : function(request, reponse){ // les deux arguments représentent les données nécessaires au plugin
 	$.ajax({
 		url : "${add_parameter.url}",
