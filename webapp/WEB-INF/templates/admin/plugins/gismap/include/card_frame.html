@@ -8,6 +8,7 @@
 <#assign strValPrint = "false" >
 <#assign strValMapClass = "map" >
 <#assign strValCss = "ol3-gismap.css" >
+<#assign reverse_geocoding_url = "" >
 <#list map_parameter.parameters?keys as key>
 	<#assign strKey = "'" + key + "'">
 	<#if strKey == "'Print'">
@@ -18,6 +19,9 @@
 	</#if>
 	<#if strKey == "'Css'">
 		<#assign strValCss = "${map_parameter.parameters[key]}"?split("'")[1] >
+	</#if>
+	<#if strKey == "'ReverseGeocodingUrl'">
+		<#assign reverse_geocoding_url = "${map_parameter.parameters[key]}"?split("'")[1] >
 	</#if>
 </#list>
 <#assign strValTypeEdit = "" >
@@ -43,6 +47,7 @@
     
     <input type="hidden" id="${idEntry}_extent_current_val" name="extent_current_val"  value="">
 	<input type="hidden" id="${idEntry}_visible_layer_val" name="visible_layer_val" value="" >
+	<input type="hidden" id="${idEntry}_reverse_geocoding_url" name="${idEntry}_reverse_geocoding_url" value='${reverse_geocoding_url}' >
     
     <div id="${idEntry}_map" class="${strValMapClass}"><div id="popup"></div></div>
     <div class="hidden"  id="measure"> #i18n{gismap.map.message.measure}</div>
@@ -166,19 +171,28 @@ function inIdSelected(id, idSelected){
 	return varBoolean;
 };
 function geocodage${idEntry}(){
-	var webappURL = $('#webapp_url').val();
+	//var geocoding_url = "https://teleservices.paris.fr/StoreAdr/rest/AdressesPostales/B68/xy/";
+	var geocoding_url = $('#${idEntry}_reverse_geocoding_url').val();
 	var valX = $('#${idEntry}_geomCentroidXGeocodage').val();
 	var valY = $('#${idEntry}_geomCentroidYGeocodage').val();
-	$.ajax({
-		url: webappURL + "rest/gismap/xy/" + valX + "," + valY,
-        dataType: "jsonp",
-	    jsonpCallback: 'callback',
-        success: function( data ) {
-			var address = data.Adresse_tot+", "+data.Codepostal+" ";
-        	$("#${idEntry}_address").val(address);
-			$("#id_additional_address").val(getAdditionalAdd(address));
-    	}
-    });
+	if(geocoding_url != "" && valX != "" && valY != ""){
+		$.ajax({
+			url: geocoding_url + "%28" + valX + "," + valY + "%29",
+	        dataType: "jsonp",
+		    jsonpCallback: 'callback',
+            success: function (response) {
+                if (response.error) {
+                    console.log(response.error.message + '\n' + response.error.details.join('\n'));
+                }else {
+                    if (response.result.Features.length >= 0) {
+        				var address = response.result.Features[0].properties.Adressetypo;
+        	        	$("#${idEntry}_address").val(address);
+        				$("#id_additional_address").val(getAdditionalAdd(address));
+                    }
+                }
+            }
+	    });
+	}
 };
 
 function getAdditionalAdd (address)

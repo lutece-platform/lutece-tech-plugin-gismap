@@ -32,6 +32,7 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String AUTOEDIT = "AutoEdit";
     public static final String SUGGESTPOISEARCH = "SuggestPOISearch";
     public static final String SUGGESTPOIPARAMS = "SuggestPOIParams";
+    public static final String REVERSEGEOCODING_URL = "ReverseGeocodingUrl";
     public static final String GPS = "GPS";
     public static final String PRINT = "Print";
     public static final String LAYEREDIT = "LayerEdit";
@@ -60,6 +61,7 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String THEMATICSIMPLE = "ThematicSimple";
     public static final String THEMATICCOMPLEX = "ThematicComplex";
     public static final String CLUSTER = "Cluster";
+
 
     @Override
     public MapParameter findById( int nKey )
@@ -97,6 +99,8 @@ public class MapParameterDAO implements IMapParameterDAO
         fillMapParameter( nKey, SUGGESTPOISEARCH, mapParameter );
 
         fillMapParameter( nKey, SUGGESTPOIPARAMS, mapParameter );
+        
+        fillMapParameter( nKey, REVERSEGEOCODING_URL, mapParameter );
 
         fillMapParameter( nKey, GPS, mapParameter );
 
