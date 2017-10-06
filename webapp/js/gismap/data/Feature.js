@@ -103,9 +103,11 @@ function Feature(projection, proxy) {
         var dataUrl = data[6];
         var vectorSource;
         var features = [];
-        var indexlr = dataUrl.lastIndexOf('/');
+        var indexlr = dataUrl.lastIndexOf('?');
         var dataUrlWithPostMethod = dataUrl.substring(0, indexlr) + '/post';
-        var dataForPostMethod = dataUrl.substring(indexlr + 1);
+		var dataUrlQuery = dataUrl.substr(indexlr);
+		var dataForPostMethod = dataUrlQuery?JSON.parse('{"' + dataUrlQuery.replace(/&/g, '","').replace(/=/g,'":"') + '"}',
+                 function(key, value) { return key===""?value:decodeURIComponent(value) }):{}
 
         if(dataFormat === 'WKT'){
             for(var i = 0; i < data.length; i++){
@@ -207,8 +209,9 @@ function Feature(projection, proxy) {
                     $.ajax({
                         url: dataUrlWithPostMethod,
                         type: 'POST',
+						contentType: 'application/json',
                         dataType: 'jsonp',
-                        data: dataForPostMethod,
+                        data: JSON.stringify(dataForPostMethod),
                         jsonpCallback: 'callback',
                         success: function (response) {
                             if (response.error) {
