@@ -104,8 +104,14 @@ function Feature(projection, proxy) {
         var vectorSource;
         var features = [];
         var indexlr = dataUrl.lastIndexOf('?');
-        var dataUrlWithPostMethod = dataUrl.substring(0, indexlr) + '/post';
-		var dataUrlQuery = dataUrl.substr(indexlr);
+        var dataUrlWithPostMethod;
+        if (indexlr != -1 ){
+        	dataUrlWithPostMethod = dataUrl.substring(0, indexlr) + '/post';
+        	}
+        else{
+        	dataUrlWithPostMethod = dataUrl + '/post';
+        	}
+		var dataUrlQuery = dataUrl.substr(indexlr+1);
 		var dataForPostMethod = dataUrlQuery?JSON.parse('{"' + dataUrlQuery.replace(/&/g, '","').replace(/=/g,'":"') + '"}',
                  function(key, value) { return key===""?value:decodeURIComponent(value) }):{}
 
@@ -214,9 +220,6 @@ function Feature(projection, proxy) {
                         data: JSON.stringify(dataForPostMethod),
                         jsonpCallback: 'callback',
                         success: function (response) {
-                            if (response.error) {
-                                console.log(response.error.message + '\n' + response.error.details.join('\n'));
-                            }else {
                                 features = geoJSONFormat.readFeatures(response,{
                                     dataProjection: dataProj,
                                     featureProjection: projection.getProjection().getCode()
@@ -224,8 +227,12 @@ function Feature(projection, proxy) {
                                 if (features.length > 0) {
                                     vectorSource.addFeatures(features);
                                 }
-                            }
-                        }
+                        },
+						error: function(xhr, textStatus, error){
+						console.log(xhr.statusText);
+						console.log(textStatus);
+						console.log(error);
+						}
                     });
                 }
             });
