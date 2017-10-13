@@ -120,9 +120,9 @@ var Manager = function() {
                         }
                     }
                 }
-                if(tempGeoJson.length === 7) {
-                    geoJson.push(tempGeoJson);
-                }
+
+                geoJson.push(tempGeoJson);
+
             }
             if (startParameters['Popup'+n] !== '' && startParameters['Popup'+n] !== undefined ) {
                 popup.push(startParameters['Popup'+n]);

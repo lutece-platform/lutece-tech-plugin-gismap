@@ -224,6 +224,30 @@ function StyleDefinition() {
 			src: 'css/img/lutece-logo.png'
 		})
     });
+    
+    
+    /**
+     * !!! Do not delete !!!
+     * Default style definition suitable for either Point, Lines or Polygons geometries
+     *  - used for default feature styling
+     * @type {ol.style.Style}
+     */
+    this.defaultStyle =  new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: 'blue',
+            width: 2
+          }),
+          fill: new ol.style.Fill({
+            color: 'rgba(150, 220, 255, 0.75)'
+          }),
+          image: new ol.style.Circle({
+            radius: 6,
+            fill: null,
+            stroke: new ol.style.Stroke({
+              color: 'blue'
+            })
+          })
+        });
 
     /**
      * Sample of correspondence table

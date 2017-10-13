@@ -58,12 +58,34 @@ function SpecificStyle() {
     var invisibleClusterFill = new ol.style.Fill({
         color: 'rgba(255, 255, 255, 0.01)'
     });
+    
+    
+    /**
+     * Default style definition for simple thematic
+     * @type {ol.style.Style}
+     */
+    var defaultIconStyle = new ol.style.Style({
+        image : new ol.style.Icon({
+			anchor : [0.5,0.5],
+			anchorXUnits: 'fraction',
+			anchorYUnits: 'fraction',
+			src: 'css/img/lutece-logo.png'
+		})
+    });
+   
 
     /**
      * thematicSimpleValues contains all information for simple thematic representation
      * @type {Array}
      */
     var thematicSimpleValues = [];
+    
+    /**
+     * thematicSimpleValues contains all information for simple thematic representation
+     * @type {Array}
+     */
+    var thematicSimpleValuesLayers = [];
+    
     /**
      * thematicComplexValues contains all information for complex thematic representation
      * @type {Array}
@@ -88,9 +110,12 @@ function SpecificStyle() {
      * @param mapThematic the name of the correspondence table
      * @param styleThematic the name of the style definition
      */
-    this.initThematicValue = function(field, mapThematic, styleThematic){
-        thematicSimpleValues[field] = [field, styleLayerDefinition.getMapCorrespondence(mapThematic),
-            styleLayerDefinition.getStyleThematic(styleThematic)];
+    this.initThematicValue = function(idLayer, field, mapThematic, styleThematic){
+    	if (thematicSimpleValuesLayers[idLayer] === undefined){
+    		thematicSimpleValuesLayers[idLayer] = new Array();
+    	}
+    	thematicSimpleValuesLayers[idLayer].push([field, styleLayerDefinition.getMapCorrespondence(mapThematic),
+            styleLayerDefinition.getStyleThematic(styleThematic)]);
     };
 
      /**
@@ -178,18 +203,33 @@ function SpecificStyle() {
      */
     this.styleThematicApply = function(feature) {
         var array = feature.getKeys();
+        var idlayer = feature.get('idLayer');
+        var result = styleLayerDefinition.defaultStyle;
+        var thematicSimpleFields = thematicSimpleValuesLayers[idlayer];
         for(var i = 0; i < array.length ; i++){
-            if(thematicSimpleValues[array[i]] !== undefined) {
-                var thematicFieldSimple = thematicSimpleValues[array[i]][0];
-                var thematicMapSimple = thematicSimpleValues[array[i]][1];
-                var thematicStyleSimple = thematicSimpleValues[array[i]][2];
-                if (thematicMapSimple[feature.get(thematicFieldSimple)]) {
-                    return thematicStyleSimple[thematicMapSimple[feature.get(thematicFieldSimple)]];
-                } else {
-                    return thematicStyleSimple['default'];
-                }
-            }
-        }
+        	for (var j = 0; j < thematicSimpleFields.length ; j++){
+	            if(thematicSimpleFields[j][0] !== undefined && thematicSimpleFields[j][0]=== array[i]) {	            	
+		                var thematicFieldSimple = thematicSimpleFields[j][0];
+		                var thematicMapSimple = thematicSimpleFields[j][1];
+		                var thematicStyleSimple = thematicSimpleFields[j][2];
+		                if (thematicMapSimple !== undefined && thematicStyleSimple !==undefined){
+			                if (thematicMapSimple[feature.get(thematicFieldSimple)]) {
+			                    result= thematicStyleSimple[thematicMapSimple[feature.get(thematicFieldSimple)]];
+			                }
+			                else if (thematicStyleSimple['default'] !== undefined ) {
+			                    result= thematicStyleSimple['default'];
+			                }
+			                return result;
+		                }
+		                else{
+		                	console.log("Could not find a corresponding Style Map or Style for the property "+thematicFieldSimple+". Check StyleDefinition and idlayer thematic configuration.")
+		                }
+	                }
+	                
+	            }
+	            
+        	}
+        return result;
     };
 
     /**
