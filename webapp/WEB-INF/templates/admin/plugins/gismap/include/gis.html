@@ -16,10 +16,14 @@ ol.proj.setProj4(proj4);
 	<#assign strKey = "'" + key + "'">
 	<#assign strVal = map_parameter.parameters[key] >
 	parameters${idEntry}.push(parameters${idEntry}[${strKey}] = ${strVal});
-	<#if strKey == "'UrlGeoJSON1'">
-		<#assign strValGeo = "${map_parameter.parameters['GeoJSON1']}"?split(",")[0] >
-		<#assign strValGeo = "${strValGeo}"?split("[")[1] >
-		fieldParameters${idEntry}.push(fieldParameters${idEntry}[${strKey}] = [${strValGeo},${strVal}]); 
+	<#if strKey?contains("UrlGeoJSON")>
+		<#assign strGeoJSONindex = "GeoJSON" + "${key}"?keep_after("UrlGeoJSON") >
+		<#if (map_parameter.parameters[strGeoJSONindex])?? >
+			<#assign strValGeo = map_parameter.parameters[strGeoJSONindex]>
+			<#assign strValGeo = "${strValGeo}"?split(",")[0] >
+			<#assign strValGeo = "${strValGeo}"?split("[")[1] >
+			fieldParameters${idEntry}.push(fieldParameters${idEntry}[${strKey}] = [${strValGeo},${strVal}]); 
+		</#if>
 	</#if>
 </#list>
 
@@ -31,12 +35,15 @@ ol.proj.setProj4(proj4);
 <#if fieldParam?? >
 <#list fieldParam?keys as key>
 	<#assign strKey = "'" + key + "'" >
-	<#assign strVal = "'" + fieldParam[key] + "'" >
-	<#if strKey == "'UrlGeoJSON1'">
-		<#assign strValGeo = "'Lutece'" >
-		<#assign strValGeo = "${map_parameter.parameters['GeoJSON1']}"?split(",")[0] >
-		<#assign strValGeo = "${strValGeo}"?split("[")[1] >
-		fieldParameters${idEntry}.push(fieldParameters${idEntry}[${strKey}] = [${strValGeo},${strVal}]);
+	<#assign strVal = "'" + fieldParam[key] + "'" >	
+	<#if strKey?contains("UrlGeoJSON")>
+		<#assign strGeoJSONindex = "GeoJSON" + "${key}"?keep_after("UrlGeoJSON") >
+		<#if (map_parameter.parameters[strGeoJSONindex])?? >
+			<#assign strValGeo = map_parameter.parameters[strGeoJSONindex]>
+			<#assign strValGeo = "${strValGeo}"?split(",")[0] >
+			<#assign strValGeo = "${strValGeo}"?split("[")[1] >
+			fieldParameters${idEntry}.push(fieldParameters${idEntry}[${strKey}] = [${strValGeo},${strVal}]); 
+		</#if>
 	<#else>
 		fieldParameters${idEntry}.push(fieldParameters${idEntry}[${strKey}] = ${strVal});
 	</#if>
