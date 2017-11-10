@@ -136,7 +136,7 @@ var GisMap = function (idMapInit, idInit) {
             popup = new Popup(GlobalMap, id, parameters['Popup']);
             interfaceValues["popup"] = popup;
         }
-        interact = new Interaction(GlobalMap, layer, popup, projectionGis, parameters['LayerEdit'], fieldParameters);
+        interact = new Interaction(GlobalMap, layer, popup, projectionGis, parameters['LayerEdit'],parameters['SelectType'], fieldParameters);
         control = new Control();
         manager.readAndInitActionParams(control, interact, layer, projectionGis, parameters);
         interfaceValues["interact"] = interact;

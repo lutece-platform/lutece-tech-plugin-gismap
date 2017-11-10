@@ -4,7 +4,7 @@
  * Interaction Class manage interactions on the map
  */
 
-function Interaction(GlobalMap, layer, popup, projection, layerEdit, fieldParameters){
+function Interaction(GlobalMap, layer, popup, projection, layerEdit, selectType, fieldParameters){
     'use strict';
     /**
      * featureLayer is a reference of the Feature Layer Object
@@ -25,7 +25,7 @@ function Interaction(GlobalMap, layer, popup, projection, layerEdit, fieldParame
      * specifInteracts is the specifics interacts object
      * @type {SpecificInteracts}
      */
-    var specifInteracts = new SpecificInteracts(layer, featureLayer);
+    var specifInteracts = new SpecificInteracts(this, selectType, layer, featureLayer);
     /**
      * editorTools is the manager of edition tools
      * @type {Editor}
@@ -34,6 +34,7 @@ function Interaction(GlobalMap, layer, popup, projection, layerEdit, fieldParame
     if(fieldParameters['TypeEdit'] !== '' && fieldParameters['TypeEdit'] !== undefined && layerEdit !== '' && layerEdit !== undefined) {
         editorTools = new Editor(this, layerEdit, fieldParameters, projection);
     }
+	
     /**
      * ListInteracts contains all interactions enable on the map
      * @type {Array}
@@ -77,7 +78,7 @@ function Interaction(GlobalMap, layer, popup, projection, layerEdit, fieldParame
         if(enable === false) {
             specifInteracts.getSelectedFeatures().clear();
         }
-        specifInteracts.getSelectInteraction().setActive(enable);
+        specifInteracts.setActiveInteraction(enable);
     };
 
      /**
@@ -126,6 +127,7 @@ function Interaction(GlobalMap, layer, popup, projection, layerEdit, fieldParame
         for(var ctrl = 0; ctrl < activeInteracts.length; ctrl++) {
             if(activeInteracts[ctrl] === "Select") {
                 this.ListInteracts.push(specifInteracts.getSelectInteraction());
+				this.ListInteracts.push(specifInteracts.getDrawSelectInteraction() );
                 this.currentInteract = "Select";
             }
             if (activeInteracts[ctrl] === "Rotate") {

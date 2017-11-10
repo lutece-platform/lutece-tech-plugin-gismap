@@ -27,6 +27,7 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String ROTATE = "Rotate";
     public static final String ZOOMZONE = "ZoomZone";
     public static final String SELECT = "Select";
+    public static final String SELECTTYPE = "SelectType";
     public static final String DRAW = "Draw";
     public static final String MEASURE = "Measure";
     public static final String AUTOEDIT = "AutoEdit";
@@ -89,6 +90,8 @@ public class MapParameterDAO implements IMapParameterDAO
         fillMapParameter( nKey, ZOOMZONE, mapParameter );
 
         fillMapParameter( nKey, SELECT, mapParameter );
+        
+        fillMapParameter( nKey, SELECTTYPE, mapParameter);
 
         fillMapParameter( nKey, DRAW, mapParameter );
 

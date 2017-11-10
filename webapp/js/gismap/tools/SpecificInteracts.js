@@ -3,8 +3,47 @@
 /**
  * SpecificInteracts Class manage a part of interaction enabled on the map
  */
-function SpecificInteracts(layer, featureLayer){
+function SpecificInteracts( interact, selectType, layer, featureLayer){
     'use strict';
+    this.drawFeature = new ol.Collection();
+    this.drawSource = new ol.source.Vector({features: this.drawFeature});
+	this.drawLayer = new ol.layer.Vector({
+		source:this.drawSource,
+		useSpatialIndex : false
+	});
+	
+	this.getDrawLayer = function(){
+		return this.drawLayer;
+	};
+	var type, geometryFunction, maxPoints;
+		
+	if (selectType === 'Box'){
+		geometryFunction = function(coordinates, geometry) {	
+		  if (!geometry) {
+			geometry = new ol.geom.Polygon(null);
+		  }
+		  var start = coordinates[0];
+		  var end = coordinates[1];
+		  geometry.setCoordinates([
+			[start, [start[0], end[1]], end, [end[0], start[1]], start]
+		  ]);
+		  return geometry;
+		};
+		maxPoints = 2;
+		type = 'LineString';
+	}
+	else{
+		type = selectType;
+	}
+    
+	this.drawSelectInteraction = new ol.interaction.Draw({
+			source: this.drawLayer.getSource(),
+			type: type,
+			geometryFunction: geometryFunction,
+			maxPoints: maxPoints
+		});
+	
+	
     /**
      * selectInteract is the interaction to select a feature on the map
      * @type {ol.interaction.Select}
@@ -37,6 +76,93 @@ function SpecificInteracts(layer, featureLayer){
             return false;
         },
         style: featureLayer.getSpecificStyle().selectStyleCluster
+    });
+    
+	/**
+     * setActiveInteraction activate the select interaction and the draw interaction depending on the selectType parameter
+     * @type {ol.interaction.Select}
+     */
+	this.setActiveInteraction = function (enable){
+		this.selectInteract.setActive(enable);
+		//Advanced select with geometry draw
+		if( enable === true && (selectType === 'Circle' || selectType === 'Box' || selectType === 'Polygon')){
+			this.drawSelectInteraction.setActive(true);
+		}
+		else{ // default click select
+			this.drawSelectInteraction.setActive(false);
+		}
+	}
+	
+    /**
+     * getDrawSelectInteraction is an accessor to a specific draw select interaction on the map
+     * @param value is the type of geometry drawn
+     * @returns {ol.interaction.Draw} the draw interaction
+     */
+    this.getDrawSelectInteraction = function() {
+        return this.drawSelectInteraction;
+    };
+    
+	 /**
+     * drawEditInteract.on is a Listener to disable single-click Select while starting draw
+     */
+    this.drawSelectInteraction.on('drawstart', function (event) { 
+	var selectInteraction = interact.getSpecificInteract().getSelectInteraction();
+	selectInteraction.getFeatures().clear();
+	selectInteraction.setActive(false); 
+	});
+		
+    /**
+     * drawEditInteract.on is a Listener to add selected features after drawing
+     */
+    this.drawSelectInteraction.on('drawend', function (event) {
+
+		var selectInteraction = interact.getSpecificInteract().getSelectInteraction();
+		selectInteraction.getFeatures().clear();
+		interact.getSpecificInteract().getDrawLayer().getSource().clear();
+
+		var parser = new jsts.io.OL3Parser();
+		var reader_wkt = new jsts.io.WKTReader();
+    	var geometry = event.feature.getGeometry();
+		var geometry_select;
+		
+		if (geometry.getType() === 'Circle'){
+			var pt = reader_wkt.read('POINT (' + geometry.getCenter().join(' ')+ ')');
+			geometry_select = pt.buffer(geometry.getRadius());
+		}
+		else{
+			geometry_select = parser.read(geometry);
+		}
+		var extent = event.feature.getGeometry().getExtent();
+		var bduplicate = false;
+		var tempSelectedFeaturesIds = [];
+		for (var i = 0 ; i < layer.getLayersFeatureMap().length; i++){
+			var featureLayer = layer.getLayersFeatureMap()[i];
+			if(featureLayer.getVisible()){
+
+              var layer_select_geometries = featureLayer
+                .getSource()
+                .getFeatures()
+                .filter(function(el) {
+                  if (geometry_select.contains(parser.read(el.getGeometry()))) {
+					  for( var j= 0; j< tempSelectedFeaturesIds.length; j++){						
+						if (tempSelectedFeaturesIds[j] === el.getId())
+						{
+							console.log("duplicate feature ID " + el.getId() + " will be ignored in current selection");
+							return false;
+						}
+					  }
+					  tempSelectedFeaturesIds.push(el.getId() );
+					  return true;
+                  }
+                });
+              selectInteraction.getFeatures().extend(layer_select_geometries);
+			}			
+		}
+		tempSelectedFeaturesIds = [];
+		//enable select after 300ms to avoid unwanted unselect
+		setTimeout(function(){ 
+			interact.getSpecificInteract().getSelectInteraction().setActive(true); 
+		}, 300);
     });
 
     /**

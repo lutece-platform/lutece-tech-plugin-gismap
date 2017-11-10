@@ -64,6 +64,11 @@ var Manager = function() {
         if (startParameters['DefaultBackGround'] !== '') {
             parameters['DefaultBackGround'] = startParameters['DefaultBackGround'];
         }
+		
+		if (startParameters['SelectType'] !== '') {
+            parameters['SelectType'] = startParameters['SelectType'];
+        }
+		
         if (startParameters['Overview'] !== '') {
             controls['Overview'] = startParameters['Overview'];
         }
