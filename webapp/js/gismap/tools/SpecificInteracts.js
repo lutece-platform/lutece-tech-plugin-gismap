@@ -213,12 +213,8 @@ function SpecificInteracts( interact, selectType, layer, featureLayer){
         var selectableLayers = layer.getSelectableLayers();
         var selection = this.selectInteract.getFeatures().getArray();
         for(var i = 0; i < selection.length; i++){
-            for(var j = 0; j < selectableLayers.length; j++){
-                if(selectableLayers[j] === this.selectInteract.getLayer(selection[i]).getProperties()['title']) {
-                    selectedElementId.push(selection[i].getId());
-                }
-            }
-        }
+			selectedElementId.push(selection[i].getId());
+		}
         return selectedElementId;
     };
 
@@ -233,8 +229,9 @@ function SpecificInteracts( interact, selectType, layer, featureLayer){
         var selectableLayers = layer.getSelectableLayers();
         for(var i = 0; i < idFeatures.length; i++) {
             for (var j = 0; j < selectableLayers.length; j++) {
-                features.push(featureLayer.getFeatureByName(selectableLayers[j]).getSource().getFeatureById(idFeatures[i]));
-            }
-        }
+				var feature_to_select = featureLayer.getFeatureByName(selectableLayers[j]).getSource().getFeatureById(idFeatures[i]);
+				if (feature_to_select != undefined){features.push(feature_to_select);}				
+				} 
+		}
     };
 }
