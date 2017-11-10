@@ -32,6 +32,7 @@ function Filter(layer, projection) {
      */
     var esriJSONFormat = new ol.format.EsriJSON();
 
+    
     /**
      * Filter Method
      * filterLayerGEOJSON apply a filter on the Lutece Web Service
@@ -39,8 +40,20 @@ function Filter(layer, projection) {
      * @param urlGeoJson the new url ot filter data
      * @param refreshmode 
      */
-    this.filterLayerGEOJSON = function(name, urlGeoJson, refreshmode){
-        var dataProj = this.ListLayers[name].getSource().getProjection();
+    this.filterLayerGEOJSON = function(name, urlGeoJson, refreshmode){    
+    	var dataProj = this.ListLayers[name].getSource().getProjection();
+    	this.filterLayerGEOJSON (name, dataproj,  urlGeoJson, refreshmode);
+    };
+    
+    /**
+     * Filter Method
+     * filterLayerGEOJSON apply a filter on the Lutece Web Service
+     * @param name the layer name
+     * @param dataProj the projection of the datasource. Ex: 'EPSG:2154'
+     * @param urlGeoJson the new url to filter data
+     * @param refreshmode 
+     */
+    this.filterLayerGEOJSON = function(name, dataProj, urlGeoJson, refreshmode){
         var vectorSource;
         if(refreshmode === 'dynamic'){
             vectorSource = new ol.source.Vector({
