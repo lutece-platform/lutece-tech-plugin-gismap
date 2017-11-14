@@ -5,6 +5,7 @@
  */
 function Editor(interact, layerEdit, fieldName, projection) {
     'use strict';
+
     /**
      * editInteraction is the map to stock all edit interaction
      * @type {Map}
@@ -266,7 +267,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
         }
         return listEditor;
     };
-
+	
     /**
      * Editor METHOD
      * writeGeoJSON send all information at Lutece to insert data in the database
@@ -277,7 +278,13 @@ function Editor(interact, layerEdit, fieldName, projection) {
              featureProjection: projection.getProjection().getCode(),
              dataProjection: this.editProj
          }));
+
          this.managePoint(feature);
+		 
+		//Trigger a Change event on the geometry field
+		 var geometryFieldName = fieldName['GeomGeoJson'];
+		 $("#"+geometryFieldName).change();
+
          this.fieldEditionStatus.value = false;
          this.editAvailable = false;
          if(this.suggestPoiEdit === false) {
@@ -365,7 +372,11 @@ function Editor(interact, layerEdit, fieldName, projection) {
      */
     this.getSelectedEditFeatures().on('add', function (evt) {
         var feature = evt.element;
-        if (interact.getEditor().getSuggestSelect() || interact.getEditor().selectInteract.getLayer(feature).get('name') === interact.getEditor().editLayer.get('name')){
+		var isEdit;
+		if (feature.getId() !== undefined){
+			isEdit= interact.getEditor().editLayer.getSource().getFeatureById(feature.getId());
+		}		
+        if (interact.getEditor().getSuggestSelect() || isEdit!== undefined ){
             interact.getEditor().fieldEditionStatus.value = true;
             feature.on('change', function (evt) {
                 dirty[evt.target.getId()] = true;
@@ -380,8 +391,12 @@ function Editor(interact, layerEdit, fieldName, projection) {
      * getSelectedEditFeatures().on is a Listener to send information of the data edit
      */
     this.getSelectedEditFeatures().on('remove', function (evt) {
-        var feature = evt.element;
-        if (interact.getEditor().getSuggestSelect() || interact.getEditor().selectInteract.getLayer(feature).get('name') === interact.getEditor().editLayer.get('name')){
+        var feature = evt.element;	
+		var isEdit;
+		if (feature.getId() !== undefined){
+			isEdit= interact.getEditor().editLayer.getSource().getFeatureById(feature.getId());
+		}	
+        if (interact.getEditor().getSuggestSelect() || isEdit !== undefined){
 			interact.getEditor().setSuggestSelect(false);
             interact.getEditor().writeGeoJSON(feature);
         }
@@ -392,6 +407,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
      * drawEditInteract.on is a Listener to add a feature
      */
     this.drawEditInteract.on('drawend', function (evt) {
+		evt.feature.setId(Date.now());
         interact.getEditor().writeGeoJSON(evt.feature);
         interact.deleteFeatures("draw");
     });

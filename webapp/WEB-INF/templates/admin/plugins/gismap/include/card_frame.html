@@ -226,4 +226,17 @@ function getAdditionalAdd (address)
 	}
 	return additionalAddress;
 };
+
+$( document ).ready(function() {
+$("#${idEntry}_geometry").on("change", 	function() {
+	var typeEdit   = "${strValTypeEdit}";
+	if(typeEdit != ""){
+	var varX = $("#${idEntry}_x").val();
+	var varY = $("#${idEntry}_y").val();
+		if(varX != "" && varY != ""){
+			geocodage${idEntry}();
+		}
+	}
+	});
+});
 </script>
