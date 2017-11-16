@@ -27,6 +27,8 @@ var GisMap = function (idMapInit, idInit) {
     var suggestPoiLocator;
     var viewGisMap;
     var zoom;
+	var zoomMin;
+	var zoomMax;
 
     var GlobalMap = new ol.Map({
         target: this.idMap,
@@ -86,9 +88,40 @@ var GisMap = function (idMapInit, idInit) {
         		inter.setEditInteraction();
         	}
         }
-        
-        
+
+		if (startParameters['Zoom'] !== '' && startParameters['Zoom'] !== undefined) {
+            zoomMin = startParameters['Zoom'][0];
+			zoomMax = startParameters['Zoom'][1];			
+        }
+		
+	/**
+     * Addition of a listener for zoom event
+     * workaround to manage the zoom limits
+     */
+		GlobalMap.getView().on('propertychange', function(e) {
+			switch (e.key) {
+				case 'resolution':
+					if (GlobalMap.getView().getZoom() > zoomMax) {
+						GlobalMap.getView().setZoom(zoomMax);
+						if (GlobalMap.getView().previousCenter) {
+							//reset the map center to avoid unwanted pan
+							GlobalMap.getView().setCenter(GlobalMap.getView().previousCenter);
+						}
+					} else if (GlobalMap.getView().getZoom() < zoomMin) {
+						GlobalMap.getView().setZoom(zoomMin);
+						if (GlobalMap.getView().previousCenter) {
+							//reset the map center to avoid unwanted pan
+							GlobalMap.getView().setCenter(GlobalMap.getView().previousCenter);
+						}
+					}
+					break;
+			   case 'center':
+					GlobalMap.getView().previousCenter = e.oldValue;
+					break;                        
+				}
+		});
     }
+
 
     /**
      * GisMap Private Method

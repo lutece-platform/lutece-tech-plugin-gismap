@@ -131,8 +131,8 @@ function View(projection) {
              extent: this.getLimitExtent(),
              center: this.centerUser,
              zoom: this.zoomSelect,
-             minZoom: this.zoomMin,
-             maxZoom: this.zoomMax
+             //minZoom: this.zoomMin,
+             //maxZoom: this.zoomMax
 
         });
     };
