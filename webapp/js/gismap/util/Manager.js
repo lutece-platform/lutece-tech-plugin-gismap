@@ -52,6 +52,9 @@ var Manager = function() {
         if (startParameters['Extent'] !== '') {
             parameters['Extent'] = startParameters['Extent'];
         }
+		if (startParameters['LimitExtent'] !== '') {
+            parameters['LimitExtent'] = startParameters['LimitExtent'];
+        }
         if (startParameters['Zoom'] !== '') {
             parameters['Zoom'] = startParameters['Zoom'];
         }
@@ -183,6 +186,10 @@ var Manager = function() {
         if (parameters['Zoom'] !== '' && parameters['Zoom'] !== undefined) {
             viewGisMap.setZoom(parameters['Zoom'][0], parameters['Zoom'][1]);
         }
+		if(parameters['LimitExtent'] !== '' && parameters['LimitExtent'] !== undefined) {
+        	viewGisMap.setLimitExtent( parameters['LimitExtent'] );
+        }
+		
     };
 
     /**

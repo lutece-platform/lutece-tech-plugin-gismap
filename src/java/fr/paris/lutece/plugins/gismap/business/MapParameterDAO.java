@@ -38,6 +38,7 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String PRINT = "Print";
     public static final String LAYEREDIT = "LayerEdit";
     public static final String EXTENT = "Extent";
+    public static final String LIMITEXTENT = "LimitExtent";
     public static final String ZOOMSELECT = "ZoomSelect";
     public static final String ZOOM = "Zoom";
     public static final String DEFAULTBACKGROUND = "DefaultBackGround";
@@ -112,6 +113,8 @@ public class MapParameterDAO implements IMapParameterDAO
         fillMapParameter( nKey, LAYEREDIT, mapParameter );
 
         fillMapParameter( nKey, EXTENT, mapParameter );
+        
+        fillMapParameter( nKey, LIMITEXTENT, mapParameter );
 
         fillMapParameter( nKey, ZOOMSELECT, mapParameter );
 
