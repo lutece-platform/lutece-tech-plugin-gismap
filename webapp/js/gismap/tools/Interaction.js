@@ -285,7 +285,14 @@ function Interaction(GlobalMap, layer, popup, projection, layerEdit, selectType,
         }else {
             if(editorTools !== null) {
                 editorTools.deleteFeature(value);
-                this.setEditInteraction();
+				switch (this.currentInteract){
+					case 'SuggestPoiEdit' : this.setSuggestEditInteraction();
+					break;
+					case 'Edit' : this.setEditInteraction();
+					break;
+					default: this.setSelectInteraction();
+					
+				}                
             }
         }
     };

@@ -215,10 +215,13 @@ function Editor(interact, layerEdit, fieldName, projection) {
      */
     this.initEditInteraction = function (mode) {
         if(this.editAvailable !== true) {
-            this.editLayer.getSource().addFeature(this.geoJSONFormat.readFeature(getTransformStringToGeoJSON(editData), {
+			var editFeature = this.geoJSONFormat.readFeature(getTransformStringToGeoJSON(editData), {
                 featureProjection: projection.getProjection().getCode(),
                 dataProjection: this.editProj
-            }));
+            });
+			//assign an Id to the edit feature
+			editFeature.setId(Date.now());
+            this.editLayer.getSource().addFeature(editFeature);
         }
         if(mode === 'Draw') {
             this.editInteraction.set('Select', this.getSelectEditInteract());
@@ -402,6 +405,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
         }
     });
 
+
      /**
      * Editor METHOD
      * drawEditInteract.on is a Listener to add a feature
@@ -421,6 +425,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
         if(editType === 'Point'){
             this.deleteFeature('draw');
             var feature = new ol.Feature(point);
+			feature.setId(Date.now());
             this.editLayer.getSource().addFeature(feature);
             this.writeGeoJSON(feature);
             this.suggestSelect = true;
@@ -464,7 +469,8 @@ function Editor(interact, layerEdit, fieldName, projection) {
         if (selectFeatures.length !== 0) {
             var selectFeaturesAuth = selectFeatures[0];
             this.writeGeoJSON(selectFeatures[0]);
-            this.selectInteract.getFeatures().push(selectFeaturesAuth);
+            //this.selectInteract.getFeatures().push(selectFeaturesAuth);
+			this.selectInteract.getFeatures().clear();
         }
         //this.selectInteract.getFeatures().clear();
     };
