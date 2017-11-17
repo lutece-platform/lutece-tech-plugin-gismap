@@ -113,8 +113,8 @@ function getResult(result) {
 
 $( "#${idEntry}_map" )
 .mouseout(function() {
-	var typeEdit   = "${strValTypeEdit}";
-	if(typeEdit != ""){
+	var typeEdit   = ${strValTypeEdit};
+	if(typeEdit !== ''){
 	var varX = $("#${idEntry}_x").val();
 	var varY = $("#${idEntry}_y").val();
 		if(varX != "" && varY != ""){
