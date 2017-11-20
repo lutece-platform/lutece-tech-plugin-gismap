@@ -88,8 +88,8 @@ var Popup = function(GlobalMap, idMap, parameters) {
         var data = '';
         var keys = feature.getKeys();
         var keysQuery = queryData[layerInfo];
-        for (var j = 0; j < keys.length; j++) {
-            for (var k = 0; k < keysQuery.length; k++) {
+        for (var k = 0; k < keysQuery.length; k++) {
+        	for (var j = 0; j < keys.length; j++) {
                 if (keysQuery[k] === keys[j]) {
                     data = data + popupForm.definePopupSimpleForm(keys[j], feature, keysQuery[k]);
                 }
