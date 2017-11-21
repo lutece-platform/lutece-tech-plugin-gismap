@@ -51,6 +51,7 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String BUTTONORDER = "ButtonOrder";
     public static final String CSS = "Css";
     public static final String DEFAULTMODE = "DefaultMode";
+	public static final String DISABLEMAPINTERACTIONS = "DisabledMapInteractions";
 
     // parameter 1 to 9
     public static final String WMSBASE = "WMS-Base";
@@ -139,6 +140,8 @@ public class MapParameterDAO implements IMapParameterDAO
         fillMapParameter( nKey, CSS, mapParameter );
         
         fillMapParameter( nKey, DEFAULTMODE, mapParameter );
+        
+        fillMapParameter( nKey, DISABLEMAPINTERACTIONS, mapParameter);
 
         for ( String property : getPropertyList( WMSBASE ) )
         {

@@ -71,7 +71,9 @@ var Manager = function() {
 		if (startParameters['SelectType'] !== '') {
             parameters['SelectType'] = startParameters['SelectType'];
         }
-		
+		if (startParameters['DisabledMapInteractions'] !== '') {
+            parameters['DisabledMapInteractions'] = startParameters['DisabledMapInteractions'];
+        }
         if (startParameters['Overview'] !== '') {
             controls['Overview'] = startParameters['Overview'];
         }

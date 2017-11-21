@@ -32,7 +32,7 @@ var GisMap = function (idMapInit, idInit) {
 
     var GlobalMap = new ol.Map({
         target: this.idMap,
-        interactions: ol.interaction.defaults({doubleClickZoom :false})
+		interactions: ol.interaction.defaults({}),
     });
 
     var fieldExtent = [];
@@ -117,7 +117,7 @@ var GisMap = function (idMapInit, idInit) {
 					break;
 			   case 'center':
 					GlobalMap.getView().previousCenter = e.oldValue;
-					break;                        
+					break; 				
 				}
 		});
     }
@@ -202,6 +202,40 @@ var GisMap = function (idMapInit, idInit) {
 
     /**
      * GisMap Private Method
+     * initDefaultMapInteractions initiate the default interactions of the map
+	 * from a list of Interactions to be disabled
+     * @param parameters is the array of parameters of properties file
+     */
+    function initDefaultMapInteractions(parameters){
+		var defaultMapInteractionCollection = GlobalMap.getInteractions().getArray();
+		var interactionTypesToDisable;
+		if (Array.isArray(parameters['DisabledMapInteractions'])==false){
+			interactionTypesToDisable = [parameters['DisabledMapInteractions']];
+		}else{
+			interactionTypesToDisable = parameters['DisabledMapInteractions'];
+		}
+		var interactionToDisable;
+		var interactionTypeToDisable;
+        for (var i = 0; i < interactionTypesToDisable.length; i++) {			
+			interactionTypeToDisable = interactionTypesToDisable[i];			
+			for (var j = 0; j < defaultMapInteractionCollection.length; j++) {
+				interactionToDisable = defaultMapInteractionCollection.filter(function(interaction) {
+					switch(interactionTypeToDisable){
+						case 'doubleClickZoom' : return interaction instanceof ol.interaction.DoubleClickZoom;
+						case 'dragPan' : return interaction instanceof ol.interaction.DragPan;
+						case 'pinchRotate' : return interaction instanceof ol.interaction.PinchRotate;
+						case 'pinchZoom' : return interaction instanceof ol.interaction.PinchZoom;
+						case 'mouseWheelZoom' : return interaction instanceof ol.interaction.MouseWheelZoom;				
+					}					  
+				})[0];			
+			}
+			GlobalMap.removeInteraction(interactionToDisable);
+		}
+    }	
+	
+	
+    /**
+     * GisMap Private Method
      * mapInitialize initiate the map and integrate all components
      * @param parameters is the array of parameters of properties file
      */
@@ -211,7 +245,9 @@ var GisMap = function (idMapInit, idInit) {
         var ListControl = control.getControls();
         for (var i = 0; i < ListControl.length; i++){
             GlobalMap.addControl(ListControl[i]);
-        }
+        }		
+		initDefaultMapInteractions(parameters);
+		
         var ListInteract = interact.getInteracts();
         for (var j = 0; j < ListInteract.length; j++){
             GlobalMap.addInteraction(ListInteract[j]);
