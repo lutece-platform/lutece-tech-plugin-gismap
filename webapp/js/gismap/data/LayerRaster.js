@@ -109,8 +109,8 @@ function LayerRaster(projection, proxy) {
      * @param dataAttribution is the information about the data
      */
 
-    this.createWMTSLayer = function(layerName, server, url, proj, resolutions, origin, dataAttribution){
-        if(server === 'AGS') {
+    this.createWMTSLayer = function(layerName, server, url, proj, resolutions, origin, dataAttribution, isDefault){
+        if(server === 'AGS') {		
             var infoProjData = projection.getEpsgData(proj, false);
             var projData = infoProjData[0];
             this.ListRasters[layerName] = new ol.layer.Tile({
@@ -133,7 +133,38 @@ function LayerRaster(projection, proxy) {
                 visible: false
             });
         }
+		else if (server === 'AGS-XML'){
+			//Retrieve layer definition from remote XML file
+			var options = this.defineSourceFromCapabilitiesFile(url);
+			resolutions = options.tileGrid.getResolutions();
+			var WMTSSource = new ol.source.WMTS(options);
+			WMTSSource.setAttributions(dataAttribution);
+			this.ListRasters[layerName] = new ol.layer.Tile({
+				title: layerName,
+				type: 'base',
+				opacity: 1,
+				source: WMTSSource,
+				visible: false
+			});
+		}
+	return resolutions;		
     };
+	
+	this.defineSourceFromCapabilitiesFile = function(url){
+		var options;
+		$.ajax({
+		url: url,
+		success: function(response) {
+		  	var parser = new ol.format.WMTSCapabilities();
+			var result = parser.read(response);
+			//var wmtsLayerName = result.Contents.Layer[0].Identifier;
+			var wmtsLayerName = result.ServiceIdentification.Title;
+			options = ol.source.WMTS.optionsFromCapabilities(result,{layer: wmtsLayerName, crossOrigin:'anonymous'});
+		},
+		async:false
+		});
+		return options;
+	};	
 
     /**
      * LayerRaster Method

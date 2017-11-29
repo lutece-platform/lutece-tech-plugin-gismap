@@ -32,12 +32,12 @@ var GisMap = function (idMapInit, idInit) {
 
     var GlobalMap = new ol.Map({
         target: this.idMap,
-		interactions: ol.interaction.defaults({}),
+		//interactions: ol.interaction.defaults({}),
+        interactions: ol.interaction.defaults({altShiftDragRotate : false})
     });
 
     var fieldExtent = [];
     var fieldLayerVisible = [];
-
 
     /**
      * GisMap Private Method
@@ -240,6 +240,9 @@ var GisMap = function (idMapInit, idInit) {
      * @param parameters is the array of parameters of properties file
      */
     function mapInitialize(parameters){
+		if(layer.getDefaultWMTSResolutions() !== undefined ){
+			viewGisMap.setResolutions(layer.getDefaultWMTSResolutions())
+		}
         viewGisMap.createView();
         GlobalMap.setView(viewGisMap.getView());
         var ListControl = control.getControls();

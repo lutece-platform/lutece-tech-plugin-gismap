@@ -201,6 +201,7 @@ var Manager = function() {
      * @param parameters is the array of data parameters
      */
     var readAndInitDataParams = function (layer, parameters, fieldParameters) {
+		layer.setDefaultBackGround(parameters['DefaultBackGround']);
         if(parameters['BackGround'] !== '' && parameters['BackGround'] !== undefined){
             for(var background = 0; background < parameters['BackGround'].length; background++){
                 layer.addLayerRaster(parameters['BackGround'][background]);
@@ -214,7 +215,7 @@ var Manager = function() {
         if(parameters['WMTS'] !== '' && parameters['WMTS'] !== undefined){
             for(var wmts = 0; wmts < parameters['WMTS'].length; wmts++){
                 layer.addWMTSLayerRaster(parameters['WMTS'][wmts]);
-            }
+			}					
         }
         if(parameters['WMS-Layer'] !== '' && parameters['WMS-Layer'] !== undefined){
             for(var wms  = 0; wms < parameters['WMS-Layer'].length; wms++){
@@ -236,7 +237,7 @@ var Manager = function() {
         if(parameters['WKT'] !== '' && parameters['WKT'] !== undefined){
             layer.addLayerVector(parameters['WKT'], 'WKT');
         }
-        layer.setDefaultBackGround(parameters['DefaultBackGround']);
+        layer.activateDefaultBackGround();
     };
 
     /**

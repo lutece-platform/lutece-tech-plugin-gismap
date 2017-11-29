@@ -37,6 +37,24 @@ function View(projection) {
      */
 	var limitExtent ;
 	
+	/**
+     * resolutions define the resolution array of the view
+     * @type {number[]}
+     */
+	this.resolutions = [];
+	
+	this.setResolutions = function(res) {
+		this.resolutions = res;
+	};
+	
+	this.getResolutions = function() {
+		var resol;
+		if (this.resolutions.length > 0){
+			resol = this.resolutions;
+		}
+		return resol;
+	};
+	
     /**
      * View Method
      * setCenter is a setter to define the center of the view
@@ -132,7 +150,8 @@ function View(projection) {
              center: this.centerUser,
              zoom: this.zoomSelect,
              //minZoom: this.zoomMin,
-             //maxZoom: this.zoomMax
+             //maxZoom: this.zoomMax,
+			 resolutions: this.getResolutions()
 
         });
     };
