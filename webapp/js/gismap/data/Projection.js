@@ -34,6 +34,26 @@ var Projection = function() {
         return this.extentUser;
     };
 
+	/**
+     * Projection Method
+     * retrieveEpsgData is calles once to retrieve the projection definition file
+     * @returns {json} is an array of projection definitions
+     */
+	this.retrieveEpsgData = function(){
+		var projDefJson;
+		$.ajax({
+			type: "GET",
+			url: 'js/gismap/lib/EPSG.json',
+			dataType: "text",
+			async:false,
+			success: function (response) {
+				projDefJson = JSON.parse(response);
+			}
+		});
+		return projDefJson;	
+	}
+	
+	var epsgDataSource = this.retrieveEpsgData();
     /**
      * Projection Method
      * defineProjection set all value and define projection and extent of the map
@@ -73,11 +93,7 @@ var Projection = function() {
      */
     this.getEpsgData = function(projValue, viewMarker) {
         projValue = projValue.split(':')[1];
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", 'js/gismap/lib/EPSG.json', false);
-        xmlHttp.send(null);
-        var json = JSON.parse(xmlHttp.responseText);
-        var results = json[projValue]['results'];
+		var results = epsgDataSource[projValue]['results'];
         if (results && results.length > 0) {
             for (var i = 0, ii = results.length; i < ii; i++) {
                 var result = results[i];
