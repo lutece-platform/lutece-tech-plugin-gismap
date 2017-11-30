@@ -26,13 +26,13 @@ function LayerRaster(projection, proxy) {
                 source: new ol.source.OSM(),
                 visible:false
             });
-        }else if (name === 'MapQuest'){
-            this.ListRasters[name] = new ol.layer.Tile({
-                title: name,
-                type: 'base',
-                source: new ol.source.MapQuest({layer: layer}),
-                visible:false
-            });
+        // }else if (name === 'MapQuest'){
+            // this.ListRasters[name] = new ol.layer.Tile({
+                // title: name,
+                // type: 'base',
+                // source: new ol.source.MapQuest({layer: layer}),
+                // visible:false
+            // });
         }
         return name;
     };
