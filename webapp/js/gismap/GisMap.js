@@ -117,6 +117,7 @@ var GisMap = function (idMapInit, idInit) {
 					break;
 			   case 'center':
 					GlobalMap.getView().previousCenter = e.oldValue;
+					//console.log(GlobalMap.getView().getResolutions());
 					break; 				
 				}
 		});
@@ -169,6 +170,22 @@ var GisMap = function (idMapInit, idInit) {
             popup = new Popup(GlobalMap, id, parameters['Popup']);
             interfaceValues["popup"] = popup;
         }
+		var enableImmersiveView = parameters['ImmersiveView'];
+		if(enableImmersiveView !== undefined && enableImmersiveView === true){
+			GlobalMap.on(['click'], function (ev) {
+				// Get the Lat & Long for RL Viewer
+				var lonlat = new ol.proj.transform(ev.coordinate, parameters['Projection'], 'EPSG:4326');
+				// Move to new location on RL 3D panel
+				viewer.setLocation(new H.realitylens.Geodesic({
+				  lat: lonlat[1],
+				  lon: lonlat[0]
+				})).then(function (loc) {
+					  console.log (loc);
+					}).catch(function (err) {
+					  alert(err);
+						});
+			});
+		}
         interact = new Interaction(GlobalMap, layer, popup, projectionGis, parameters['LayerEdit'],parameters['SelectType'], fieldParameters);
         control = new Control();
         manager.readAndInitActionParams(control, interact, layer, projectionGis, parameters);

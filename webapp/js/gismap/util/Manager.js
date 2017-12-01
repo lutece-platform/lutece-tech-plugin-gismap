@@ -74,6 +74,9 @@ var Manager = function() {
 		if (startParameters['DisabledMapInteractions'] !== '') {
             parameters['DisabledMapInteractions'] = startParameters['DisabledMapInteractions'];
         }
+		if (startParameters['ImmersiveView'] !== '') {
+            parameters['ImmersiveView'] = startParameters['ImmersiveView'];
+        }
         if (startParameters['Overview'] !== '') {
             controls['Overview'] = startParameters['Overview'];
         }

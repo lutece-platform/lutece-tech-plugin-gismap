@@ -52,6 +52,9 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String CSS = "Css";
     public static final String DEFAULTMODE = "DefaultMode";
 	public static final String DISABLEMAPINTERACTIONS = "DisabledMapInteractions";
+    public static final String IMMERSIVEVIEW = "ImmersiveView";
+    public static final String IMMERSIVEVIEWAPPCODE = "ImmersiveViewAppCode";
+    public static final String IMMERSIVEVIEWAPPID = "ImmersiveViewAppId";
 
     // parameter 1 to 9
     public static final String WMSBASE = "WMS-Base";
@@ -142,6 +145,12 @@ public class MapParameterDAO implements IMapParameterDAO
         fillMapParameter( nKey, DEFAULTMODE, mapParameter );
         
         fillMapParameter( nKey, DISABLEMAPINTERACTIONS, mapParameter);
+        
+        fillMapParameter( nKey, IMMERSIVEVIEW, mapParameter);
+        
+        fillMapParameter( nKey, IMMERSIVEVIEWAPPCODE, mapParameter);
+        
+        fillMapParameter( nKey, IMMERSIVEVIEWAPPID, mapParameter);
 
         for ( String property : getPropertyList( WMSBASE ) )
         {

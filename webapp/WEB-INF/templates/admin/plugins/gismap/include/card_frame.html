@@ -36,6 +36,7 @@
 </#if>
 <link rel="stylesheet" href="js/gismap/lib/css/${strValCss}" type="text/css">
 <script src="js/autocomplete/jquery.session.js"></script>
+<script src ="http://s3.eu-central-1.amazonaws.com/rcscommons/public/realitylens/sdk/1.0.3/rlens.min.js"></script>
 <div>
 	<input type="hidden" id="${idEntry}_geomCentroidXGeocodage" value=""/>
     <input type="hidden" id="${idEntry}_geomCentroidYGeocodage" value=""/>
@@ -48,7 +49,7 @@
     <input type="hidden" id="${idEntry}_extent_current_val" name="extent_current_val"  value="">
 	<input type="hidden" id="${idEntry}_visible_layer_val" name="visible_layer_val" value="" >
 	<input type="hidden" id="${idEntry}_reverse_geocoding_url" name="${idEntry}_reverse_geocoding_url" value='${reverse_geocoding_url}' >
-    
+    <div id="${idEntry}_realitylens" class="${strValMapClass}" style="display:none"></div>
     <div id="${idEntry}_map" class="${strValMapClass}"><div id="popup"></div></div>
     <div class="hidden"  id="measure"> #i18n{gismap.map.message.measure}</div>
     <button id="zoomSelect" type="button" onClick="GisMapDisplay${idEntry}.getZoom().zoomSelect()">Zoom To</button>
@@ -63,6 +64,7 @@
     <!-- <script src="js/Gis.js" type="text/javascript"></script> </script> -->
 </div>
 <script>
+ 
 $("#${idEntry}_address").autocomplete({
 	source : function(request, reponse){ // les deux arguments représentent les données nécessaires au plugin
 	$.ajax({
