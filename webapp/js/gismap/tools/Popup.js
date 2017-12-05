@@ -255,7 +255,14 @@ var Popup = function(GlobalMap, idMap, parameters) {
             ol.Observable.unByKey(popupKey);
         }else if(value === 'on'){
             interact.manageActiveInteraction();
-            GlobalMap.addOverlay(overlay);
+            GlobalMap.addOverlay(overlay);			
+			// change mouse cursor when over marker
+			GlobalMap.on('pointermove', function(e) {
+				if (e.dragging) { return;}
+				var pixel = GlobalMap.getEventPixel(e.originalEvent);
+				var hit = GlobalMap.hasFeatureAtPixel(pixel);
+				this.getTargetElement().style.cursor = hit ? 'pointer' : '';
+				});			
             popupKey = GlobalMap.on('singleclick', function(evt){initiatePopup(evt);});
         }
     };
