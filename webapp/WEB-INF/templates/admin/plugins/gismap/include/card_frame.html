@@ -23,6 +23,9 @@
 	<#if strKey == "'ReverseGeocodingUrl'">
 		<#assign reverse_geocoding_url = "${map_parameter.parameters[key]}"?split("'")[1] >
 	</#if>
+	<#if strKey == "'ImmersiveView'">
+		<#assign enableImmersiveView = map_parameter.parameters[key]>
+	</#if>
 </#list>
 <#assign strValTypeEdit = "" >
 <#if fieldParam?? >
@@ -36,7 +39,10 @@
 </#if>
 <link rel="stylesheet" href="js/gismap/lib/css/${strValCss}" type="text/css">
 <script src="js/autocomplete/jquery.session.js"></script>
+
+<#if enableImmersiveView?? && enableImmersiveView?boolean>
 <script src ="http://s3.eu-central-1.amazonaws.com/rcscommons/public/realitylens/sdk/1.0.3/rlens.min.js"></script>
+</#if>
 <div>
 	<input type="hidden" id="${idEntry}_geomCentroidXGeocodage" value=""/>
     <input type="hidden" id="${idEntry}_geomCentroidYGeocodage" value=""/>
@@ -49,7 +55,9 @@
     <input type="hidden" id="${idEntry}_extent_current_val" name="extent_current_val"  value="">
 	<input type="hidden" id="${idEntry}_visible_layer_val" name="visible_layer_val" value="" >
 	<input type="hidden" id="${idEntry}_reverse_geocoding_url" name="${idEntry}_reverse_geocoding_url" value='${reverse_geocoding_url}' >
-    <div id="${idEntry}_realitylens" class="${strValMapClass}" style="display:none"></div>
+<#if enableImmersiveView?? && enableImmersiveView?boolean>
+    <div id="${idEntry}_realitylens" class="${strValMapClass}"></div>
+</#if>
     <div id="${idEntry}_map" class="${strValMapClass}"><div id="popup"></div></div>
     <div class="hidden"  id="measure"> #i18n{gismap.map.message.measure}</div>
     <button id="zoomSelect" type="button" onClick="GisMapDisplay${idEntry}.getZoom().zoomSelect()">Zoom To</button>

@@ -29,11 +29,11 @@ var GisMap = function (idMapInit, idInit) {
     var zoom;
 	var zoomMin;
 	var zoomMax;
+	var immersiveViewMarker;
 
     var GlobalMap = new ol.Map({
         target: this.idMap,
-		//interactions: ol.interaction.defaults({}),
-        interactions: ol.interaction.defaults({altShiftDragRotate : false})
+		interactions: ol.interaction.defaults({}),
     });
 
     var fieldExtent = [];
@@ -180,9 +180,9 @@ var GisMap = function (idMapInit, idInit) {
 				  lat: lonlat[1],
 				  lon: lonlat[0]
 				})).then(function (loc) {
-					  console.log (loc);
+					  //console.log (loc);
 					}).catch(function (err) {
-					  alert(err);
+					  console.log(err);
 						});
 			});
 		}
@@ -215,6 +215,7 @@ var GisMap = function (idMapInit, idInit) {
             }
         }
         filter = new Filter(layer, projectionGis);
+		immersiveViewMarker = new ImmersiveViewPosition(GlobalMap, viewGisMap);
     }
 
     /**
@@ -365,6 +366,17 @@ var GisMap = function (idMapInit, idInit) {
         initGis(parameters, fieldParameters);
         return GlobalMap;
     };
+	
+	    /**
+     * GisMap Method
+     * updateMarker displays or updates the marker feature
+     * representing a current RealityLens position
+	 * and center the view on it
+     * @param X, Y the target coordinates
+     */
+	var updateMarker = function (X, Y) {
+		immersiveViewMarker.updateMarker([X,Y]);
+	};
 
     return {
         getFilter: getFilter,
@@ -372,6 +384,7 @@ var GisMap = function (idMapInit, idInit) {
         getLayer: getLayer,
         getPopup: getPopup,
         getZoom: getZoom,
-        initGisMap: initGisMap
+        initGisMap: initGisMap,
+		updateMarker : updateMarker
     };
 };

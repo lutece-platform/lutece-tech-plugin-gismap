@@ -78,7 +78,6 @@ var enableImmersiveView${idEntry} = parameters${idEntry}['ImmersiveView'];
 if ((enableImmersiveView${idEntry} != undefined ) && ( enableImmersiveView${idEntry} === true)){
 	var app_code = parameters${idEntry}['ImmersiveViewAppCode'];
 	var app_id = parameters${idEntry}['ImmersiveViewAppId'];
-	document.getElementById("${idEntry}_realitylens").style.display = 'block';
 	var viewer = new H.realitylens.Viewer(document.getElementById("${idEntry}_realitylens"), {
 		url: 'http://realitylens.api.here.com',
 		sliUrls: [ 'http://sli.api.here.com' ] ,
@@ -97,7 +96,7 @@ if ((enableImmersiveView${idEntry} != undefined ) && ( enableImmersiveView${idEn
 	viewer.on('transitionStop', function (e) {
 		var loc = e.location.geodesic,
 		pos = new ol.proj.transform([loc.lon, loc.lat], 'EPSG:4326', proj);
-		GisMapDisplay${idEntry}.getZoom().zoomSuggestPoi( pos[0], pos[1]);
+		GisMapDisplay${idEntry}.updateMarker(pos[0], pos[1]);
 	});
 }
 </script>
