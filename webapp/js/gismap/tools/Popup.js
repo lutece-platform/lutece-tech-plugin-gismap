@@ -26,6 +26,12 @@ var Popup = function(GlobalMap, idMap, parameters) {
      * @type {string}
      */
     var popupKey = '';
+	
+	/**
+     * cursorChangeKey is the key of the listener to change the cursor when hovering features
+     * @type {string}
+     */
+	var cursorChangeKey = '';
     /**
      * overlay is the overlay of the popup
      * @type {ol.Overlay.Popup}
@@ -243,6 +249,20 @@ var Popup = function(GlobalMap, idMap, parameters) {
         definePopup(evt, layerInfo, features, wmsLayers, count, id);
     }
 
+	/**
+     * Popup Method
+     * changeCursor modify the cursor when hovering a feature that is not part of the Edit layer
+     * @param evt the event triggered by the caller
+     */
+	function changeCursor (evt) {
+				if (evt.dragging) { return;}
+				var pixel = GlobalMap.getEventPixel(evt.originalEvent);
+				var hit = GlobalMap.hasFeatureAtPixel(pixel, {layerFilter: function(layer){
+					return layer.get('name') !== 'EditLayer';
+				}});
+				GlobalMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
+
+	}
     /**
      * Popup Method
      * managePopup add or remove the overlay of the map and the listener
@@ -253,16 +273,12 @@ var Popup = function(GlobalMap, idMap, parameters) {
             overlay.hide();
             GlobalMap.removeOverlay(overlay);
             ol.Observable.unByKey(popupKey);
+			ol.Observable.unByKey(cursorChangeKey);
         }else if(value === 'on'){
             interact.manageActiveInteraction();
             GlobalMap.addOverlay(overlay);			
 			// change mouse cursor when over marker
-			GlobalMap.on('pointermove', function(e) {
-				if (e.dragging) { return;}
-				var pixel = GlobalMap.getEventPixel(e.originalEvent);
-				var hit = GlobalMap.hasFeatureAtPixel(pixel);
-				this.getTargetElement().style.cursor = hit ? 'pointer' : '';
-				});			
+			cursorChangeKey = GlobalMap.on('pointermove', function(evt) {changeCursor(evt)});			
             popupKey = GlobalMap.on('singleclick', function(evt){initiatePopup(evt);});
         }
     };
