@@ -35,6 +35,7 @@ function Interaction(GlobalMap, layer, popup, projection, layerEdit, selectType,
         editorTools = new Editor(this, layerEdit, fieldParameters, projection);
     }
 	
+	var immersiveView = new ImmersiveViewPosition(GlobalMap);
     /**
      * ListInteracts contains all interactions enable on the map
      * @type {Array}
@@ -66,7 +67,9 @@ function Interaction(GlobalMap, layer, popup, projection, layerEdit, selectType,
             this.activeEditorTool(null, false);
         }else if(this.currentInteract === "SuggestPoiEdit"){
             this.activeEditorTool(null, false);
-        }
+        }else if(this.currentInteract === "ImmersiveView"){
+            this.activeImmersiveViewTool(false);
+		}
     };
 
     /**
@@ -79,6 +82,16 @@ function Interaction(GlobalMap, layer, popup, projection, layerEdit, selectType,
             specifInteracts.getSelectedFeatures().clear();
         }
         specifInteracts.setActiveInteraction(enable);
+    };
+	
+	
+	 /**
+     * Interaction Private METHOD
+     * activeSpecificTool enable or disable specific interaction
+     * @param enable is the marker to indicate activation
+     */
+    this.activeImmersiveViewTool = function (enable){
+        immersiveView.setActiveInteraction(enable);
     };
 
      /**
@@ -183,10 +196,27 @@ function Interaction(GlobalMap, layer, popup, projection, layerEdit, selectType,
             if (activeInteracts[ctrl] === "ReadOnly") {
                 editorInteracts = editorTools.initEditInteraction('ReadOnly');
             }
+			if (activeInteracts[ctrl] === "ImmersiveView") {
+				//immersiveView = new ImmersiveViewPosition(GlobalMap);
+				//this.ListInteracts.push(immersiveView);
+				this.setImmersiveViewInteraction();
+				ListInteractsTemp = [];
+            }
         }
     };
 
 
+	/**
+     * Interaction Public METHOD
+     * setImmersiveViewInteraction define the current draw interaction
+     */
+    this.setImmersiveViewInteraction = function(){
+        this.disablePopup();
+        this.manageActiveInteraction();
+        immersiveView.enableImmersiveView();
+        this.currentInteract = "ImmersiveView";
+    };
+	
     /**
      * Interaction Public METHOD
      * setDrawInteraction define the current draw interaction
@@ -341,4 +371,13 @@ function Interaction(GlobalMap, layer, popup, projection, layerEdit, selectType,
     this.getSpecificInteract = function(){
         return specifInteracts;
     };
+	
+    /**
+     * Interaction Public METHOD
+     * getImmersiveView is the accessor of the Immersive view tool
+     * @returns {ImmersiveViewPosition} the measure tools object
+     */
+    this.getImmersiveView = function(){
+        return immersiveView;
+    };	
 }

@@ -74,9 +74,11 @@ var Manager = function() {
 		if (startParameters['DisabledMapInteractions'] !== '') {
             parameters['DisabledMapInteractions'] = startParameters['DisabledMapInteractions'];
         }
+		
 		if (startParameters['ImmersiveView'] !== '') {
             parameters['ImmersiveView'] = startParameters['ImmersiveView'];
         }
+		
         if (startParameters['Overview'] !== '') {
             controls['Overview'] = startParameters['Overview'];
         }
@@ -285,6 +287,9 @@ var Manager = function() {
     		}
     		if (startParameters['ButtonOrder'][i] === 'Info' && popup.length !== 0) {
     			interacts.push('Info');
+    		}
+			if (startParameters['ButtonOrder'][i] === 'ImmersiveView' && startParameters['ImmersiveView'] !== false) {
+    			interacts.push('ImmersiveView');
     		}
     		if (startParameters['ButtonOrder'][i] === 'Edit') {
     			autoEdit = false;
