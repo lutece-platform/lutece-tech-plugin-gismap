@@ -27,7 +27,7 @@
 		<#assign enableImmersiveView = map_parameter.parameters[key]>
 	</#if>
 </#list>
-<#assign strValTypeEdit = "" >
+<#assign strValTypeEdit = "''" >
 <#if fieldParam?? >
 <#list fieldParam?keys as key>
 	<#assign strKey = "'" + key + "'">
