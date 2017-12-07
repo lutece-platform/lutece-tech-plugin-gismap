@@ -42,10 +42,13 @@ import fr.paris.lutece.plugins.gismap.business.MapParameter;
 import fr.paris.lutece.plugins.gismap.business.View;
 import fr.paris.lutece.plugins.gismap.business.ViewHome;
 import fr.paris.lutece.plugins.gismap.utils.GismapUtils;
+import fr.paris.lutece.portal.web.l10n.LocaleService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.html.HtmlTemplate;
+
+import java.util.Locale;
 
 /**
  *
@@ -154,7 +157,8 @@ public class GismapService
         model.put( PARAMETER_ADD_PARAMETER, view.getAddressParam( ) );
         model.put( PARAMETER_DEFAULT_VIEW, directoryId );
 
-        HtmlTemplate templateList = AppTemplateService.getTemplate( view.getMapTemplateFile( ), request.getLocale( ), model );
+        Locale locale = ( request == null ) ? LocaleService.getDefault( ) : request.getLocale( );
+        HtmlTemplate templateList = AppTemplateService.getTemplate( view.getMapTemplateFile( ), locale, model );
 
         return templateList.getHtml( );
     }
