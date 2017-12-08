@@ -49,6 +49,21 @@ var Zoom = function(GlobalMap, projection, viewGisMap) {
         if(selectFeatures.length === 0 ) {
             selectFeatures = interact.getEditor().getSelectEditInteract().getFeatures().getArray();
         }
+		//if nothing is selected then zoom to the geometry field coordinates
+		if(selectFeatures.length === 0 ) {
+            var geomfieldData = interact.getEditor().getFieldData().value;
+			if (geomfieldData !== undefined && geomfieldData != ''){
+				var feature = new ol.format.GeoJSON().readFeature(interact.getEditor().getTransformData(geomfieldData), {
+					featureProjection: projection.getProjection().getCode(),
+					dataProjection: interact.getEditor().getEditProj()
+				});
+				if (feature !== undefined && feature.getGeometry() != undefined ){
+					viewGisMap.getView().fit(feature.getGeometry(), GlobalMap.getSize(), {
+						maxZoom: viewGisMap.getZoomSelect()
+					});
+				}
+			}
+        }
         if (selectFeatures.length === 1) {
             viewGisMap.getView().fit(selectFeatures[0].getGeometry(), GlobalMap.getSize(),{
                 maxZoom: viewGisMap.getZoomSelect()
@@ -74,9 +89,11 @@ var Zoom = function(GlobalMap, projection, viewGisMap) {
                 featureProjection: projection.getProjection().getCode(),
                 dataProjection: interact.getEditor().getEditProj()
             });
-            viewGisMap.getView().fit(feature.getGeometry(), GlobalMap.getSize(), {
-                maxZoom: viewGisMap.getZoomSelect()
-            });
+			if (feature !== undefined && feature.getGeometry() != undefined ){
+				viewGisMap.getView().fit(feature.getGeometry(), GlobalMap.getSize(), {
+					maxZoom: viewGisMap.getZoomSelect()
+				});
+			}
         }
     };
 

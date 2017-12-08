@@ -26,6 +26,10 @@ function Editor(interact, layerEdit, fieldName, projection) {
      * @type {Element}
      */
     this.fieldData = document.getElementById(fieldName['GeomGeoJson']);
+	
+	this.getFieldData = function() {
+		return this.fieldData;
+	}
     /**
      * fieldCentroidXStockage is the field where we stock centroid value
      * @type {Element}
