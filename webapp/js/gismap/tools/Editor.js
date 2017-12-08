@@ -449,6 +449,9 @@ function Editor(interact, layerEdit, fieldName, projection) {
         this.fieldCentroidYGeocodage.value = '';
         this.fieldEditionStatus.value = false;
         this.editAvailable = true;
+		//Trigger a Change event on the geometry field
+		 var geometryFieldName = fieldName['GeomGeoJson'];
+		 $("#"+geometryFieldName).change();
     };
 
     /**
