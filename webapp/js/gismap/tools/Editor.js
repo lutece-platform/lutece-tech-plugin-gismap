@@ -287,10 +287,6 @@ function Editor(interact, layerEdit, fieldName, projection) {
          }));
 
          this.managePoint(feature);
-		 
-		//Trigger a Change event on the geometry field
-		 var geometryFieldName = fieldName['GeomGeoJson'];
-		 $("#"+geometryFieldName).change();
 
          this.fieldEditionStatus.value = false;
          this.editAvailable = false;
@@ -406,6 +402,9 @@ function Editor(interact, layerEdit, fieldName, projection) {
         if (interact.getEditor().getSuggestSelect() || isEdit !== undefined){
 			interact.getEditor().setSuggestSelect(false);
             interact.getEditor().writeGeoJSON(feature);
+		//Trigger a Change event on the geometry field
+		 var geometryFieldName = fieldName['GeomGeoJson'];
+		 $("#"+geometryFieldName).change();
         }
     });
 

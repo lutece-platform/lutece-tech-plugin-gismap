@@ -74,6 +74,8 @@
 <script>
  
 $("#${idEntry}_address").autocomplete({
+    minLength: ${add_parameter.minLength},
+    delay: ${add_parameter.delay},
 	source : function(request, reponse){ // les deux arguments représentent les données nécessaires au plugin
 	$.ajax({
 		url : "${add_parameter.url}",
@@ -122,14 +124,16 @@ function getResult(result) {
 };
 
 $( "#${idEntry}_map" )
-.mouseout(function() {
+.on( "mouseleave", function() {
 	var typeEdit   = ${strValTypeEdit};
 	if(typeEdit !== ''){
 	var varX = $("#${idEntry}_x").val();
 	var varY = $("#${idEntry}_y").val();
-		if(varX != "" && varY != ""){
+	if(varX != "" && varY != ""){
 			GisMapDisplay${idEntry}.getInteract().getEditor().forceValidate();
-			geocodage${idEntry}();
+			if($("#${idEntry}_geomState").val() === 'true'){
+				geocodage${idEntry}();
+			}
 		}
 	}
 	else{
@@ -187,7 +191,6 @@ function geocodage${idEntry}(){
 		$.ajax({
 			url: geocoding_url + "%28" + valX + "," + valY + "%29",
 	        dataType: "jsonp",
-		    jsonpCallback: 'callback',
             success: function (response) {
                 if (response.error) {
                     console.log(response.error.message + '\n' + response.error.details.join('\n'));
