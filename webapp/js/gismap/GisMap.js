@@ -155,7 +155,11 @@ var GisMap = function (idMapInit, idInit) {
      * @param parameters is the array of parameters of properties file
      */
     function dataInitialize(parameters, fieldParameters){
-        layer = new Layer(projectionGis, fieldParameters['Proxy']);
+		var proxy = "";
+		if (fieldParameters['Proxy'] !== undefined){
+			proxy = fieldParameters['Proxy'];
+		}
+        layer = new Layer(projectionGis, proxy);
         manager.readAndInitDataParams(layer, parameters, fieldParameters);
     }
 
