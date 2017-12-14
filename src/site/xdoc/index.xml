@@ -1,14 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
     <properties>
-        <title>Plugin gis</title>
+        <title>Plugin gismap</title>
     </properties>
     <body>
-        <section name="Plugin Gis">
+        <section name="Plugin Gismap">
+            <!-- <p>
+                <img src="images/openlayers.png" />
+                <img src="images/OGC.png" />
+                <img src="images/GeoJson.png" />
+                <img src="images/GeoServer.jpg" />
+                <img src="images/esri.jpg" />
+                <img src="images/CapGeoMdp.png" />
+                <img src="images/OpenStreetMap.jpg" />
+            </p> -->
             <subsection name="Introduction">
-                <p>
-                    Integrate maps from geoserver in your page (google map kind of maps)
-                </p>
+               <p>               
+The GISMAP plugin is a LUTECE plugin to implement the cartographic representation of the data. It was made using the OpenLayers API (http://openlayers.org/)
+The current version makes it possible to integrate a map display in standalone mode or coupled with the LUTECE FORM and DIRECTORY plugins.</p>
+			<p>Below is the list of the main features:			
+			<ul>
+				<li>Map navigation</li>
+				<li>Display of various map data
+				<li>Various data formats:  WMTS, WMS, WFS, GeoJson</li>
+				<li>Various Map servers:   GeoServer, ArcGis Server d'ESRI</li>
+				<li>Various map data providers:  CapGeo (Infra Mairie de Paris), OpenStreetMaps, ... </li>
+				</li>
+				<li>Capture of Geolocation data type</li>
+				<li>Various standard map tools:  GPS, Full screen, Scale, Popup, Positionning overview , cursor coordinates display, Drawing tools, Measure tools, Zoom to a place,...</li>
+			</ul>
+			</p>
+			<p>
+			For gismap interaction with plugin FORM, use module-genericattributes-gismap.
+			For gismap interaction plugin DIRECTORY, use module-directory-gismap.
+			In both cases, it will enable Gismap as a map provider for the GEOLOCALISATION data type.
+			</p>
+			</subsection>
+			<subsection name="What's new in Gismap version 2.0.0">
+			<p>
+			Technical upgrade
+			<ul>
+				<li>OpenLayers v4.6.2</li>
+				<li>Improvement of inverse geocoding</li>
+				<li>Refactoring for better code separation between Gismap and Directory</li>
+			</ul>
+			</p>
+			<p>Bug fixes
+			<ul>
+				<li>WS directory-gismap</li>
+				<li>Popup field order consistency with configuration</li>
+				<li>FilterLayerGeoJson() function handles projection parameter</li>
+				<li>Fix miscellaneous console warning or error messages</li>
+				<li>Removal of obsolete files or datasources</li>
+				<li>OpenLayer non-debug version</li>
+			</ul>
+			</p>
+			<p>Functional
+			<ul>
+				<li>Advanced graphical select tool</li>
+				<li>Option to disable mouse/touch map interactions</li>
+				<li>Support for WMTS custom resolutions</li>
+				<li>Support for WMTS source configuration from remote Capabilities XML file</li>
+				<li>Extent limitation</li>
+				<li>Zoom level limitation</li>
+				<li>Support for several GeoJson source layers</li>
+				<li>Immersive view display and map interaction (Here Map API)</li>
+				<li>Cursor modification when hovering objects with popup enabled</li>
+			</ul>
+			</p>
+            </subsection>
+            <subsection name="Configuration">
+             <p>
+                The gismap.properties file gathers gobal plugin configuration and view parameters. The different views define maps with specific tools, data sources and styles for different applications: general map, management map, attribute map with edition or read-only mode.
+             </p>
+            </subsection>
+            <subsection name="Usage">
+             <p>
+               Front office URL web page to display a standalone default map : <em>/jsp/site/RunStandaloneApp.jsp?page=gismap</em>
+             </p>
+             <p>
+                Back office URL web page to display a standalone default map : <em>/jsp/admin/plugins/gismap/ManageGismap.jsp?plugin_name=gismap</em>
+             </p>
+            </subsection>
+            <subsection name="Documentation">
+              <p>
+                For more informations about Gismap functionalities, plugin development and integration into a Lutece website, refer to the wiki :
+                <a href="http://fr.lutece.paris.fr/fr/wiki/home.html"> Gismap documentation </a>
+             </p>
             </subsection>
         </section>
     </body>

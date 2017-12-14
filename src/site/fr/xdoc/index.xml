@@ -1,556 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
     <properties>
-        <title>Introduction</title>
+        <title>Plugin gismap</title>
     </properties>
     <body>
-        <section name="Descriptif du plugin">
+        <section name="Plugin Gismap">
             <subsection name="Introduction">
-                <p>Le plugin-gis est l'intégration dans Lutèce d'<a href="http://www.openlayers.org">Openlayers</a>, client web cartographique permettant entre autre de faire de l'aggréagation de service web cartographique venant de différents serveurs.</p>
-				<pre>
-				
-Description des différents paramètres du pluginGIS disponible en version 2.0.1				
-				
-				
-############################################################################
-# PRE REQUIS
-#
-# Pour que le pluginGIS soit opérationnel, deux fichiers de configurations sont nécessaires et doivent être localisés dans
-# le répertoire "WEB-INF\conf\plugins" :
-# - gis.properties
-# - gis_[NOM_DE_CARTE].properties
-#
-# [NOM_DE_CARTE] est un nom arbitraire respectant les règles de nommage (voir ci-dessous) qui permet d'identifier la carte à
-# afficher dans la page. Cette valeur est passé en paramètre HTTP dans la requête, utilisé par le code Javascript d'OpenLayer et
-# par le code Java de la partie serveur du pluginGIS. Ce nom doit donc être simple pour ne pas engendrer de difficulté lors de
-# l'utilisation par ces différents composants.
-# 
-############################################################################
-# REGLES GENERALES
-#
-# Afin d'éviter des difficultés inutiles, il faut :
-# - Ne pas utiliser de caractères spéciaux (espace, etc.), ni accentués (é, è, à, etc.)
-# - Utiliser les normes de nommages Java
-#
-############################################################################
-# AVERTISSEMENT
-#
-# Ce fichier n'a pas pour vocation d'être directement opérationnel, mais recense l'ensemble des paramètres disponibles
-#
-############################################################################
-
-
-# Identifiant donné à la liste de stockage des view
-# !! Ne pas modifier !!
-gis.view.list=1
-
-# Liste des paramètres, issus d'OpenLayer, disponibles au sein du pluginGIS
-# !! Ne pas modifier !!
-gis.view.availableParameters=control.inverseGeolocalization.minZoom,control.inverseGeolocalization,control.inverseGeolocalization.title,geolocalizationPanel,geolocalizationPanel.minZoomLevel,geolocalizationPanel.externalGraphic,geolocalizationPanel.graphicHeight,geolocalizationPanel.graphicWidth,geolocalizationPanel.graphicXOffset,geolocalizationPanel.graphicYOffset,geolocalizationPanel.radius,layerSearchPanel,control.identify.title,control.identify,wms,wfs,boundsLeft,boundsBottom,boundsRight,boundsTop,zoom,numZoomLevels,maxResolution,resolution.enabled,resolution.grid,format,projection,units,vectors.enabled,vectors.name,layerSwitcher.baseLayer.label,layerSwitcher.dataLayer.label,showPanZoomBar,navigation,layerSwitcher,overviewMap,control.select,control.select.title,control.point,control.point.title,control.line,control.line.title,control.polygon,control.polygon.title,control.selecthover,control.selecthover.title,control.mouse,control.mouse.title,control.modify,control.modify.title,control.modify.confirm,control.delete,control.delete.title,control.delete.confirm,control.print,control.scaleLine,control.scaleLine.title,control.print.title,control.fullscreen,control.fullscreen.title,legend,legend.title,keyboardNavigation,imagePath,imageUsed
-
-# Liste des paramètres de Couche, issus d'OpenLayer, disponibles au sein du pluginGIS
-# !! Ne pas modifier !!
-gis.view.availableParametersLayers=wms,wfs,format,isSearchable,searchable.layerStyle,searchable.ogcFilterProperty,isIdentifiable,legendTitle,legendGraphicWidth,legendGraphicHeight,legendGraphicLayer,legendGraphicStyle,featureNS,serverName,type,tiled,name,layer,url,minScale,maxScale,selectable,selectable.attributesToRetrieve,selectable.popup,cqlFilter,ogcFilter,style.default,style.default.rules,style.select,featureType,visibility,displayInLayerSwitcher,displayInLegend,geometryType
-
-# Liste des paramètres de Styles, issus d'OpenLayer, disponibles au sein du pluginGIS
-# !! Ne pas modifier !!
-# Compléments d'informations concernant les paramètres de styles à l'adresse : http://dev.openlayers.org/releases/OpenLayers-2.8/doc/apidocs/files/OpenLayers/Feature/Vector-js.html
-gis.view.availableParametersStyles=pointRadius,strokeColor,strokeWidth,strokeOpacity,fillColor,fillOpacity,fill,stroke,strokeLinecap,strokeDashstyle,graphic,pointerEvents,cursor,externalGraphic,graphicWidth,graphicHeight,graphicOpacity,graphicXOffset,graphicYOffset,graphicZIndex,graphicName,graphicTitle,backgroundGraphic,backgroundGraphicZIndex,backgroundXOffset,backgroundYOffset,backgroundHeight,backgroundWidth,label,labelAlign,fontColor,fontFamily,fontSize,fontWeight,display
-
-# Liste des paramètres des Règles de Styles, issus d'OpenLayer, disponibles au sein du pluginGIS
-# !! Ne pas modifier !!
-gis.view.availableParametersStyleRules=filter,style,name
-
-# Paramètre permettant de définir le serveur cartographique principal d'où les couches sont consommées.
-# Geoserver		==> gis.view.serverName=http://localhost:8080/geoserver
-# ArcGIS Server	==> gis.view.serverName=http://10.161.1.9/arcgis/services/BPPG/MapServer
-gis.view.serverName=http://localhost:8080/geoserver
-
-# Espace de nom privilégié, du serveur cartographique principal, par lequel les couches sont accessibles.
-# Geoserver		==> gis.view.featureNS=ankou
-# ArcGIS Server	==> gis.view.featureNS=http://10.161.1.9/arcgis/services/BPPG/MapServer
-gis.view.featureNS=ankou
-
-# Clé de la vue, pour le [NOM_DE_CARTE] indiqué. Cette valeur sera utilisée pour définir tous les paramètres associés à cette vue dans le fichier
-# gis_[NOM_DE_CARTE].properties
-gis.view.FORMENGINE=1
-gis.view.RAM=2
-gis.view.BAG=3
-
-# Localisation sur le serveur de la Xpage Lutèce du pluginGIS
-# !! Ne pas modifier !!
-gis.xpage.view=site/plugins/gis/XPageView.html
-
-# Titre de la Xpage Lutèce du pluginGIS
-gis.xpage.title=Plugin GIS du CMS Lutèce
-
-# Liste des mots clés se retrouvant dans la balise HTML Keywords utilisé pour le référencement des sites web par les moteurs de recherche.
-gis.xpage.keyword=
-
-# ????
-gis.xpage.pathLabel=
-
-
-
-
-####################################################
-# Paramètres du "Content Service" Lutèce
-####################################################
-
-# Chemin d’accès au template permettant d’afficher la carte. Exemple : admin/plugins/gis/view1.html
-# !! Ne pas modifier !!
-gis.view.1.templateFile=admin/plugins/gis/view1.html
-
-# Chemin d’accès au fichier .js permettant de générer la carte. Exemple : js/plugins/gis/view1.js
-# !! Ne pas modifier !!
-gis.view.1.jsFile=js/plugins/gis/view1.js
-
-
-
-####################################################
-# Liste des paramètres de la cartographie
-####################################################
-
-
-############## PARAMETRES GLOBAUX
-
-# URL relative du service WMS
-# Ce paramètre est surchargeable au niveau du paramétrage de la couche (layer)
-# ArcGIS Server : /WMSServer 
-# Geoserver : /wms
-gis.view.1.parameter.wms=/wms
-
-# URL relative du service WFS
-# Ce paramètre est surchargeable au niveau du paramétrage de la couche (layer)
-# ArcGIS Server : /WFSServer 
-# Geoserver : /wfs
-gis.view.1.parameter.wfs=/wfs
-
-# Chemin d'accès aux images utilisées par le openlayer
-# Exemple : images/admin/skin/plugins/gis/openlayers/
-gis.view.1.parameter.imagePath=images/admin/skin/plugins/gis/openlayers/
-
-# Image utilisée
-# Exemple : ajouter,delete,fullscreen,move,select,print,pan
-gis.view.1.parameter.imageUsed=ajouter,delete,fullscreen,move,select,print,pan
-
-
-
-############## PARAMETRES DE LA CARTE
-
-# Nombre de niveau de zoom possible pour les cartes du cimetière.
-gis.view.1.parameter.numZoomLevels=10
-
-# Résolution maximum autorisée. Laisser ce paramètre à automatique délèguera à OpenLayers la charge de calculer
-# la résolution maximum en fonction de l’emprise et de la couche.
-gis.view.1.parameter.maxResolution=auto
-
-# Booléen permettant de définir une résolution spécifique ou non
-gis.view.1.parameter.resolution.enabled=false
-
-# Définition de la résolution. Les resolutions doivent être séparées par des virgules et sans espace entre chaque valeur.
-# Le nombre de valeur de grid doit être égale au nombre de "numZoomLevels"
-# Exemple : resolution.grid=0.703125,0.3515625,0.17578125,0.087890625,0.0439453125,0.02197265625,0.010986328125
-# gis.view.1.parameter.resolution.grid=0.703125,0.3515625,0.17578125,0.087890625,0.0439453125,0.02197265625,0.010986328125
-
-# Système de projection (commun à toutes les couches).
-gis.view.1.parameter.projection=EPSG:27561
-
-# Définition de l’emprise de la carte (limites : gauche, bas, droite, haut).
-gis.view.1.parameter.boundsLeft=593644.2403696673
-gis.view.1.parameter.boundsBottom=123794.68578792154
-gis.view.1.parameter.boundsRight=605889.5045426273
-gis.view.1.parameter.boundsTop=133642.0522768815
-
-# Format des images renvoyées par le serveur de carte pour toutes les couches.
-# ArcGIS Server : png
-# Geoserver : image/png
-gis.view.1.parameter.format=image/png
-
-# Unité de mesure, par défaut : m (mètre)
-gis.view.1.parameter.units=m
-
-# Active/désactive la possibilité d'afficher des vecteurs
-# !! Ne pas modifier !!
-gis.view.1.parameter.vectors.enabled=true
-
-# Intitulé des vecteurs. Où apparait-il ????
-gis.view.1.parameter.vectors.name=Mes points
-
-
-############## PARAMETRES DES REGROUPEMENTS COUCHES
-
-# Liste des layers de base (fond de plan). Un seul fond de plan visible à la fois (bouton radio HTML).
-# Exemple : layer0,layer12,monFondDePlan
-gis.view.1.parameter.layers.base=layer0
-
-# Liste des couches thématiques (métier ou technique (recherche, etc.)).
-# Exemple : layer23,maCouche
-gis.view.1.parameter.layers.thematic=thematicMetier1,resultatRecherche
-
-# Liste des couches identifiées comme « sélectionnables ». Ce paramètre ne doit pas être modifié, il est alimenté automatiquement en fonction
-# du paramètre « selectable » de chaque couche.
-# Exemple : layer45,maCoucheSelectionnable
-gis.view.1.parameter.layers.selectable=
-
-
-############## PARAMETRES DES STYLES
-
-# Liste des styles disponibles. Favoriser la définition des styles côtés Serveur cartographiques via des fichiers SLD.
-# Exemple : style1,monStyleParDefaut,styleSelectedItems,searchResultStyle
-gis.view.1.parameter.styles=style1,monStyleParDefaut,styleSelectedItems,searchResultStyle
-
-# Diamètre du point affiché en pixel
-# Exemple : 5
-gis.view.1.parameter.monStyleParDefaut.pointRadius=5
-
-# Couleur du contour. Valeur RVB en hexadécimale (comme en HTML), ou valeur prédéfinie
-# Exemple : FF0000
-# Exemple : red
-gis.view.1.parameter.monStyleParDefaut.strokeColor=FF0000
-
-# Epaisseur du contour en pixel
-# Exemple : 2
-gis.view.1.parameter.monStyleParDefaut.strokeWidth=2
-
-# Opacité du contour de 0 (transparent) à 1 (couleur à 100%)
-# Exemple : 0.8
-gis.view.1.parameter.monStyleParDefaut.strokeOpacity=0.5
-
-# Couleur de remplissage du point. Valeur RVB en hexadécimale (comme en HTML), ou valeur prédéfinie
-# Exemple : 00FF00
-# Exemple : yellow
-gis.view.1.parameter.monStyleParDefaut.fillColor=00FF00
-
-# Opacité du remplissage du point de 0 (transparent) à 1 (couleur à 100%)
-# Exemple : 0.2
-gis.view.1.parameter.monStyleParDefaut.fillOpacity=0.6
-
-
-
-############## PARAMETRES DE CONFIGURATION DES COUCHES
-
-# Type de données transmises : wms ou wfs.
-# Exemple : wms
-gis.view.1.parameter.thematicMetier1.type=wms
-
-# Nom de la couche affiché dans le sélectionneur de couches (« layerswitcher »).
-gis.view.1.parameter.thematicMetier1.name=Ma Couche
-
-# Nom de la couche affiché dans la légende. Si la propriété n’est pas indiquée, la propriété « name » est utilisée.
-gis.view.1.parameter.thematicMetier1.legendTitle=Légende de ma couche
-
-# Nom de la couche défini dans Geoserver. Dans le cas d'ArcGIS Server, liste des calques de la couche par ordre décroissant séparé par une virgule
-# Exemple Geoserver : maCouche
-# Exemple ArcGIS Server : 7,5,3,2,1,0
-gis.view.1.parameter.thematicMetier1.layer=maCouche
-
-# Champs de la vue SQL liée à la couche Geoserver à récupérer lors d’une sélection d’un élément sur la carte.
-# Exemple : id,localisation_id
-gis.view.1.parameter.thematicMetier1.selectable.attributesToRetrieve=id,localisation_id
-
-# L’échelle minimum à laquelle la couche doit s’afficher.
-# Exemple : 800
-gis.view.1.parameter.thematicMetier1.minScale=800
-
-# L’échelle maximale à laquelle la couche doit s’afficher.
-# Exemple : 100
-gis.view.1.parameter.thematicMetier1.maxScale=100
-
-# Définition du filtre OGC sur les données
-# Exemple : {\\"type\\":\\"==\\", \\"property\\":\\"sepulture_trigramme\\", \\"value\\":\\"BAG\\"}
-gis.view.1.parameter.thematicMetier1.ogcFilter={\\"type\\":\\"==\\", \\"property\\":\\"sepulture_trigramme\\", \\"value\\":\\"BAG\\"}
-
-# Nom du style par défaut. Définit le style de l’élément lorsque celui-ci n’est pas sélectionné.
-gis.view.1.parameter.thematicMetier1.style.default=style1
-
-# Liste des règles pour le style par défaut.
-# Exemple : ajoutRule,modificationRule
-gis.view.1.parameter.thematicMetier1.style.default.rules=ajoutRule,modificationRule
-
-# Nom de la règle.
-# Exemple : Point ajouté
-gis.view.1.parameter.thematicMetier1.style.default.ajoutRule.name=Point ajouté
-
-# Définition du filtre OGC pour une règle.
-# Exemple : {\\"type\\":\\"==\\", \\"property\\":\\"statut_id\\", \\"value\\":\\"1\\"}
-gis.view.1.parameter.thematicMetier1.style.default.ajoutRule.filter={\\"type\\":\\"==\\", \\"property\\":\\"statut_id\\", \\"value\\":\\"1\\"}
-
-# Nom du style pour une règle
-# Exemple : style1
-gis.view.1.parameter.thematicMetier1.style.default.ajoutRule.style=style1
-
-# Nom du style pour les éléments sélectionnés.
-# Exemple : styleSelectedItems
-gis.view.1.parameter.thematicMetier1.style.select=styleSelectedItems
-
-# Affiche ou cache la couche sur la carte.
-# Exemple : true
-gis.view.1.parameter.thematicMetier1.visibility=true
-
-# Affiche ou cache la couche dans le sélectionneur de couche (layerswitcher).
-# Exemple : true
-gis.view.1.parameter.thematicMetier1.displayInLayerSwitcher=true
-
-# Affiche ou cache la couche dans le bloc légende.
-# Exemple : false
-gis.view.1.parameter.thematicMetier1.displayInLegend=true
-
-# Type de représentation utilisé (point, ligne…).
-# Exemple : OpenLayers.Geometry.Point
-gis.view.1.parameter.thematicMetier1.geometryType=OpenLayers.Geometry.Point
-
-# Affiche une popup lorsqu’un élément est sélectionné.
-# Exemple : true
-gis.view.1.parameter.thematicMetier1.selectable.popup=true
-
-# Surcharge pour la couche l’URL du serveur de carte. Ce paramètre permet de déclarer des couches provenant de serveurs externes
-# Exemple : http://10.161.128.35/geoserver
-gis.view.1.parameter.thematicMetier1.serverName=http://10.161.1.9/arcgis/services/ArcopoleStudioTest/referentiel/MapServer
-
-# Surcharge pour la couche le namespace qui a été déclaré en global.
-# Exemple : ankou
-gis.view.1.parameter.thematicMetier1.featureNS=ankou
-
-# Surcharge le parametre wms afin d’indiquer le nouvel endpoint de la couche. GeoServer : /wms ArcGIS : /WMSServer
-gis.view.1.parameter.thematicMetier1.wms=/wms
-
-# Surcharge le parametre wfs afin d’indiquer le nouvel endpoint de la couche. GeoServer : /wfs ArcGIS : /WFSServer
-gis.view.1.parameter.thematicMetier1.wfs=/wfs
-
-# Surcharge le paramètre du format des images renvoyées par le serveur de carte pour la couche.
-# Exemple Geoserver : image/png
-# Exemple ArcGIS Server : png
-gis.view.1.parameter.thematicMetier1.format=png
-
-# Active/désactive la transparence d’une légende retournée par GetLegendGraphic.
-# Exemple : true
-gis.view.1.parameter.thematicMetier1.legendGraphicTransparent=true
-
-# Nom de la couche utilisée pour produire la légende dans le cas d’une agrégation de couche avec Geoserver. Propriété valide pour une couche de type WMS.
-gis.view.1.parameter.thematicMetier1.legendGraphicLayer=nbre_defunt
-
-# Nom du style utilisé pour produire la légende. Si la propriété n’est pas indiquée, le style par défaut est sélectionné. Le style doit correspondre un style valide et disponible pour la couche. Propriété valide pour une couche de type WMS.
-gis.view.1.parameter.thematicMetier1.legendGraphicStyle=monStyleParDefaut
-
-# Largeur de la légende retournée par GetLegendGraphic. Propriété valide pour une couche de type WMS.
-# Exemple : 128
-gis.view.1.parameter.thematicMetier1.legendGraphicWidth=128
-
-# Hauteur de la légende retournée par GetLegendGraphic. Propriété valide pour une couche de type WMS.
-# Exemple : 128
-gis.view.1.parameter.thematicMetier1.legendGraphicHeight=128
-
-# Autorise ou non l’identification (info-bulle) pour la couche. Propriété valide pour une couche de type WMS.
-# Exemple : true
-gis.view.1.parameter.thematicMetier1.isIdentifiable=true
-
-# Autorise ou non la recherche d’entités sur la couche. Propriété valide pour une couche de type WMS.
-# Exemple : true
-gis.view.1.parameter.thematicMetier1.isSearchable=true
-
-# Nom du champ au quel s’applique la recherche.
-# Exemple : NAME
-gis.view.1.parameter.thematicMetier1.searchable.ogcFilterProperty=NAME
-
-# Nom du style des résultats. Le style doit correspondre un style valide et disponible pour la couche WMS. Si la propriété n’est pas indiquée, le style par défaut est sélectionné.
-# Un style définit au niveau de la couche du Geoserver.
-# Exemple : searchResultStyleOnGeoserverLayer
-gis.view.1.parameter.thematicMetier1.searchable.layerStyle=searchResultStyleOnGeoserverLayer
-
-
-
-############## PARAMETRAGE DES OUTILS DE LA CARTE
-
-######## FONCTIONNALITES GENERALES
-
-# Affiche/cache la barre de zoom.
-gis.view.1.parameter.showPanZoomBar=true
-
-# Active/désactive la navigation à la souris.
-gis.view.1.parameter.navigation=true
-
-# Affiche/Cache les coordonnées dans la projection de la carte de la souris
-gis.view.1.parameter.mousePosition=true
-
-# Affiche/cache l’aperçu de la carte (carte de localisation).
-gis.view.1.parameter.overviewMap=true
-
-# Active/désactive la navigation au clavier.
-gis.view.1.parameter.keyboardNavigation=false
-
-# Active/cache le layer search panel
-gis.view.1.parameter.layerSearchPanel=false
-
-
-######## SELECTEUR DE COUCHES
-
-# Affiche/cache le sélectionneur de couches (layer switcher).
-gis.view.1.parameter.layerSwitcher=true
-
-# Titre de la liste des couches fond de plan dans le layer switcher.
-gis.view.1.parameter.layerSwitcher.baseLayer.label=Fonds de plan
-
-# Titre de la liste des couches de données dans le layer switcher.
-gis.view.1.parameter.layerSwitcher.dataLayer.label=Thématiques
-
-
-######## GEOLOCALISATION
-
-# Affiche/cache le panel de Geolocalisation
-gis.view.1.parameter.geolocalizationPanel=false
-
-# URL de l’image-icône permettant de styliser le marker d’un résultat de géo-localisation.
-gis.view.1.parameter.geolocalizationPanel.externalGraphic=http://localhost:8080/site-gis-test/js/plugins/gis/openlayers/img/marker.png
-
-# Hauteur de l’image-icône.
-gis.view.1.parameter.geolocalizationPanel.graphicHeight=25
-
-# Largeur de l’image-icône.
-gis.view.1.parameter.geolocalizationPanel.graphicWidth=21
-
-# Décalage en pixel nécessaire pour centrer l’image-icône en x
-gis.view.1.parameter.geolocalizationPanel.graphicXOffset=-10.5
-
-# Décalage en pixel nécessaire pour centrer l’image-icône en y
-gis.view.1.parameter.geolocalizationPanel.graphicYOffset=-25
-
-# Rayon sur lequel le marker est déplaçable autour du point adresse obtenu.
-gis.view.1.parameter.geolocalizationPanel.radius=500
-
-# Echelle minimale à laquelle zoomer la carte pour afficher un résultat de géocodage.
-gis.view.1.parameter.geolocalizationPanel.minZoomLevel=2
-
-
-######## GEOLOCALISATION INVERSE
-
-# Affiche/cache l’outil de géolocalisation inverse
-gis.view.1.parameter.control.inverseGeolocalization=true
-
-# Titre de l’outil de géolocalisation inverse
-gis.view.1.parameter.control.inverseGeolocalization.title=Inverse Geolocalization
-
-# Zoom minimale à laquelle on peut utiliser l’outil de géolocalisation inverse
-gis.view.1.parameter.control.inverseGeolocalization.minZoom=2
-
-
-######## IDENTIFICATION
-
-# Affiche un outil d’identification dans la barre d’outils.
-gis.view.1.parameter.control.identify=false
-
-# Titre de l’outil d’identification.
-gis.view.1.parameter.control.identify.title=Identification
-
-
-######## SELECTION
-
-# Affiche un outil de sélection d’élément dans la barre d’outils.
-gis.view.1.parameter.control.select=false
-
-# Titre de l’outil de sélection.
-gis.view.1.parameter.control.select.title=Sélectionner un élément
-
-
-######## AJOUT DE GEOMETRIE
-
-# Affiche un outil d’ajout de point dans la barre d’outils.
-gis.view.1.parameter.control.point=false
-
-# Titre de l’outil d’ajout de point.
-gis.view.1.parameter.control.point.title=Ajouter un point
-
-# Affiche un outil d’ajout de ligne dans la barre d’outils.
-gis.view.1.parameter.control.line=false
-
-# Titre de l’outil d’ajout de ligne.
-gis.view.1.parameter.control.line.title=Ajouter une ligne
-
-# Affiche un outil d’ajout de polygone dans la barre d’outils.
-gis.view.1.parameter.control.polygon=false
-
-# Titre de l’outil d’ajout de polygone.
-gis.view.1.parameter.control.polygon.title=Ajouter un polygone
-
-
-######## SELECTION PAR SURVOL
-
-# Affiche un outil de sélection à la volée dans la barre d’outils.
-gis.view.1.parameter.control.selecthover=false
-
-# Titre de l’outil de sélection à la volée.
-gis.view.1.parameter.control.selecthover.title=Sélectionner un élément au survol
-
-
-######## DEPLACER
-
-# Affiche un outil de navigation à la souris dans la barre d'outils
-gis.view.1.parameter.control.mouse=true
-
-# Titre de l’outil de navigation à la souris.
-gis.view.1.parameter.control.mouse.title=Déplacer
-
-
-######## MODIFIER (DEPLACER DANS OPENLAYER) UNE GEOMETRIE
-
-# Affiche un outil de modification de la géométrie
-gis.view.1.parameter.control.modify=false
-
-# Titre de l'outil de modification de géométrie
-gis.view.1.parameter.control.modify.title=Modifier un élément
-
-# Texte de la popup de confirmation de modification d’un élément.
-gis.view.1.parameter.control.modify.confirm=Êtes vous sur(e) de vouloir modifier cet élément ?
-
-
-######## SUPPRIMER DANS OPENLAYER UNE GEOMETRIE
-
-# Affiche un outil de suppression d’élément dans la barre d’outils.
-gis.view.1.parameter.control.delete=false
-
-# Titre de l’outil de suppression d’élément.
-gis.view.1.parameter.control.delete.title=Supprimer un élément
-
-# Texte de la popup de confirmation de suppression d’un élément.
-gis.view.1.parameter.control.delete.confirm=Êtes vous sur(e) de vouloir supprimer cet élément ?
-
-
-######## PLEIN ECRAN
-
-# Affiche un outil de mise en plein écran dans la barre d’outils.
-gis.view.1.parameter.control.fullscreen=true
-
-# Titre de l’outil de mise en plein écran.
-gis.view.1.parameter.control.fullscreen.title=Plein écran
-
-
-######## ECHELLE
-
-# Affiche une échelle sur la carte.
-gis.view.1.parameter.control.scaleLine=true
-
-# Titre de l’outil d’échelle.
-gis.view.1.parameter.control.scaleLine.title=Echelle
-
-
-######## IMPRESSION (Navigateur)
-
-# Affiche un outil d’impression de la carte.
-gis.view.1.parameter.control.print=false
-
-# Titre de l’outil d’impression.
-gis.view.1.parameter.control.print.title=Imprimer
-
-
-######## LEGENDE
-
-# Affiche/cache la légende.
-gis.view.1.parameter.legend=true
-
-# Titre de la légende
-gis.view.1.parameter.legend.title=Légende
-				</pre>
+               <p>
+			Le plugin GISMAP est un plugin LUTECE pour implémenter la représentation cartographique des données. Il a été réalisé en s’appuyant sur l'API cartographique OpenLayers (http://openlayers.org/)
+			La version actuelle permet d’intégrer un affichage cartographique de manière autonome ou couplé aux plugins FORM et DIRECTORY de LUTECE. <br />
+			Ci-dessous la liste des principales fonctionnalités : <br />
+			</p>
+			<ul>
+				<li>Navigation cartographique</li>
+				<li>Affichage de données cartographiques diverses
+					<ul>
+						<li>Divers formats:  WMTS, WMS, WFS, GeoJson</li>
+						<li>Divers serveurs cartographique:   GeoServer, ArcGis Server d'ESRI</li>
+						<li>Divers fournisseurs de données cartographiques:  CapGeo (Infra Marie de Paris), OpenStreetMaps, ... </li>
+					</ul>
+				</li>
+				<li>Saisie d'une information de type GEOLOCALISATION</li>
+				<li>Différents outils cartographiques standards:
+					<ul>
+						<li> GPS, Plein écran, Echelle, Popup, Fenêtre de positionnement, Affichage des coordonnées du curseur de la souris, Outils de dessin, Outils de mesure, Zoom sur un lieu,...</li>
+					</ul>	
+				 </li>
+			</ul>
+			<p>
+			Pour un couplage de gismap avec le plugin FORM, utiliser le module-genericattributes-gismap.
+			Pour un couplage de gismap avec le plugin DIRECTORY, utiliser le module-directory-gismap.
+			Dans les deux cas, cela permet d'associer Gismap comme fournisseur de carte pour les données de type GEOLOCALISATION.
+			</p>
+			<p>
+			Nouveautés de la version 2.0.0:
+			</p>
+			<ul>
+				<li>Montée de palier technique
+					<ul>
+						<li>OpenLayers v4.6.2</li>
+						<li>Consommation des WS Adresse et amélioration du géocodage inverse</li>
+					</ul>
+				</li>
+				<li>Correction d’anomalies identifiées
+					<ul>
+						<li>WS directory-gismap</li>
+						<li>Ordre des infos dans la Popup cohérent avec l’ordre du paramétrage</li>
+						<li>Fonction FilterLayerGeoJson() qui prend en compte la projection</li>
+						<li>Divers message d’erreur dans la console</li>
+						<li>Suppression de fichier obsolète ou source de données obsolète</li>
+						<li>Librairie OL Non Debug</li>
+					</ul>
+				</li>
+				<li>Fonctionnel
+					<ul>
+						<li>Sélection graphique via dessin</li>
+						<li>Interaction avec la souris (pouvoir désactiver certaines actions via paramétrage)</li>
+						<li>Résolution CapGeo(en cours)</li>
+						<li>Bloquer l’emprise par paramétrage</li>
+						<li>Bloquer le niveau de Zoom par paramétrage</li>
+						<li>Pouvoir consommer plusieurs sources GeoJson</li>
+						<li>Intégration de vues immersives</li>
+						<li>Modification du curseur au survol si POPUP</li>
+					</ul>
+				</li>
+			</ul>
+            </subsection>
+            <subsection name="Configuration">
+             <p>
+                Le fichier gismap.properties rassemble la configuration globale du plugin et les paramètres de vue. Les différentes vues permettent de définir des cartes avec des outils, sources et styles spécifiques pour des applications différentes : cartes générales, cartes de gestion, carte attributaires avec edition ou en lecture seule.
+             </p>
+            </subsection>
+            <subsection name="Usage">
+             <p>
+                Page Front-office pour afficher une carte par défaut en mode autonome : <em>/jsp/site/RunStandaloneApp.jsp?page=gismap</em>
+             </p>
+             <p>
+                Page d'administration back-office pour afficher une carte par défaut en mode autonome : <em>/jsp/admin/plugins/gismap/ManageGismap.jsp?plugin_name=gismap</em>
+             </p>
+            </subsection>
+            <subsection name="Documentation">
+              <p>
+                Pour plus d'information concernant les fonctionalités, le develeoppement et l'integration de Gismap dans un site Lutece, consulter le wiki :
+                <a href="http://fr.lutece.paris.fr/fr/wiki/home.html"> documentation Gismap</a>
+             </p>
             </subsection>
         </section>
     </body>
-</document>
+</document>  
