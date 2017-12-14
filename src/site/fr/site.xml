@@ -7,6 +7,10 @@
 			<item name="FR" href="/fr/index.html" />
 		</links>
 		
+		<menu name="Plugin gismap">
+			<item name="Home" href="index.html" />
+		</menu>
+		
 		<menu name="Downloads" inherit="bottom">
 			     <item name="Released versions" href="../../stable_builds/plugins/plugin-gis/"/>
 			     <item name="Nightly builds" href="../../nightly_builds/plugins/plugin-gis/" />
