@@ -275,8 +275,12 @@ var GisMap = function (idMapInit, idInit) {
      * getContext is a method to stock in hidden field the current context of the map
      */
     function getContext(){
-        fieldExtent = '['+GlobalMap.getView().calculateExtent(GlobalMap.getSize())+']';
-        fieldLayerVisible = '['+layer.getVisibleLayers()+']';
+		if( fieldExtent !== null ){
+			fieldExtent.value = '['+GlobalMap.getView().calculateExtent(GlobalMap.getSize())+']';
+		}
+		if( fieldLayerVisible !== null ){
+			fieldLayerVisible.value = '['+layer.getVisibleLayers()+']';
+		}
     }
 
     /**
