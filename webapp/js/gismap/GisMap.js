@@ -53,7 +53,8 @@ var GisMap = function (idMapInit, idInit) {
         dataInitialize(parameters, fieldParameters);
         controlInitialize(parameters, fieldParameters);
         mapInitialize(parameters);
-        if (parameters['ListLayersVisible'] !== '' && parameters['ListLayersVisible'] !== undefined){
+        if (parameters['ListLayersVisible'] !== '' && parameters['ListLayersVisible'] !== undefined
+			&& fieldParameters['TypeEdit'] ===  ''){
             setContext(parameters['ListLayersVisible']);
         }
         if(parameters['ExtentContext'] !== '' && parameters['ExtentContext'] !== undefined) {
