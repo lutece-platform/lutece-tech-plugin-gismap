@@ -11,6 +11,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
      * @type {Map}
      */
     this.editInteraction = new Map();
+	
     /**
      * geoJSONFormat is the format to write on the GeoJSON data
      * @type {ol.format.GeoJSON}
@@ -21,6 +22,8 @@ function Editor(interact, layerEdit, fieldName, projection) {
      * @type {{}}
      */
     var dirty = {};
+	
+	var isEditing = false;
     /**
      * fieldData is the field where we stock data value
      * @type {Element}
@@ -124,6 +127,16 @@ function Editor(interact, layerEdit, fieldName, projection) {
     this.modifyInteract = new ol.interaction.Modify({
         features: this.selectInteract.getFeatures()
     });
+	
+	this.modifyInteract.on('modifystart', function (evt){
+		console.log('modifystart');
+		isEditing = true;
+	});
+	
+	this.modifyInteract.on('modifyend', function (evt){
+		console.log('modifyend');
+		isEditing = false;
+	});
     /**
      * drawInteract is the interaction to draw a feature on the map
      * @type {ol.interaction.Draw}
@@ -290,6 +303,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
 
          this.fieldEditionStatus.value = false;
          this.editAvailable = false;
+		 
          if(this.suggestPoiEdit === false) {
              interact.setEditInteraction();
          }else{
@@ -471,13 +485,16 @@ function Editor(interact, layerEdit, fieldName, projection) {
      * forceValidate force to validate current edition
      */
     this.forceValidate = function () {
-        var selectFeatures = this.selectInteract.getFeatures().getArray();
-        if (selectFeatures.length !== 0) {
-            var selectFeaturesAuth = selectFeatures[0];
-            this.writeGeoJSON(selectFeatures[0]);
-            //this.selectInteract.getFeatures().push(selectFeaturesAuth);
-			this.selectInteract.getFeatures().clear();
-        }
+    	//Don't validate is modify interact is not ended yet
+		if(isEditing === false){
+			var selectFeatures = this.selectInteract.getFeatures().getArray();
+			if (selectFeatures.length !== 0) {
+				var selectFeaturesAuth = selectFeatures[0];
+				this.writeGeoJSON(selectFeatures[0]);
+				//this.selectInteract.getFeatures().push(selectFeaturesAuth);
+				this.selectInteract.getFeatures().clear();
+			}
+		}
         //this.selectInteract.getFeatures().clear();
     };
 }
