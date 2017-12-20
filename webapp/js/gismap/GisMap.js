@@ -57,7 +57,8 @@ var GisMap = function (idMapInit, idInit) {
 			&& fieldParameters['TypeEdit'] ===  ''){
             setContext(parameters['ListLayersVisible']);
         }
-        if(parameters['ExtentContext'] !== '' && parameters['ExtentContext'] !== undefined) {
+        if(parameters['ExtentContext'] !== '' && parameters['ExtentContext'] !== undefined
+		&& fieldParameters['TypeEdit'] ===  '') {
             viewGisMap.getView().fit(parameters['ExtentContext'], GlobalMap.getSize());
             viewGisMap.getView().setZoom(parameters['current_zoom']);
         }else if(manager.getSpecificExtent().length > 1 ){
