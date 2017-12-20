@@ -62,6 +62,8 @@ var Zoom = function(GlobalMap, projection, viewGisMap) {
 			if(interact.getEditor()!== null && interact.getEditor().getSuggestPoiEdit()){
 				interact.getEditor().addPoint(pointPoi);
 			}
+			//set Previous center usefull for the zoom Max/Min limitation
+			GlobalMap.getView().previousCenter = GlobalMap.getView().getCenter();
 		}
     };
 
@@ -101,6 +103,8 @@ var Zoom = function(GlobalMap, projection, viewGisMap) {
             var geomColl = new ol.geom.GeometryCollection(arrayGeom);
             viewGisMap.getView().fit(geomColl.getExtent(), GlobalMap.getSize());
         }
+		//set Previous center usefull for the zoom Max/Min limitation
+		GlobalMap.getView().previousCenter = GlobalMap.getView().getCenter();
     };
 
     /**
@@ -119,6 +123,7 @@ var Zoom = function(GlobalMap, projection, viewGisMap) {
 					maxZoom: viewGisMap.getZoomSelect()
 				});
 			}
+			GlobalMap.getView().previousCenter = GlobalMap.getView().getCenter();
         }
     };
 
