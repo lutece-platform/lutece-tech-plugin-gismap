@@ -31,6 +31,30 @@ function View(projection) {
      */
     this.view = null;
 
+	/**
+     * limitExtent define the bounding extent of the view
+     * @type {number[]}
+     */
+	var limitExtent ;
+	
+	/**
+     * resolutions define the resolution array of the view
+     * @type {number[]}
+     */
+	this.resolutions = [];
+	
+	this.setResolutions = function(res) {
+		this.resolutions = res;
+	};
+	
+	this.getResolutions = function() {
+		var resol;
+		if (this.resolutions.length > 0){
+			resol = this.resolutions;
+		}
+		return resol;
+	};
+	
     /**
      * View Method
      * setCenter is a setter to define the center of the view
@@ -91,6 +115,30 @@ function View(projection) {
         return this.view;
     };
 
+	
+	 /**
+     * View Method
+     * getLimitExtent is a getter to access the bounding extent
+	 * @returns {number[]} the extent
+     */
+	this.getLimitExtent = function (){
+		if ( this.limitExtent === undefined){
+			return projection.getExtent();
+		}
+		else{
+			return this.limitExtent;
+		}			
+    };
+
+    /**
+     * View Method
+     * setLimitExtent is a setter to define the bounding extent
+     * @param extent is the extent
+     */
+    this.setLimitExtent = function (extent){
+        this.limitExtent = extent;
+    };
+	
     /**
      * View Method
      * createView initialize the view with all parameters
@@ -98,11 +146,12 @@ function View(projection) {
     this.createView = function(){
          this.view = new ol.View({
              projection: projection.getProjection().getCode(),
-             extent: projection.getExtent(),
+             extent: this.getLimitExtent(),
              center: this.centerUser,
              zoom: this.zoomSelect,
-             minZoom: this.zoomMin,
-             maxZoom: this.zoomMax
+             //minZoom: this.zoomMin,
+             //maxZoom: this.zoomMax,
+			 resolutions: this.getResolutions()
 
         });
     };

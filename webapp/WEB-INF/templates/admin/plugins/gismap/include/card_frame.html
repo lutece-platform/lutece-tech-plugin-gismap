@@ -8,6 +8,7 @@
 <#assign strValPrint = "false" >
 <#assign strValMapClass = "map" >
 <#assign strValCss = "ol3-gismap.css" >
+<#assign reverse_geocoding_url = "" >
 <#list map_parameter.parameters?keys as key>
 	<#assign strKey = "'" + key + "'">
 	<#if strKey == "'Print'">
@@ -19,8 +20,14 @@
 	<#if strKey == "'Css'">
 		<#assign strValCss = "${map_parameter.parameters[key]}"?split("'")[1] >
 	</#if>
+	<#if strKey == "'ReverseGeocodingUrl'">
+		<#assign reverse_geocoding_url = "${map_parameter.parameters[key]}"?split("'")[1] >
+	</#if>
+	<#if strKey == "'ImmersiveView'">
+		<#assign enableImmersiveView = map_parameter.parameters[key]>
+	</#if>
 </#list>
-<#assign strValTypeEdit = "" >
+<#assign strValTypeEdit = "''" >
 <#if fieldParam?? >
 <#list fieldParam?keys as key>
 	<#assign strKey = "'" + key + "'">
@@ -32,6 +39,10 @@
 </#if>
 <link rel="stylesheet" href="js/gismap/lib/css/${strValCss}" type="text/css">
 <script src="js/autocomplete/jquery.session.js"></script>
+
+<#if enableImmersiveView?? && enableImmersiveView?boolean>
+<script src ="http://s3.eu-central-1.amazonaws.com/rcscommons/public/realitylens/sdk/1.0.3/rlens.min.js"></script>
+</#if>
 <div>
 	<input type="hidden" id="${idEntry}_geomCentroidXGeocodage" value=""/>
     <input type="hidden" id="${idEntry}_geomCentroidYGeocodage" value=""/>
@@ -43,7 +54,10 @@
     
     <input type="hidden" id="${idEntry}_extent_current_val" name="extent_current_val"  value="">
 	<input type="hidden" id="${idEntry}_visible_layer_val" name="visible_layer_val" value="" >
-    
+	<input type="hidden" id="${idEntry}_reverse_geocoding_url" name="${idEntry}_reverse_geocoding_url" value='${reverse_geocoding_url}' >
+<#if enableImmersiveView?? && enableImmersiveView?boolean>
+    <div id="${idEntry}_realitylens" class="${strValMapClass}"></div>
+</#if>
     <div id="${idEntry}_map" class="${strValMapClass}"><div id="popup"></div></div>
     <div class="hidden"  id="measure"> #i18n{gismap.map.message.measure}</div>
     <button id="zoomSelect" type="button" onClick="GisMapDisplay${idEntry}.getZoom().zoomSelect()">Zoom To</button>
@@ -58,7 +72,10 @@
     <!-- <script src="js/Gis.js" type="text/javascript"></script> </script> -->
 </div>
 <script>
-$("#address").autocomplete({
+ 
+$("#${idEntry}_address").autocomplete({
+    minLength: ${add_parameter.minLength},
+    delay: ${add_parameter.delay},
 	source : function(request, reponse){ // les deux arguments représentent les données nécessaires au plugin
 	$.ajax({
 		url : "${add_parameter.url}",
@@ -107,14 +124,16 @@ function getResult(result) {
 };
 
 $( "#${idEntry}_map" )
-.mouseout(function() {
-	var typeEdit   = "${strValTypeEdit}";
-	if(typeEdit != ""){
+.on( "mouseleave", function() {
+	var typeEdit   = ${strValTypeEdit};
+	if(typeEdit !== ''){
 	var varX = $("#${idEntry}_x").val();
 	var varY = $("#${idEntry}_y").val();
-		if(varX != "" && varY != ""){
+	if(varX != "" && varY != ""){
 			GisMapDisplay${idEntry}.getInteract().getEditor().forceValidate();
-			geocodage${idEntry}();
+			if($("#${idEntry}_geomState").val() === 'true'){
+				geocodage${idEntry}();
+			}
 		}
 	}
 	else{
@@ -124,8 +143,7 @@ $( "#${idEntry}_map" )
 			$.session.set("extent_current", varExtendCurrent);
 			$.session.set("visible_layer", varVisibleLayer);
 			$.session.set("current_zoom", GisMapDisplay${idEntry}.getZoom().getCurrentZoom());
-		}
-		
+		}		
 		$("#${idEntry}_extent_current_val").val($.session.get("extent_current"));
 		$("#${idEntry}_visible_layer_val").val($.session.get("visible_layer"));
 	}
@@ -166,19 +184,26 @@ function inIdSelected(id, idSelected){
 	return varBoolean;
 };
 function geocodage${idEntry}(){
-	var webappURL = $('#webapp_url').val();
+	var geocoding_url = $('#${idEntry}_reverse_geocoding_url').val();
 	var valX = $('#${idEntry}_geomCentroidXGeocodage').val();
 	var valY = $('#${idEntry}_geomCentroidYGeocodage').val();
-	$.ajax({
-		url: webappURL + "rest/gismap/xy/" + valX + "," + valY,
-        dataType: "jsonp",
-	    jsonpCallback: 'callback',
-        success: function( data ) {
-			var address = data.Adresse_tot+", "+data.Codepostal+" ";
-        	$("#${idEntry}_address").val(address);
-			$("#id_additional_address").val(getAdditionalAdd(address));
-    	}
-    });
+	if(geocoding_url != "" && valX != "" && valY != ""){
+		$.ajax({
+			url: geocoding_url + "%28" + valX + "," + valY + "%29",
+	        dataType: "jsonp",
+            success: function (response) {
+                if (response.error) {
+                    console.log(response.error.message + '\n' + response.error.details.join('\n'));
+                }else {
+                    if (response.result.Features.length >= 0) {
+        				var address = response.result.Features[0].properties.Adressetypo;
+        	        	$("#${idEntry}_address").val(address);
+        				$("#id_additional_address").val(getAdditionalAdd(address));
+                    }
+                }
+            }
+	    });
+	}
 };
 
 function getAdditionalAdd (address)
@@ -213,4 +238,19 @@ function getAdditionalAdd (address)
 	}
 	return additionalAddress;
 };
+
+$( document ).ready(function() {
+$("#${idEntry}_geometry").on("change", 	function() {
+	var typeEdit   = "${strValTypeEdit}";
+	if(typeEdit != ""){
+	var varX = $("#${idEntry}_x").val();
+	var varY = $("#${idEntry}_y").val();
+		if(varX != "" && varY != ""){
+			geocodage${idEntry}();
+		}else{
+		$("#${idEntry}_address").val("");
+		}
+	}
+	});
+});
 </script>

@@ -27,15 +27,18 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String ROTATE = "Rotate";
     public static final String ZOOMZONE = "ZoomZone";
     public static final String SELECT = "Select";
+    public static final String SELECTTYPE = "SelectType";
     public static final String DRAW = "Draw";
     public static final String MEASURE = "Measure";
     public static final String AUTOEDIT = "AutoEdit";
     public static final String SUGGESTPOISEARCH = "SuggestPOISearch";
     public static final String SUGGESTPOIPARAMS = "SuggestPOIParams";
+    public static final String REVERSEGEOCODING_URL = "ReverseGeocodingUrl";
     public static final String GPS = "GPS";
     public static final String PRINT = "Print";
     public static final String LAYEREDIT = "LayerEdit";
     public static final String EXTENT = "Extent";
+    public static final String LIMITEXTENT = "LimitExtent";
     public static final String ZOOMSELECT = "ZoomSelect";
     public static final String ZOOM = "Zoom";
     public static final String DEFAULTBACKGROUND = "DefaultBackGround";
@@ -48,6 +51,10 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String BUTTONORDER = "ButtonOrder";
     public static final String CSS = "Css";
     public static final String DEFAULTMODE = "DefaultMode";
+	public static final String DISABLEMAPINTERACTIONS = "DisabledMapInteractions";
+    public static final String IMMERSIVEVIEW = "ImmersiveView";
+    public static final String IMMERSIVEVIEWAPPCODE = "ImmersiveViewAppCode";
+    public static final String IMMERSIVEVIEWAPPID = "ImmersiveViewAppId";
 
     // parameter 1 to 9
     public static final String WMSBASE = "WMS-Base";
@@ -60,6 +67,7 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String THEMATICSIMPLE = "ThematicSimple";
     public static final String THEMATICCOMPLEX = "ThematicComplex";
     public static final String CLUSTER = "Cluster";
+
 
     @Override
     public MapParameter findById( int nKey )
@@ -87,6 +95,8 @@ public class MapParameterDAO implements IMapParameterDAO
         fillMapParameter( nKey, ZOOMZONE, mapParameter );
 
         fillMapParameter( nKey, SELECT, mapParameter );
+        
+        fillMapParameter( nKey, SELECTTYPE, mapParameter);
 
         fillMapParameter( nKey, DRAW, mapParameter );
 
@@ -97,6 +107,8 @@ public class MapParameterDAO implements IMapParameterDAO
         fillMapParameter( nKey, SUGGESTPOISEARCH, mapParameter );
 
         fillMapParameter( nKey, SUGGESTPOIPARAMS, mapParameter );
+        
+        fillMapParameter( nKey, REVERSEGEOCODING_URL, mapParameter );
 
         fillMapParameter( nKey, GPS, mapParameter );
 
@@ -105,6 +117,8 @@ public class MapParameterDAO implements IMapParameterDAO
         fillMapParameter( nKey, LAYEREDIT, mapParameter );
 
         fillMapParameter( nKey, EXTENT, mapParameter );
+        
+        fillMapParameter( nKey, LIMITEXTENT, mapParameter );
 
         fillMapParameter( nKey, ZOOMSELECT, mapParameter );
 
@@ -129,6 +143,14 @@ public class MapParameterDAO implements IMapParameterDAO
         fillMapParameter( nKey, CSS, mapParameter );
         
         fillMapParameter( nKey, DEFAULTMODE, mapParameter );
+        
+        fillMapParameter( nKey, DISABLEMAPINTERACTIONS, mapParameter);
+        
+        fillMapParameter( nKey, IMMERSIVEVIEW, mapParameter);
+        
+        fillMapParameter( nKey, IMMERSIVEVIEWAPPCODE, mapParameter);
+        
+        fillMapParameter( nKey, IMMERSIVEVIEWAPPID, mapParameter);
 
         for ( String property : getPropertyList( WMSBASE ) )
         {

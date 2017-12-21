@@ -26,6 +26,12 @@ var Popup = function(GlobalMap, idMap, parameters) {
      * @type {string}
      */
     var popupKey = '';
+	
+	/**
+     * cursorChangeKey is the key of the listener to change the cursor when hovering features
+     * @type {string}
+     */
+	var cursorChangeKey = '';
     /**
      * overlay is the overlay of the popup
      * @type {ol.Overlay.Popup}
@@ -88,8 +94,8 @@ var Popup = function(GlobalMap, idMap, parameters) {
         var data = '';
         var keys = feature.getKeys();
         var keysQuery = queryData[layerInfo];
-        for (var j = 0; j < keys.length; j++) {
-            for (var k = 0; k < keysQuery.length; k++) {
+        for (var k = 0; k < keysQuery.length; k++) {
+        	for (var j = 0; j < keys.length; j++) {
                 if (keysQuery[k] === keys[j]) {
                     data = data + popupForm.definePopupSimpleForm(keys[j], feature, keysQuery[k]);
                 }
@@ -243,6 +249,20 @@ var Popup = function(GlobalMap, idMap, parameters) {
         definePopup(evt, layerInfo, features, wmsLayers, count, id);
     }
 
+	/**
+     * Popup Method
+     * changeCursor modify the cursor when hovering a feature that is not part of the Edit layer
+     * @param evt the event triggered by the caller
+     */
+	function changeCursor (evt) {
+				if (evt.dragging) { return;}
+				var pixel = GlobalMap.getEventPixel(evt.originalEvent);
+				var hit = GlobalMap.hasFeatureAtPixel(pixel, {layerFilter: function(layer){
+					return layer.get('name') !== 'EditLayer';
+				}});
+				GlobalMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
+
+	}
     /**
      * Popup Method
      * managePopup add or remove the overlay of the map and the listener
@@ -252,10 +272,13 @@ var Popup = function(GlobalMap, idMap, parameters) {
         if(value === 'off'){
             overlay.hide();
             GlobalMap.removeOverlay(overlay);
-            GlobalMap.unByKey(popupKey);
+            ol.Observable.unByKey(popupKey);
+			ol.Observable.unByKey(cursorChangeKey);
         }else if(value === 'on'){
             interact.manageActiveInteraction();
-            GlobalMap.addOverlay(overlay);
+            GlobalMap.addOverlay(overlay);			
+			// change mouse cursor when over marker
+			cursorChangeKey = GlobalMap.on('pointermove', function(evt) {changeCursor(evt)});			
             popupKey = GlobalMap.on('singleclick', function(evt){initiatePopup(evt);});
         }
     };

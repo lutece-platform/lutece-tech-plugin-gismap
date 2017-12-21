@@ -15,8 +15,6 @@
 
 .layer-switcher.shown {
     bottom: 3em;
-    max-height: 200px;
-    max-width: 500px;
 }
 
 .layer-switcher .panel {
@@ -73,6 +71,10 @@
 .layer-switcher li.layer label, .layer-switcher li.layer input {
     display: table-cell;
     vertical-align: sub;
+}
+
+.layer-switcher label.disabled {
+    opacity:0.4;
 }
 
 .layer-switcher input {

@@ -80,19 +80,4 @@ public final class ViewDAO implements IViewDAO
         return listView;
     }
 
-    @Override
-    public List<String> findListRecordField( int directoryId )
-    {
-        List<String> listRecordField = new ArrayList<>( );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_RECORD_FIELD );
-        daoUtil.setInt( 1, directoryId );
-        daoUtil.executeQuery( );
-
-        while ( daoUtil.next( ) )
-        {
-            listRecordField.add( Integer.toString( daoUtil.getInt( 1 ) ) );
-        }
-        return listRecordField;
-    }
-
 }

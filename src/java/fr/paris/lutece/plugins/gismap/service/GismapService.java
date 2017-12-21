@@ -119,47 +119,4 @@ public class GismapService
         return templateList.getHtml( );
     }
 
-    public String getMapTemplateWithDirectoryParam( HttpServletRequest request, int directoryId, String viewId )
-    {
-        Map<String, Object> model = new HashMap<>( );
-
-        // Récupération de la vue par défaut
-        View view = ViewHome.findByPrimaryKey( Integer.parseInt( AppPropertiesService.getProperty( GISMAP_DEFAULT_VIEW_PROPERTIES ) ) );
-
-        // Récupération des paramètres définissant l’affichage du flux GEOJSON de la vue du directory
-        View viewDirectory = ViewHome.findByPrimaryKey( Integer.parseInt( viewId ) );
-        String paramGeojson = viewDirectory.getMapParameter( ).getParameters( PARAM_VIEW_GEOJSON1 );
-        String paramThematicSimple = viewDirectory.getMapParameter( ).getParameters( PARAM_VIEW_THEMATICSIMPLE1 );
-        String paramPopup = viewDirectory.getMapParameter( ).getParameters( PARAM_VIEW_POPUP1 );
-        String paramShowlink = viewDirectory.getMapParameter( ).getParameters( PARAM_VIEW_SHOWLINK );
-
-        // Ajout de la couche GeoJSON du directory
-        MapParameter tmp = view.getMapParameter( );
-        tmp.setParameters( PARAM_VIEW_URLGEOJSON, "'" + AppPathService.getBaseUrl( request ) + GISMAP_URL_REST + GismapUtils.getRecordField( directoryId ) + "'" );
-        tmp.setParameters( PARAM_VIEW_GEOJSON1, paramGeojson );
-        tmp.setParameters( PARAM_VIEW_THEMATICSIMPLE1, paramThematicSimple );
-
-        if ( paramPopup != null )
-        {
-            tmp.setParameters( PARAM_VIEW_POPUP1, paramPopup );
-        }
-
-        if ( paramShowlink != null )
-        {
-            tmp.setParameters( PARAM_VIEW_SHOWLINK, paramShowlink );
-        }
-
-        tmp.setParameters( PARAM_VIEW_THEMATICSIMPLE1, paramThematicSimple );
-
-        view.setMapParameter( tmp );
-
-        model.put( PARAMETER_MAP_PARAMETER, view.getMapParameter( ) );
-        model.put( PARAMETER_ADD_PARAMETER, view.getAddressParam( ) );
-        model.put( PARAMETER_DEFAULT_VIEW, directoryId );
-
-        Locale locale = ( request == null ) ? LocaleService.getDefault( ) : request.getLocale( );
-        HtmlTemplate templateList = AppTemplateService.getTemplate( view.getMapTemplateFile( ), locale, model );
-
-        return templateList.getHtml( );
-    }
 }

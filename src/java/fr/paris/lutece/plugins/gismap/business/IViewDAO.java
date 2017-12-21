@@ -46,6 +46,4 @@ public interface IViewDAO
 
     public List<View> findAll( );
 
-    public List<String> findListRecordField( int directoryId );
-
 }

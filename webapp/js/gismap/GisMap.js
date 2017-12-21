@@ -27,15 +27,17 @@ var GisMap = function (idMapInit, idInit) {
     var suggestPoiLocator;
     var viewGisMap;
     var zoom;
+	var zoomMin;
+	var zoomMax;
+	var immersiveViewMarker;
 
     var GlobalMap = new ol.Map({
         target: this.idMap,
-        interactions: ol.interaction.defaults({doubleClickZoom :false})
+		interactions: ol.interaction.defaults({}),
     });
 
     var fieldExtent = [];
     var fieldLayerVisible = [];
-
 
     /**
      * GisMap Private Method
@@ -51,10 +53,12 @@ var GisMap = function (idMapInit, idInit) {
         dataInitialize(parameters, fieldParameters);
         controlInitialize(parameters, fieldParameters);
         mapInitialize(parameters);
-        if (parameters['ListLayersVisible'] !== '' && parameters['ListLayersVisible'] !== undefined){
+        if (parameters['ListLayersVisible'] !== '' && parameters['ListLayersVisible'] !== undefined
+			&& fieldParameters['TypeEdit'] ===  ''){
             setContext(parameters['ListLayersVisible']);
         }
-        if(parameters['ExtentContext'] !== '' && parameters['ExtentContext'] !== undefined) {
+        if(parameters['ExtentContext'] !== '' && parameters['ExtentContext'] !== undefined
+		&& fieldParameters['TypeEdit'] ===  '') {
             viewGisMap.getView().fit(parameters['ExtentContext'], GlobalMap.getSize());
             viewGisMap.getView().setZoom(parameters['current_zoom']);
         }else if(manager.getSpecificExtent().length > 1 ){
@@ -86,9 +90,41 @@ var GisMap = function (idMapInit, idInit) {
         		inter.setEditInteraction();
         	}
         }
-        
-        
+
+		if (startParameters['Zoom'] !== '' && startParameters['Zoom'] !== undefined) {
+            zoomMin = startParameters['Zoom'][0];
+			zoomMax = startParameters['Zoom'][1];			
+        }
+		
+	/**
+     * Addition of a listener for zoom event
+     * workaround to manage the zoom limits
+     */
+		GlobalMap.getView().on('propertychange', function(e) {
+			switch (e.key) {
+				case 'resolution':
+					if (GlobalMap.getView().getZoom() > zoomMax) {
+						GlobalMap.getView().setZoom(zoomMax);
+						if (GlobalMap.getView().previousCenter) {
+							//reset the map center to avoid unwanted pan
+							GlobalMap.getView().setCenter(GlobalMap.getView().previousCenter);
+						}
+					} else if (GlobalMap.getView().getZoom() < zoomMin) {
+						GlobalMap.getView().setZoom(zoomMin);
+						if (GlobalMap.getView().previousCenter) {
+							//reset the map center to avoid unwanted pan
+							GlobalMap.getView().setCenter(GlobalMap.getView().previousCenter);
+						}
+					}
+					break;
+			   case 'center':
+					GlobalMap.getView().previousCenter = e.oldValue;
+					//console.log(GlobalMap.getView().getResolutions());
+					break; 				
+				}
+		});
     }
+
 
     /**
      * GisMap Private Method
@@ -121,7 +157,11 @@ var GisMap = function (idMapInit, idInit) {
      * @param parameters is the array of parameters of properties file
      */
     function dataInitialize(parameters, fieldParameters){
-        layer = new Layer(projectionGis, fieldParameters['Proxy']);
+		var proxy = "";
+		if (fieldParameters['Proxy'] !== undefined){
+			proxy = fieldParameters['Proxy'];
+		}
+        layer = new Layer(projectionGis, proxy);
         manager.readAndInitDataParams(layer, parameters, fieldParameters);
     }
 
@@ -136,7 +176,7 @@ var GisMap = function (idMapInit, idInit) {
             popup = new Popup(GlobalMap, id, parameters['Popup']);
             interfaceValues["popup"] = popup;
         }
-        interact = new Interaction(GlobalMap, layer, popup, projectionGis, parameters['LayerEdit'], fieldParameters);
+        interact = new Interaction(GlobalMap, layer, popup, projectionGis, parameters['LayerEdit'],parameters['SelectType'], fieldParameters);
         control = new Control();
         manager.readAndInitActionParams(control, interact, layer, projectionGis, parameters);
         interfaceValues["interact"] = interact;
@@ -169,16 +209,55 @@ var GisMap = function (idMapInit, idInit) {
 
     /**
      * GisMap Private Method
+     * initDefaultMapInteractions initiate the default interactions of the map
+	 * from a list of Interactions to be disabled
+     * @param parameters is the array of parameters of properties file
+     */
+    function initDefaultMapInteractions(parameters){
+		var defaultMapInteractionCollection = GlobalMap.getInteractions().getArray();
+		var interactionTypesToDisable;
+		if (Array.isArray(parameters['DisabledMapInteractions'])==false){
+			interactionTypesToDisable = [parameters['DisabledMapInteractions']];
+		}else{
+			interactionTypesToDisable = parameters['DisabledMapInteractions'];
+		}
+		var interactionToDisable;
+		var interactionTypeToDisable;
+        for (var i = 0; i < interactionTypesToDisable.length; i++) {			
+			interactionTypeToDisable = interactionTypesToDisable[i];			
+			for (var j = 0; j < defaultMapInteractionCollection.length; j++) {
+				interactionToDisable = defaultMapInteractionCollection.filter(function(interaction) {
+					switch(interactionTypeToDisable){
+						case 'doubleClickZoom' : return interaction instanceof ol.interaction.DoubleClickZoom;
+						case 'dragPan' : return interaction instanceof ol.interaction.DragPan;
+						case 'pinchRotate' : return interaction instanceof ol.interaction.PinchRotate;
+						case 'pinchZoom' : return interaction instanceof ol.interaction.PinchZoom;
+						case 'mouseWheelZoom' : return interaction instanceof ol.interaction.MouseWheelZoom;				
+					}					  
+				})[0];			
+			}
+			GlobalMap.removeInteraction(interactionToDisable);
+		}
+    }	
+	
+	
+    /**
+     * GisMap Private Method
      * mapInitialize initiate the map and integrate all components
      * @param parameters is the array of parameters of properties file
      */
     function mapInitialize(parameters){
+		if(layer.getDefaultWMTSResolutions() !== undefined ){
+			viewGisMap.setResolutions(layer.getDefaultWMTSResolutions())
+		}
         viewGisMap.createView();
         GlobalMap.setView(viewGisMap.getView());
         var ListControl = control.getControls();
         for (var i = 0; i < ListControl.length; i++){
             GlobalMap.addControl(ListControl[i]);
-        }
+        }		
+		initDefaultMapInteractions(parameters);
+		
         var ListInteract = interact.getInteracts();
         for (var j = 0; j < ListInteract.length; j++){
             GlobalMap.addInteraction(ListInteract[j]);
@@ -198,8 +277,12 @@ var GisMap = function (idMapInit, idInit) {
      * getContext is a method to stock in hidden field the current context of the map
      */
     function getContext(){
-        fieldExtent = '['+GlobalMap.getView().calculateExtent(GlobalMap.getSize())+']';
-        fieldLayerVisible = '['+layer.getVisibleLayers()+']';
+		if( fieldExtent !== null ){
+			fieldExtent.value = '['+GlobalMap.getView().calculateExtent(GlobalMap.getSize())+']';
+		}
+		if( fieldLayerVisible !== null ){
+			fieldLayerVisible.value = '['+layer.getVisibleLayers()+']';
+		}
     }
 
     /**
@@ -276,6 +359,17 @@ var GisMap = function (idMapInit, idInit) {
         initGis(parameters, fieldParameters);
         return GlobalMap;
     };
+	
+	    /**
+     * GisMap Method
+     * updateMarker displays or updates the marker feature
+     * representing a current RealityLens position
+	 * and center the view on it
+     * @param X, Y the target coordinates
+     */
+	var updateMarker = function (X, Y) {
+		interact.getImmersiveView().updateMarker([X,Y]);
+	};
 
     return {
         getFilter: getFilter,
@@ -283,6 +377,7 @@ var GisMap = function (idMapInit, idInit) {
         getLayer: getLayer,
         getPopup: getPopup,
         getZoom: getZoom,
-        initGisMap: initGisMap
+        initGisMap: initGisMap,
+		updateMarker : updateMarker
     };
 };

@@ -224,6 +224,44 @@ function StyleDefinition() {
 			src: 'css/img/lutece-logo.png'
 		})
     });
+    
+    
+    /**
+     * !!! Do not delete !!!
+     * Default style definition suitable for either Point, Lines or Polygons geometries
+     *  - used for default feature styling
+     * @type {ol.style.Style}
+     */
+    this.defaultStyle =  new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: 'blue',
+            width: 2
+          }),
+          fill: new ol.style.Fill({
+            color: 'rgba(150, 220, 255, 0.75)'
+          }),
+          image: new ol.style.Circle({
+            radius: 6,
+            fill: null,
+            stroke: new ol.style.Stroke({
+              color: 'blue'
+            })
+          })
+        });
+
+ /**
+ * !!! Do not delete !!!
+ * Default style definition for immersive view marker
+ * @type {ol.style.Style}
+ */
+this.defaultImmersiveViewMarkerStyle = new ol.style.Style({
+    image: new ol.style.Icon (/** @type {olx.style.IconOptions} */ ({
+        anchor: [0.5, 0.5],
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'pixels',
+        src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAAH6ji2bAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAsdJREFUeNpi+P//PwNDSsN/MA1l/GdYef0/I4hmXHXjP8PulQwAAcQM4jQ+ZbzAxHiK4b+/gbo+MwMDY8NNPhkGgABigJnAcPI/BAPZzCC1DKn1Ev6nVzDc3LaWgUFNnwEggCAmpjZOAFqUD8SK/2fXP2AEaw1KZ2AQlmBgWDeDgeHty4lMQFkGnr0rGP6bARlBGSBuPljwi5kHw4GbDxhgACR4EeRCx3scDAyzGxmAZjICBBDMIgGg5HsG7OAiUKEByHKIa6AO4Fk1geHLx48MDK7hDAwKGmATYdbkg1kgVwIFP/cUgKxi2K/PATHPJx5MgUxUANL3GYTFYS5HgF8/GBgWdkIUQgKcATlAUADIIyAaIICQFYJM3gDE+lA1E4GKCmAaYL6+gKQAHQgCNXxggVqpj+HGty+AUTCTARpsjJC4AYHUegaGBzcYQAHNw8/P8CWsAFkxJL7AYQYE/q8vgIMGFESg8AQHGQRA4pCBVwAcFA1+DnCbwYGOBCAKr5xgYGDjYDBsmgmO9ICpK+C2wKIR4cb4crBiFABJTyCWIgvI+2CfgWIAmBwZ1AwYGH7+AHsKKVE8QA7w/1jCEB7oAAEGVwiPARxRiQOgxB5yDILS7QGMWAQ5WR6YJNmhfgQ5/SEwTm5dxEjbQOwAimlEaoQBUIz7JGAGFDoApdQtC2CBBwOKzAxGDiCXScBd5BnDwMDMAkkdq6cy+P97wTBDi4chgeMDw4cjOyB5H5QAQFjTBBjRH5ANdWRB8SYoRmC2A2Nlf0k8g4O6AlwaxAalA8eehZAkCdODCAJ9JhRvgMIIBIDeBaXbCXtOYPgUJAaSw9ADixR4GQEDsMIKBIDe5jm1A558wZkDWESByw7UHAWPdfRiEBEx9gHImQUVgAw6uAE9QsBJCDnBYk86hAE8yWBN2EjFDyjBOmCx4CLU4gmgLISuFwDimD6XRPI8JAAAAABJRU5ErkJggg=='
+    }))
+});    
 
     /**
      * Sample of correspondence table

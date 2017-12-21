@@ -103,10 +103,20 @@ function Feature(projection, proxy) {
         var dataUrl = data[6];
         var vectorSource;
         var features = [];
-        var indexlr = dataUrl.lastIndexOf('/');
-        var dataUrlWithPostMethod = dataUrl.substring(0, indexlr) + '/post';
-        var dataForPostMethod = dataUrl.substring(indexlr + 1);
-
+        if (dataUrl != '' && dataUrl != undefined ){
+	        var indexlr = dataUrl.lastIndexOf('?');
+	        var dataUrlWithPostMethod;
+	        if (indexlr != -1 ){
+	        	dataUrlWithPostMethod = dataUrl.substring(0, indexlr) + '/post';
+	        	}
+	        else{
+	        	dataUrlWithPostMethod = dataUrl + '/post';
+	        	}
+			var dataUrlQuery = dataUrl.substr(indexlr+1);
+			var dataForPostMethod = dataUrlQuery?JSON.parse('{"' + dataUrlQuery.replace(/&/g, '","').replace(/=/g,'":"') + '"}',
+	                 function(key, value) { return key===""?value:decodeURIComponent(value) }):{}
+        }
+        
         if(dataFormat === 'WKT'){
             for(var i = 0; i < data.length; i++){
                 features.push(wktFormat.readFeatures(dataUrl, {
@@ -142,7 +152,9 @@ function Feature(projection, proxy) {
                                 url: webService,
                                 type: 'GET',
                                 dataType: 'jsonp',
-                                jsonpCallback: 'callback',
+                                error: function(xhr, status, error) {
+                                    console.log(status + '; ' + error);
+                                },
                                 success: function (response) {
                                     if (response.error) {
                                         console.log(response.error.message + '\n' + response.error.details.join('\n'));
@@ -207,13 +219,13 @@ function Feature(projection, proxy) {
                     $.ajax({
                         url: dataUrlWithPostMethod,
                         type: 'POST',
+						contentType: 'application/json',
                         dataType: 'jsonp',
-                        data: dataForPostMethod,
-                        jsonpCallback: 'callback',
+                        data: JSON.stringify(dataForPostMethod),
+                        error: function(xhr, status, error) {
+                            console.log(status + '; ' + error);
+                        },
                         success: function (response) {
-                            if (response.error) {
-                                console.log(response.error.message + '\n' + response.error.details.join('\n'));
-                            }else {
                                 features = geoJSONFormat.readFeatures(response,{
                                     dataProjection: dataProj,
                                     featureProjection: projection.getProjection().getCode()
@@ -221,7 +233,6 @@ function Feature(projection, proxy) {
                                 if (features.length > 0) {
                                     vectorSource.addFeatures(features);
                                 }
-                            }
                         }
                     });
                 }
@@ -611,9 +622,13 @@ function Feature(projection, proxy) {
                 var labelLayer = thematic[thematicNb][0];
                 var orderLayer = thematic[thematicNb][1];
                 var visibility = thematic[thematicNb][3];
-                this.style.initThematicValue(thematic[thematicNb][4], thematic[thematicNb][5], thematic[thematicNb][6]);
+                this.style.initThematicValue(idLayer, thematic[thematicNb][4], thematic[thematicNb][5], thematic[thematicNb][6]);
                 var resoMin = thematic[thematicNb][7] === '' ? 0 : parseFloat(thematic[thematicNb][7]);
                 var resoMax = thematic[thematicNb][8] === '' ? 156543.03 : parseFloat(thematic[thematicNb][8]);
+                
+                vectorSource.on('addfeature', function(event) {
+                    event.feature.set('idLayer', idLayer);
+                });
 
                 this.ListFeatures[labelLayer] = new ol.layer.Vector({
                     title: labelLayer,

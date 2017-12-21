@@ -52,6 +52,9 @@ var Manager = function() {
         if (startParameters['Extent'] !== '') {
             parameters['Extent'] = startParameters['Extent'];
         }
+		if (startParameters['LimitExtent'] !== '') {
+            parameters['LimitExtent'] = startParameters['LimitExtent'];
+        }
         if (startParameters['Zoom'] !== '') {
             parameters['Zoom'] = startParameters['Zoom'];
         }
@@ -64,6 +67,18 @@ var Manager = function() {
         if (startParameters['DefaultBackGround'] !== '') {
             parameters['DefaultBackGround'] = startParameters['DefaultBackGround'];
         }
+		
+		if (startParameters['SelectType'] !== '') {
+            parameters['SelectType'] = startParameters['SelectType'];
+        }
+		if (startParameters['DisabledMapInteractions'] !== '') {
+            parameters['DisabledMapInteractions'] = startParameters['DisabledMapInteractions'];
+        }
+		
+		if (startParameters['ImmersiveView'] !== '') {
+            parameters['ImmersiveView'] = startParameters['ImmersiveView'];
+        }
+		
         if (startParameters['Overview'] !== '') {
             controls['Overview'] = startParameters['Overview'];
         }
@@ -120,9 +135,9 @@ var Manager = function() {
                         }
                     }
                 }
-                if(tempGeoJson.length === 7) {
-                    geoJson.push(tempGeoJson);
-                }
+
+                geoJson.push(tempGeoJson);
+
             }
             if (startParameters['Popup'+n] !== '' && startParameters['Popup'+n] !== undefined ) {
                 popup.push(startParameters['Popup'+n]);
@@ -178,6 +193,10 @@ var Manager = function() {
         if (parameters['Zoom'] !== '' && parameters['Zoom'] !== undefined) {
             viewGisMap.setZoom(parameters['Zoom'][0], parameters['Zoom'][1]);
         }
+		if(parameters['LimitExtent'] !== '' && parameters['LimitExtent'] !== undefined) {
+        	viewGisMap.setLimitExtent( parameters['LimitExtent'] );
+        }
+		
     };
 
     /**
@@ -187,6 +206,7 @@ var Manager = function() {
      * @param parameters is the array of data parameters
      */
     var readAndInitDataParams = function (layer, parameters, fieldParameters) {
+		layer.setDefaultBackGround(parameters['DefaultBackGround']);
         if(parameters['BackGround'] !== '' && parameters['BackGround'] !== undefined){
             for(var background = 0; background < parameters['BackGround'].length; background++){
                 layer.addLayerRaster(parameters['BackGround'][background]);
@@ -200,7 +220,7 @@ var Manager = function() {
         if(parameters['WMTS'] !== '' && parameters['WMTS'] !== undefined){
             for(var wmts = 0; wmts < parameters['WMTS'].length; wmts++){
                 layer.addWMTSLayerRaster(parameters['WMTS'][wmts]);
-            }
+			}					
         }
         if(parameters['WMS-Layer'] !== '' && parameters['WMS-Layer'] !== undefined){
             for(var wms  = 0; wms < parameters['WMS-Layer'].length; wms++){
@@ -222,7 +242,7 @@ var Manager = function() {
         if(parameters['WKT'] !== '' && parameters['WKT'] !== undefined){
             layer.addLayerVector(parameters['WKT'], 'WKT');
         }
-        layer.setDefaultBackGround(parameters['DefaultBackGround']);
+        layer.activateDefaultBackGround();
     };
 
     /**
@@ -267,6 +287,9 @@ var Manager = function() {
     		}
     		if (startParameters['ButtonOrder'][i] === 'Info' && popup.length !== 0) {
     			interacts.push('Info');
+    		}
+			if (startParameters['ButtonOrder'][i] === 'ImmersiveView' && startParameters['ImmersiveView'] !== false) {
+    			interacts.push('ImmersiveView');
     		}
     		if (startParameters['ButtonOrder'][i] === 'Edit') {
     			autoEdit = false;

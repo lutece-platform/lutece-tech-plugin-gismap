@@ -139,6 +139,18 @@ var InterfaceElements = function(app, interfaceValues, parameters) {
                 buttonInfo.addEventListener('click', handlePopup, false);
                 element.appendChild(buttonInfo);
             }
+			if (parameters['Interacts'][i] === 'ImmersiveView') {
+                var buttonView = document.createElement('button');
+                buttonView.setAttribute('type','button');
+                buttonView.setAttribute('id','idViewButton');
+                buttonView.innerHTML = 'View';
+                var handleView = function (e) {
+                    interfaceValues["interact"].setImmersiveViewInteraction();
+                };
+                buttonView.addEventListener('click', handleView, false);
+                buttonView.addEventListener('touchstart', handleView, false);
+                element.appendChild(buttonView);
+            }
             if (parameters['Interacts'][i] === 'Draw' || parameters['Interacts'][i] === 'Measure'|| parameters['Interacts'][i] === 'Edit'|| parameters['Interacts'][i] === 'AutoEdit'){
                 if(rubberActive === false) {
                     var buttonRubber = document.createElement('button');

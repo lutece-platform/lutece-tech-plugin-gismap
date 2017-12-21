@@ -21,10 +21,27 @@ function Layer(projection, proxy) {
      * @type {Array}
      */
     this.selectableLayers = [];
+
+    /**
+     * defaultWMTSResolutions store the resolution array if defaultbackground is a WMTS layer
+	 * @type {Array}
+     */	 
+	this.defaultWMTSResolutions = [];
+	
+    /**
+     * defaultBackground layer name 
+	 * @type {string}
+     */	 
+	this.defaultBackground = '';
+	
+	this.setDefaultBackGround = function(layerName){
+		this.defaultBackground = layerName;
+	};	
+	
     /**
      * featureLayerGis is the Feature Layer object
      * @type {Feature}
-     */
+     */	 
     this.featureLayerGis = new Feature(projection, proxy);
     /**
      * rasterLayerGis is the Raster Layer object
@@ -134,8 +151,13 @@ function Layer(projection, proxy) {
         var wmtsReso = wmts[4];
         var wmtsOrigin = wmts[5];
         var wmtsAttribution = wmts[6];
-        this.rasterLayerGis.createWMTSLayer(wmtsLibelle, wmtsServer, wmtsUrl, wmtsProj, wmtsReso, wmtsOrigin, wmtsAttribution);
-        this.ListLayers.push(wmtsLibelle);
+		var isDefault = this.isDefaultBackGround(wmtsLibelle);
+		var wmtsResolutions = this.rasterLayerGis.createWMTSLayer(wmtsLibelle, wmtsServer, wmtsUrl, wmtsProj, wmtsReso, wmtsOrigin, wmtsAttribution, isDefault);
+		//If DefaultBackground then get the resolutions to apply it to the view
+		if(wmtsResolutions !== undefined && wmtsResolutions !== '' && isDefault){
+			this.setDefaultWMTSResolutions(wmtsResolutions);
+		}
+		this.ListLayers.push(wmtsLibelle);
     };
 
     /**
@@ -196,20 +218,30 @@ function Layer(projection, proxy) {
             this.selectableLayers.push(names[i].split('-')[1]);
         }
     };
-
-    /**
+	
+	/**
      * Layer Method
-     * setDefaultBackGround active the default background to initiate the map
-     * @param defaultBackground is the name of a layer
+     * returns true if the given layerName is the defaultbackground
+     * @param layerName is the name of a layer
      */
-    this.setDefaultBackGround = function(defaultBackground){
-        for (var layerMap = 0; layerMap < this.ListLayers.length; layerMap++){
-            if(this.rasterLayerGis.getRasterByName(this.ListLayers[layerMap])=== this.rasterLayerGis.getRasterByName(defaultBackground)) {
-                this.rasterLayerGis.setRasterVisibility(this.ListLayers[layerMap], true);
-            }
-        }
+	this.isDefaultBackGround = function(layerName){
+		return(layerName === this.defaultBackground);
     };
 
+	/**
+	* activateDefaultBackGround activates the default background to initiate the map
+	*/
+	this.activateDefaultBackGround = function(){
+		for (var layerMap = 0; layerMap < this.ListLayers.length; layerMap++){
+            if(this.ListLayers[layerMap] === this.defaultBackground) {
+                if (this.rasterLayerGis.getRasterByName(this.ListLayers[layerMap]) !== undefined){
+					this.rasterLayerGis.setRasterVisibility(this.ListLayers[layerMap], true);
+				}
+            }
+        }
+	};
+	
+	
     /**
      * Layer Method
      * getLayersRasterMap is a getter to all Rasters Layers
@@ -279,4 +311,12 @@ function Layer(projection, proxy) {
             this.featureLayerGis.getFeatureByName(layerName).setVisible(visible);
         }
     };
+	
+	this.setDefaultWMTSResolutions = function(WMTSResolutions) {
+		this.defaultWMTSResolutions = WMTSResolutions;
+	};
+	
+	this.getDefaultWMTSResolutions = function() {
+		return this.defaultWMTSResolutions;
+	};
 }

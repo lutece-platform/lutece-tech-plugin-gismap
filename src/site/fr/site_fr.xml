@@ -7,13 +7,13 @@
 			<item name="EN" href="../index.html" />
 		</links>
 
-		<menu name="Aper&ccedil;u">
+		<menu name="Plugin gismap">
 			<item name="Introduction" href="index.html" />
 		</menu>
 
 		<menu name="T&#233;l&#233;chargements" inherit="bottom">
-			<item name="Versions stables" href="../../../stable_builds/plugins/plugin-gis/" />
-			<item name="Nightly builds" href="../../../nightly_builds/plugins/plugin-gis/" />
+			<item name="Versions stables" href="../../../stable_builds/plugins/plugin-gismap/" />
+			<item name="Nightly builds" href="../../../nightly_builds/plugins/plugin-gismap/" />
 		</menu>
 
 		<menu ref="reports" />

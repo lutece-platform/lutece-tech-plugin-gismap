@@ -16,10 +16,14 @@ ol.proj.setProj4(proj4);
 	<#assign strKey = "'" + key + "'">
 	<#assign strVal = map_parameter.parameters[key] >
 	parameters${idEntry}.push(parameters${idEntry}[${strKey}] = ${strVal});
-	<#if strKey == "'UrlGeoJSON1'">
-		<#assign strValGeo = "${map_parameter.parameters['GeoJSON1']}"?split(",")[0] >
-		<#assign strValGeo = "${strValGeo}"?split("[")[1] >
-		fieldParameters${idEntry}.push(fieldParameters${idEntry}[${strKey}] = [${strValGeo},${strVal}]); 
+	<#if strKey?contains("UrlGeoJSON")>
+		<#assign strGeoJSONindex = "GeoJSON" + "${key}"?keep_after("UrlGeoJSON") >
+		<#if (map_parameter.parameters[strGeoJSONindex])?? >
+			<#assign strValGeo = map_parameter.parameters[strGeoJSONindex]>
+			<#assign strValGeo = "${strValGeo}"?split(",")[0] >
+			<#assign strValGeo = "${strValGeo}"?split("[")[1] >
+			fieldParameters${idEntry}.push(fieldParameters${idEntry}[${strKey}] = [${strValGeo},${strVal}]); 
+		</#if>
 	</#if>
 </#list>
 
@@ -31,12 +35,15 @@ ol.proj.setProj4(proj4);
 <#if fieldParam?? >
 <#list fieldParam?keys as key>
 	<#assign strKey = "'" + key + "'" >
-	<#assign strVal = "'" + fieldParam[key] + "'" >
-	<#if strKey == "'UrlGeoJSON1'">
-		<#assign strValGeo = "'Lutece'" >
-		<#assign strValGeo = "${map_parameter.parameters['GeoJSON1']}"?split(",")[0] >
-		<#assign strValGeo = "${strValGeo}"?split("[")[1] >
-		fieldParameters${idEntry}.push(fieldParameters${idEntry}[${strKey}] = [${strValGeo},${strVal}]);
+	<#assign strVal = "'" + fieldParam[key] + "'" >	
+	<#if strKey?contains("UrlGeoJSON")>
+		<#assign strGeoJSONindex = "GeoJSON" + "${key}"?keep_after("UrlGeoJSON") >
+		<#if (map_parameter.parameters[strGeoJSONindex])?? >
+			<#assign strValGeo = map_parameter.parameters[strGeoJSONindex]>
+			<#assign strValGeo = "${strValGeo}"?split(",")[0] >
+			<#assign strValGeo = "${strValGeo}"?split("[")[1] >
+			fieldParameters${idEntry}.push(fieldParameters${idEntry}[${strKey}] = [${strValGeo},${strVal}]); 
+		</#if>
 	<#else>
 		fieldParameters${idEntry}.push(fieldParameters${idEntry}[${strKey}] = ${strVal});
 	</#if>
@@ -50,6 +57,7 @@ ol.proj.setProj4(proj4);
 	fieldParameters${idEntry}.push(fieldParameters${idEntry}['GeomCentroidXGeocodage']='GeomCentroidXGeocodage');
 	fieldParameters${idEntry}.push(fieldParameters${idEntry}['GeomCentroidYGeocodage']='GeomCentroidYGeocodage');
 	fieldParameters${idEntry}.push(fieldParameters${idEntry}['GeomState']='GeomState');
+	fieldParameters${idEntry}.push(fieldParameters${idEntry}['Proxy']='rest/gismapp/gisproxy?url=');
 </#if>
 
 var GisMapDisplay${idEntry} = new GisMap(idMap${idEntry}, ${idEntry});
@@ -67,4 +75,29 @@ if ($.session.get("visible_layer") !== undefined){
 }
 GisMapDisplay${idEntry}.initGisMap(parameters${idEntry}, fieldParameters${idEntry});
 
+var enableImmersiveView${idEntry} = parameters${idEntry}['ImmersiveView'];
+if ((enableImmersiveView${idEntry} != undefined ) && ( enableImmersiveView${idEntry} === true)){
+	var app_code = parameters${idEntry}['ImmersiveViewAppCode'];
+	var app_id = parameters${idEntry}['ImmersiveViewAppId'];
+	var viewer = new H.realitylens.Viewer(document.getElementById("${idEntry}_realitylens"), {
+		url: 'http://realitylens.api.here.com',
+		sliUrls: [ 'http://sli.api.here.com' ] ,
+		app_code: app_code,
+		app_id:app_id,
+		locale :'fr'
+	});
+	var proj = 	parameters${idEntry}['Projection'];
+	var center = ol.extent.getCenter(parameters${idEntry}['Extent']);
+	center = new ol.proj.transform([center[0], center[1]],proj,'EPSG:4326');
+	//Set viewer location from map center coordinates	
+	viewer.setLocation(
+			new H.realitylens.Geodesic({ lat: center[1], lon: center[0]}),
+			new H.realitylens.YawPitch({ yaw: 0, pitch: 0 })
+			);
+	viewer.on('transitionStop', function (e) {
+		var loc = e.location.geodesic,
+		pos = new ol.proj.transform([loc.lon, loc.lat], 'EPSG:4326', proj);
+		GisMapDisplay${idEntry}.updateMarker(pos[0], pos[1]);
+	});
+}
 </script>
