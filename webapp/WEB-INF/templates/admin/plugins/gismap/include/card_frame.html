@@ -92,6 +92,7 @@ $("#${idEntry}_address").autocomplete({
                 $('#${idEntry}_x').val(0);
                 $('#${idEntry}_y').val(0);
                 $('#id_additional_address').val('');
+                $('#${idEntry}_idAddress').val('');
                 GisMapDisplay${idEntry}.getInteract().deleteFeatures();
                 
        		}
@@ -105,6 +106,7 @@ $("#${idEntry}_address").autocomplete({
 		$('#${idEntry}_x').val(ui.item.x);
 		$('#${idEntry}_y').val(ui.item.y);
 		$('#id_additional_address').val(getAdditionalAdd(ui.item.label));
+		$('#${idEntry}_idAddress').val(ui.item.id);
 		GisMapDisplay${idEntry}.getZoom().zoomSuggestPoi(ui.item.x, ui.item.y);
 	    }
 }).focus();
@@ -198,6 +200,8 @@ function geocodage${idEntry}(){
                     if (response.result.Features.length >= 0) {
         				var address = response.result.Features[0].properties.Adressetypo;
         	        	$("#${idEntry}_address").val(address);
+        	        	var idAddress = response.result.Features[0].properties.Id;
+        	        	$("#${idEntry}_idAddress").val(idAddress);
         				$("#id_additional_address").val(getAdditionalAdd(address));
                     }
                 }
@@ -249,6 +253,7 @@ $("#${idEntry}_geometry").on("change", 	function() {
 			geocodage${idEntry}();
 		}else{
 		$("#${idEntry}_address").val("");
+		$("#${idEntry}_idAddress").val("");
 		}
 	}
 	});
