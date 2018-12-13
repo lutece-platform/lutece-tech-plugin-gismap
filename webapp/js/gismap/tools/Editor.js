@@ -232,13 +232,16 @@ function Editor(interact, layerEdit, fieldName, projection) {
      */
     this.initEditInteraction = function (mode) {
         if(this.editAvailable !== true) {
-			var editFeature = this.geoJSONFormat.readFeature(getTransformStringToGeoJSON(editData), {
+			var editFeatures = this.geoJSONFormat.readFeatures(getTransformStringToGeoJSON(editData), {
                 featureProjection: projection.getProjection().getCode(),
                 dataProjection: this.editProj
             });
 			//assign an Id to the edit feature
-			editFeature.setId(Date.now());
-            this.editLayer.getSource().addFeature(editFeature);
+			var now = Date.now();
+			for (var i=0; i<editFeature.length; i++) {
+				editFeature[i].setId(now+i);
+			};
+            this.editLayer.getSource().addFeatures(editFeature);
         }
         if(mode === 'Draw') {
             this.editInteraction.set('Select', this.getSelectEditInteract());
