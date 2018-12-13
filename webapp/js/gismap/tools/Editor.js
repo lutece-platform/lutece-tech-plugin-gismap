@@ -105,6 +105,12 @@ function Editor(interact, layerEdit, fieldName, projection) {
      */
     this.editProj = layerEdit;
     /**
+     * when isTransformingGeoJSON is true, the json object is serialized/deserialized with simple quotes
+     * on by default for backwards compatiblity
+     * @type {boolean}
+     */
+    this.isTransformingGeoJSON = "false" != fieldName['isTransformingGeoJSON'];
+    /**
      * editType is the type of the data can be edit
      * @type {String}
      */
@@ -112,7 +118,8 @@ function Editor(interact, layerEdit, fieldName, projection) {
     if ( fieldName['TypeEdit'] === 'SuggestPOI' ) {
         editType = 'Point';
     } else if (fieldName['TypeEdit'] === 'ReadOnly') {
-        var editDataParsed = JSON.parse( getTransformStringToGeoJSON(editData) );
+        var parseInput = this.isTransformingGeoJSON ? getTransformStringToGeoJSON(editData) : editData;
+        var editDataParsed = JSON.parse( parseInput );
         if (editDataParsed['features'] != null) {
             //TODO what to do when we have multiple types of geometries?
             //for now use the type of the first object
@@ -245,7 +252,8 @@ function Editor(interact, layerEdit, fieldName, projection) {
      */
     this.initEditInteraction = function (mode) {
         if(this.editAvailable !== true) {
-			var editFeatures = this.geoJSONFormat.readFeatures(getTransformStringToGeoJSON(editData), {
+            var parseInput = this.isTransformingGeoJSON ? getTransformStringToGeoJSON(editData) : editData;
+            var editFeature = this.geoJSONFormat.readFeatures( parseInput, {
                 featureProjection: projection.getProjection().getCode(),
                 dataProjection: this.editProj
             });
@@ -310,10 +318,11 @@ function Editor(interact, layerEdit, fieldName, projection) {
      * @param feature is the new feature
      */
      this.writeGeoJSON = function(feature) {
-         this.fieldData.value = getTransformGeoJSONToString(this.geoJSONFormat.writeFeature(feature, {
+         var formatOutput = this.geoJSONFormat.writeFeature(feature, {
              featureProjection: projection.getProjection().getCode(),
              dataProjection: this.editProj
-         }));
+         });
+         this.fieldData.value = this.isTransformingGeoJSON ? getTransformGeoJSONToString(formatOutput) : formatOutput;
 
          this.managePoint(feature);
 
@@ -391,12 +400,16 @@ function Editor(interact, layerEdit, fieldName, projection) {
 
     /**
      * Editor METHOD
-     * getTransformData accessor to formate the geoJson for OpenLayers
+     * getTransformData accessor to formate the geoJson for OpenLayers if enabled
      * @param st is the initial string to formate
      * @returns {string} is the formated string
      */
     this.getTransformData = function(st){
-        return getTransformStringToGeoJSON(st);
+        if ( this.isTransformingGeoJSON ) {
+            return getTransformStringToGeoJSON(st);
+        } else {
+            return st;
+        }
     };
 
     /**
