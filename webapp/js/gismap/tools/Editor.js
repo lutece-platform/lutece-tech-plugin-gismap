@@ -62,7 +62,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
      * editSource is the source of the data can be edit on the map
      * @type {String}
      */
-    var editData = this.fieldData.value === null ? '' : this.fieldData.value;
+    var editData = this.fieldData.value == null ? this.fieldData.innerHTML : this.fieldData.value;
     /**
      * editAvailable is the marker to expose the editable data of the map
      * @type {boolean}

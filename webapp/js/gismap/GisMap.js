@@ -68,7 +68,7 @@ var GisMap = function (idMapInit, idInit) {
         }
         initInterfaces(parameters);
         if(getInteract().getEditor()!==null) {
-            var geomElement = document.getElementById(fieldParameters['GeomGeoJson']).value;
+            var geomElement = document.getElementById(fieldParameters['GeomGeoJson']).value || document.getElementById(fieldParameters['GeomGeoJson']).innerHTML;
             if (geomElement !== null && geomElement !== '' && geomElement !== undefined) {
                 zoom.initialZoom(fieldParameters['GeomGeoJson']);
             }

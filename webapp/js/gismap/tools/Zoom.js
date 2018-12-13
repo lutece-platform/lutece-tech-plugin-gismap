@@ -78,7 +78,7 @@ var Zoom = function(GlobalMap, projection, viewGisMap) {
         }
 		//if nothing is selected then zoom to the geometry field coordinates
 		if(selectFeatures.length === 0 ) {
-            var geomfieldData = interact.getEditor().getFieldData().value;
+            var geomfieldData = interact.getEditor().getFieldData().value || interact.getEditor().getFieldData().innerHTML ;
 			if (geomfieldData !== undefined && geomfieldData != ''){
 				var feature = new ol.format.GeoJSON().readFeature(interact.getEditor().getTransformData(geomfieldData), {
 					featureProjection: projection.getProjection().getCode(),
@@ -114,7 +114,8 @@ var Zoom = function(GlobalMap, projection, viewGisMap) {
      */
     var initialZoom = function (fieldGeom) {
         if(interact.getEditor() !== null) {
-            var feature = new ol.format.GeoJSON().readFeature(interact.getEditor().getTransformData(document.getElementById(fieldGeom).value), {
+            var geomfieldData = interact.getEditor().getFieldData().value || interact.getEditor().getFieldData().innerHTML ;
+            var feature = new ol.format.GeoJSON().readFeature(interact.getEditor().getTransformData(geomfieldData), {
                 featureProjection: projection.getProjection().getCode(),
                 dataProjection: interact.getEditor().getEditProj()
             });
