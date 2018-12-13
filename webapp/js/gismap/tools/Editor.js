@@ -108,8 +108,21 @@ function Editor(interact, layerEdit, fieldName, projection) {
      * editType is the type of the data can be edit
      * @type {String}
      */
-    var editType = fieldName['TypeEdit'] === 'SuggestPOI'  ? 'Point' : fieldName['TypeEdit'] === 'ReadOnly' ?
-        JSON.parse(getTransformStringToGeoJSON(editData))['geometry']['type'] : fieldName['TypeEdit'];
+    var editType;
+    if ( fieldName['TypeEdit'] === 'SuggestPOI' ) {
+        editType = 'Point';
+    } else if (fieldName['TypeEdit'] === 'ReadOnly') {
+        var editDataParsed = JSON.parse( getTransformStringToGeoJSON(editData) );
+        if (editDataParsed['features'] != null) {
+            //TODO what to do when we have multiple types of geometries?
+            //for now use the type of the first object
+            editType = editDataParsed['features'][0]['geometry']['type'];
+        } else {
+            editType = editDataParsed['geometry']['type'];
+        }
+    } else {
+        editType = fieldName['TypeEdit'];
+    }
     /**
      * suggestPoiEdit is the marker to know the mode of edition on the map
      * @type {Boolean}
