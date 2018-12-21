@@ -173,7 +173,8 @@ var GisMap = function (idMapInit, idInit) {
      */
     function controlInitialize(parameters, fieldParameters) {
         if(parameters['Popup'] !== '' && parameters['Popup'] !== undefined){
-            popup = new Popup(GlobalMap, id, parameters['Popup']);
+            var isEditLayerPopupOnInfo = parameters['isEditLayerPopupOnInfo'] && fieldParameters['TypeEdit'] === 'ReadOnly';
+            popup = new Popup(GlobalMap, id, parameters['Popup'], isEditLayerPopupOnInfo);
             interfaceValues["popup"] = popup;
         }
         interact = new Interaction(GlobalMap, layer, popup, projectionGis, parameters['LayerEdit'],parameters['SelectType'], fieldParameters);

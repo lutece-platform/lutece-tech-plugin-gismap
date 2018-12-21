@@ -55,6 +55,7 @@ public class MapParameterDAO implements IMapParameterDAO
     public static final String IMMERSIVEVIEW = "ImmersiveView";
     public static final String IMMERSIVEVIEWAPPCODE = "ImmersiveViewAppCode";
     public static final String IMMERSIVEVIEWAPPID = "ImmersiveViewAppId";
+    public static final String ISEDITLAYERPOPUPONINFO = "isEditLayerPopupOnInfo";
 
     // parameter 1 to 9
     public static final String WMSBASE = "WMS-Base";
@@ -151,6 +152,8 @@ public class MapParameterDAO implements IMapParameterDAO
         fillMapParameter( nKey, IMMERSIVEVIEWAPPCODE, mapParameter);
         
         fillMapParameter( nKey, IMMERSIVEVIEWAPPID, mapParameter);
+
+        fillMapParameter( nKey, ISEDITLAYERPOPUPONINFO, mapParameter);
 
         for ( String property : getPropertyList( WMSBASE ) )
         {

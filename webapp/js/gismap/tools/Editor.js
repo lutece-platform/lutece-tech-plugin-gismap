@@ -81,6 +81,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
      */
     this.editLayer = new ol.layer.Vector({
         name:"EditLayer",
+        title:"EditLayer",
         source: this.editSource,
         style: new ol.style.Style({
             fill: new ol.style.Fill({
