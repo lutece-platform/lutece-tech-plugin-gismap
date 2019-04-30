@@ -1,8 +1,9 @@
 /*global ol, PopupForm*/
 /**
  * Popup Class manage all popups included in the map
+ * isEditLayerPopupOnInfo : should the features of the editLayer trigger a popup in info mode
  */
-var Popup = function(GlobalMap, idMap, parameters) {
+var Popup = function(GlobalMap, idMap, parameters, isEditLayerPopupOnInfo) {
     'use strict';
     /**
      * popupForm is the reference of the form of the Popup
@@ -217,32 +218,40 @@ var Popup = function(GlobalMap, idMap, parameters) {
         dataJson = null;
         GlobalMap.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
             if(layer !== null) {
-                if (queryData[layer.get('title')] !== null && queryData[layer.get('title')] !== undefined) {
+                var layer_title = layer.get('title');
+                if (layer_title == "EditLayer" && !isEditLayerPopupOnInfo) {
+                    layer_title = undefined;
+                }
+                if (queryData[layer_title] !== null && queryData[layer_title] !== undefined) {
                     var unknown = true;
                     for (var i = 0; i < layerInfo.length; i++) {
-                        if (layerInfo[i] === layer.get('title')) {
+                        if (layerInfo[i] === layer_title) {
                             unknown = false;
                         }
                     }
                     if (unknown === true) {
-                        layerInfo.push(layer.get('title'));
+                        layerInfo.push(layer_title);
                     }
-                    features[layer.get('title') + count] = feature;
+                    features[layer_title + count] = feature;
                     count++;
                 }
             }
         });
         GlobalMap.forEachLayerAtPixel(evt.pixel, function (layer) {
-            if(queryData[layer.get('title')] !== null && queryData[layer.get('title')] !== undefined) {
+            var layer_title = layer.get('title');
+            if (layer_title == "EditLayer" && !isEditLayerPopupOnInfo) {
+                layer_title = undefined;
+            }
+            if(queryData[layer_title] !== null && queryData[layer_title] !== undefined) {
                 var unknown = true;
                 for (var i = 0; i < layerInfo.length; i++) {
-                    if (layerInfo[i] === layer.get('title')) {
+                    if (layerInfo[i] === layer_title) {
                         unknown = false;
                     }
                 }
                 if (unknown === true) {
-                    layerInfo.push(layer.get('title'));
-                    wmsLayers[layer.get('title')] = layer;
+                    layerInfo.push(layer_title);
+                    wmsLayers[layer_title] = layer;
                 }
             }
         });
@@ -258,7 +267,7 @@ var Popup = function(GlobalMap, idMap, parameters) {
 				if (evt.dragging) { return;}
 				var pixel = GlobalMap.getEventPixel(evt.originalEvent);
 				var hit = GlobalMap.hasFeatureAtPixel(pixel, {layerFilter: function(layer){
-					return layer.get('name') !== 'EditLayer';
+					return isEditLayerPopupOnInfo || layer.get('name') !== 'EditLayer';
 				}});
 				GlobalMap.getTargetElement().style.cursor = hit ? 'pointer' : '';
 

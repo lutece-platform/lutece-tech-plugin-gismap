@@ -68,7 +68,7 @@ var GisMap = function (idMapInit, idInit) {
         }
         initInterfaces(parameters);
         if(getInteract().getEditor()!==null) {
-            var geomElement = document.getElementById(fieldParameters['GeomGeoJson']).value;
+            var geomElement = document.getElementById(fieldParameters['GeomGeoJson']).value || document.getElementById(fieldParameters['GeomGeoJson']).innerHTML;
             if (geomElement !== null && geomElement !== '' && geomElement !== undefined) {
                 zoom.initialZoom(fieldParameters['GeomGeoJson']);
             }
@@ -173,7 +173,8 @@ var GisMap = function (idMapInit, idInit) {
      */
     function controlInitialize(parameters, fieldParameters) {
         if(parameters['Popup'] !== '' && parameters['Popup'] !== undefined){
-            popup = new Popup(GlobalMap, id, parameters['Popup']);
+            var isEditLayerPopupOnInfo = parameters['isEditLayerPopupOnInfo'] && fieldParameters['TypeEdit'] === 'ReadOnly';
+            popup = new Popup(GlobalMap, id, parameters['Popup'], isEditLayerPopupOnInfo);
             interfaceValues["popup"] = popup;
         }
         interact = new Interaction(GlobalMap, layer, popup, projectionGis, parameters['LayerEdit'],parameters['SelectType'], fieldParameters);

@@ -78,6 +78,9 @@ var Manager = function() {
 		if (startParameters['ImmersiveView'] !== '') {
             parameters['ImmersiveView'] = startParameters['ImmersiveView'];
         }
+        if (startParameters['isEditLayerPopupOnInfo'] !== '') {
+            parameters['isEditLayerPopupOnInfo'] = startParameters['isEditLayerPopupOnInfo'];
+        }
 		
         if (startParameters['Overview'] !== '') {
             controls['Overview'] = startParameters['Overview'];

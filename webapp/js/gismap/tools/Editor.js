@@ -62,7 +62,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
      * editSource is the source of the data can be edit on the map
      * @type {String}
      */
-    var editData = this.fieldData.value === null ? '' : this.fieldData.value;
+    var editData = this.fieldData.value == null ? this.fieldData.innerHTML : this.fieldData.value;
     /**
      * editAvailable is the marker to expose the editable data of the map
      * @type {boolean}
@@ -81,6 +81,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
      */
     this.editLayer = new ol.layer.Vector({
         name:"EditLayer",
+        title:"EditLayer",
         source: this.editSource,
         style: new ol.style.Style({
             fill: new ol.style.Fill({
@@ -105,11 +106,31 @@ function Editor(interact, layerEdit, fieldName, projection) {
      */
     this.editProj = layerEdit;
     /**
+     * when isTransformingGeoJSON is true, the json object is serialized/deserialized with simple quotes
+     * on by default for backwards compatiblity
+     * @type {boolean}
+     */
+    this.isTransformingGeoJSON = "false" != fieldName['isTransformingGeoJSON'];
+    /**
      * editType is the type of the data can be edit
      * @type {String}
      */
-    var editType = fieldName['TypeEdit'] === 'SuggestPOI'  ? 'Point' : fieldName['TypeEdit'] === 'ReadOnly' ?
-        JSON.parse(getTransformStringToGeoJSON(editData))['geometry']['type'] : fieldName['TypeEdit'];
+    var editType;
+    if ( fieldName['TypeEdit'] === 'SuggestPOI' ) {
+        editType = 'Point';
+    } else if (fieldName['TypeEdit'] === 'ReadOnly') {
+        var parseInput = this.isTransformingGeoJSON ? getTransformStringToGeoJSON(editData) : editData;
+        var editDataParsed = JSON.parse( parseInput );
+        if (editDataParsed['features'] != null) {
+            //TODO what to do when we have multiple types of geometries?
+            //for now use the type of the first object
+            editType = editDataParsed['features'][0]['geometry']['type'];
+        } else {
+            editType = editDataParsed['geometry']['type'];
+        }
+    } else {
+        editType = fieldName['TypeEdit'];
+    }
     /**
      * suggestPoiEdit is the marker to know the mode of edition on the map
      * @type {Boolean}
@@ -232,13 +253,17 @@ function Editor(interact, layerEdit, fieldName, projection) {
      */
     this.initEditInteraction = function (mode) {
         if(this.editAvailable !== true) {
-			var editFeature = this.geoJSONFormat.readFeature(getTransformStringToGeoJSON(editData), {
+            var parseInput = this.isTransformingGeoJSON ? getTransformStringToGeoJSON(editData) : editData;
+            var editFeature = this.geoJSONFormat.readFeatures( parseInput, {
                 featureProjection: projection.getProjection().getCode(),
                 dataProjection: this.editProj
             });
 			//assign an Id to the edit feature
-			editFeature.setId(Date.now());
-            this.editLayer.getSource().addFeature(editFeature);
+			var now = Date.now();
+			for (var i=0; i<editFeature.length; i++) {
+				editFeature[i].setId(now+i);
+			};
+            this.editLayer.getSource().addFeatures(editFeature);
         }
         if(mode === 'Draw') {
             this.editInteraction.set('Select', this.getSelectEditInteract());
@@ -294,10 +319,11 @@ function Editor(interact, layerEdit, fieldName, projection) {
      * @param feature is the new feature
      */
      this.writeGeoJSON = function(feature) {
-         this.fieldData.value = getTransformGeoJSONToString(this.geoJSONFormat.writeFeature(feature, {
+         var formatOutput = this.geoJSONFormat.writeFeature(feature, {
              featureProjection: projection.getProjection().getCode(),
              dataProjection: this.editProj
-         }));
+         });
+         this.fieldData.value = this.isTransformingGeoJSON ? getTransformGeoJSONToString(formatOutput) : formatOutput;
 
          this.managePoint(feature);
 
@@ -375,12 +401,16 @@ function Editor(interact, layerEdit, fieldName, projection) {
 
     /**
      * Editor METHOD
-     * getTransformData accessor to formate the geoJson for OpenLayers
+     * getTransformData accessor to formate the geoJson for OpenLayers if enabled
      * @param st is the initial string to formate
      * @returns {string} is the formated string
      */
     this.getTransformData = function(st){
-        return getTransformStringToGeoJSON(st);
+        if ( this.isTransformingGeoJSON ) {
+            return getTransformStringToGeoJSON(st);
+        } else {
+            return st;
+        }
     };
 
     /**

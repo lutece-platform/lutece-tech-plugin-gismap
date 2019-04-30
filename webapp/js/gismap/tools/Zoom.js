@@ -78,17 +78,19 @@ var Zoom = function(GlobalMap, projection, viewGisMap) {
         }
 		//if nothing is selected then zoom to the geometry field coordinates
 		if(selectFeatures.length === 0 ) {
-            var geomfieldData = interact.getEditor().getFieldData().value;
+            var geomfieldData = interact.getEditor().getFieldData().value || interact.getEditor().getFieldData().innerHTML ;
 			if (geomfieldData !== undefined && geomfieldData != ''){
-				var feature = new ol.format.GeoJSON().readFeature(interact.getEditor().getTransformData(geomfieldData), {
+				var features = new ol.format.GeoJSON().readFeatures(interact.getEditor().getTransformData(geomfieldData), {
 					featureProjection: projection.getProjection().getCode(),
 					dataProjection: interact.getEditor().getEditProj()
 				});
-				if (feature !== undefined && feature.getGeometry() != undefined ){
-					viewGisMap.getView().fit(feature.getGeometry(), GlobalMap.getSize(), {
-						maxZoom: viewGisMap.getZoomSelect()
-					});
+				var bounds = ol.extent.createEmpty();
+				for(var i=0;i< features.length;i++){
+					ol.extent.extend(bounds,features[i].getGeometry().getExtent())
 				}
+				viewGisMap.getView().fit(bounds, GlobalMap.getSize(), {
+					maxZoom: viewGisMap.getZoomSelect()
+				});
 			}
         }
         if (selectFeatures.length === 1) {
@@ -114,15 +116,18 @@ var Zoom = function(GlobalMap, projection, viewGisMap) {
      */
     var initialZoom = function (fieldGeom) {
         if(interact.getEditor() !== null) {
-            var feature = new ol.format.GeoJSON().readFeature(interact.getEditor().getTransformData(document.getElementById(fieldGeom).value), {
+            var geomfieldData = interact.getEditor().getFieldData().value || interact.getEditor().getFieldData().innerHTML ;
+            var features = new ol.format.GeoJSON().readFeatures(interact.getEditor().getTransformData(geomfieldData), {
                 featureProjection: projection.getProjection().getCode(),
                 dataProjection: interact.getEditor().getEditProj()
             });
-			if (feature !== undefined && feature.getGeometry() != undefined ){
-				viewGisMap.getView().fit(feature.getGeometry(), GlobalMap.getSize(), {
-					maxZoom: viewGisMap.getZoomSelect()
-				});
+			var bounds = ol.extent.createEmpty();
+			for(var i=0;i< features.length;i++){
+				ol.extent.extend(bounds,features[i].getGeometry().getExtent())
 			}
+			viewGisMap.getView().fit(bounds, GlobalMap.getSize(), {
+				maxZoom: viewGisMap.getZoomSelect()
+			});
 			GlobalMap.getView().previousCenter = GlobalMap.getView().getCenter();
         }
     };
