@@ -60,12 +60,12 @@
 </#if>
     <div id="${idEntry}_map" class="${strValMapClass}"><div id="popup"></div></div>
     <div class="hidden"  id="measure"> #i18n{gismap.map.message.measure}</div>
-    <button id="zoomSelect" type="button" onClick="GisMapDisplay${idEntry}.getZoom().zoomSelect()">Zoom To</button>
+    <button class="btn btn-primary btn-sm" id="zoomSelect" type="button" onClick="GisMapDisplay${idEntry}.getZoom().zoomSelect()">Recentrer</button>
     <#if editModeValue?? && editModeValue=="">
-	    <button id="SelectVia" type="button" onClick="selectObjectLuteceViaMap(GisMapDisplay${idEntry}.getInteract().getSpecificInteract().getSpecificSelectedFeatures())">Select Object lutece via Map</button>
-	    <button id="SelectTo" type="button" onClick="GisMapDisplay${idEntry}.getInteract().getSpecificInteract().setSpecificSelectedFeatures(selectObjectMapViaLutece())">Select Object Map via Lutece</button>
+	    <button class="btn btn-primary btn-sm" id="SelectVia" type="button" onClick="selectObjectLuteceViaMap(GisMapDisplay${idEntry}.getInteract().getSpecificInteract().getSpecificSelectedFeatures())">Sélection : Lutèce -> Carte</button>
+	    <button class="btn btn-primary btn-sm" id="SelectTo" type="button" onClick="GisMapDisplay${idEntry}.getInteract().getSpecificInteract().setSpecificSelectedFeatures(selectObjectMapViaLutece())">Sélection : Carte -> Lutèce</button>
     </#if>
-    <a id="mapPrint" class="btn" download="map.png" <#if strValPrint == "false"> style="display: none" </#if> ><input type="button" value="Print Map"></a>
+    <a id="mapPrint" class="btn"  download="map.png" <#if strValPrint == "false"> style="display: none" </#if> ><input type="button" class="btn btn-primary btn-sm"  value="Imprimer"></a>
     
     <!-- <script src="js/gismap/GisTest.js" type="text/javascript"></script> -->
     
@@ -74,19 +74,11 @@
 <script>
  
 $("#${idEntry}_address").autocomplete({
-    minLength: ${add_parameter.minLength},
-    delay: ${add_parameter.delay},
 	source : function(request, reponse){ // les deux arguments représentent les données nécessaires au plugin
+	var url = ${add_parameter.url};
 	$.ajax({
-		url : "${add_parameter.url}",
+		url : url +request.term,
 	    dataType: "jsonp",
-	    data: {
-	    	clientId : "${add_parameter.clientId}",
-			nbResults : ${add_parameter.nbResult}, 
-			types : "${add_parameter.listType}",
-			query : request.term
-			
-	    },
 	    success : function(data){
 	    	if(data.result.length == 0){
                 $('#${idEntry}_x').val(0);
@@ -115,11 +107,11 @@ function getResult(result) {
 	var index;
 	for	(index = 0; index < result.length; index++) {
 		var object = new Object();
-		object.value = result[index].libelleTypo;
-		object.label = result[index].libelleTypo;
-		object.x = result[index].x;
-		object.y = result[index].y;
-		object.id = result[index].id;
+		object.value = result[index].Libelletypo;
+		object.label = result[index].Libelletypo;
+		object.x = parseFloat(result[index].X);
+		object.y = parseFloat(result[index].Y);
+		object.id = result[index].Id;
 		resultArray.push(object);
 	}
 	return resultArray;	
@@ -252,7 +244,8 @@ $("#${idEntry}_geometry").on("change", 	function() {
 		if(varX != "" && varY != ""){
 			geocodage${idEntry}();
 		}else{
-			$("#${idEntry}_idAddress").val("");
+		$("#${idEntry}_address").val("");
+		$("#${idEntry}_idAddress").val("");
 		}
 	}
 	});
