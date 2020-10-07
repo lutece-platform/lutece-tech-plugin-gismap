@@ -470,7 +470,7 @@ function Feature(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: proxy + encodeURI(url + dataName + '/ImageServer'),
+                    url: encodeURI(url + dataName + '/ImageServer'),
                     crossOrigin:'anonymous'
                 }),
                 minResolution: parseFloat(resoMin),
@@ -486,7 +486,7 @@ function Feature(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: proxy + encodeURI(url + dataName + '/MapServer'),
+                    url: encodeURI(url + dataName + '/MapServer'),
                     crossOrigin:'anonymous'
                 }),
                 minResolution: parseFloat(resoMin),
@@ -502,7 +502,7 @@ function Feature(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: proxy + encodeURI(url),
+                    url:  encodeURI(url),
                     params: {'LAYERS': dataName},
                     serverType:'geoserver',
                     crossOrigin:'anonymous'
