@@ -57,7 +57,7 @@ function LayerRaster(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: proxy + encodeURI(url + dataName + '/ImageServer'),
+                    url: encodeURI(url + dataName + '/ImageServer'),
                     crossOrigin:'anonymous'
                 }),
                 visible:false
@@ -72,7 +72,7 @@ function LayerRaster(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: proxy + encodeURI(url + dataName + '/MapServer'),
+                    url: encodeURI(url + dataName + '/MapServer'),
                     crossOrigin:'anonymous'
                 }),
                 visible:false
@@ -87,7 +87,7 @@ function LayerRaster(projection, proxy) {
                             html: dataAttribution
                         })
                     ],
-                    url: proxy + encodeURI(url),
+                    url: encodeURI(url),
                     params: {'LAYERS': dataName},
                     serverType:'geoserver',
                     crossOrigin:'anonymous'

@@ -5,8 +5,8 @@ var SuggestPoiLocator = function(zoom, suggestPoiParams) {
     'use strict';
 
 	var url = suggestPoiParams[0];
-	var idClient = suggestPoiParams[1];
-	var nbResults = suggestPoiParams[2];
+	var valEntites = suggestPoiParams[1];
+	var valToSRID = suggestPoiParams[2];
 
     /**
      * SuggestPoiLocator Method
@@ -16,12 +16,10 @@ var SuggestPoiLocator = function(zoom, suggestPoiParams) {
         $('#addressSuggestPoi').autocomplete({
             source: function (request, reponse) {
                 $.ajax({
-                    url: url,
+                    url: url + request.term,
                     dataType: "jsonp",
                     data: {
-                        clientId: idClient,
-                        nbResults: nbResults,
-                        query: request.term
+                        Parms: "{\"Entites\":\"" + valEntites+ "\",\"toSrid\":\"" + valToSRID + "\"}"
                     },
                     success: function (data) {
                         reponse($.map(getResult(data.result), function (objet) {
@@ -47,12 +45,12 @@ var SuggestPoiLocator = function(zoom, suggestPoiParams) {
         var index;
         for (index = 0; index < result.length; index++){
             var object = new Object();
-            object.value = result[index].libelleTypo;
-            object.label = result[index].libelleTypo;
-            object.id = result[index].id;
-            object.x = result[index].x;
-            object.y = result[index].y;
-            object.type = result[index].type;
+            object.value = result[index].Libelletypo;
+            object.label = result[index].Libelletypo;
+            object.id = result[index].Id;
+            object.x =  parseFloat(result[index].X);
+            object.y =  parseFloat(result[index].Y);
+            object.type = result[index].Objectid;
             resultArray.push(object);
         }
         return resultArray;
