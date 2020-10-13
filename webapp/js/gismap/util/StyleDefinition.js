@@ -161,6 +161,42 @@ function StyleDefinition() {
     var fill_GreenWater = new ol.style.Fill({
         color: 'rgba(153, 255, 204, 0.75)'
     });
+	
+	/**
+     * Sample of style definition
+     * @type {ol.style.Fill}
+     */
+    var fill_Green = new ol.style.Fill({
+        color: 'rgba(56, 240, 20, 1)'
+    });
+	
+	/**
+     * Sample of style definition
+     * @type {ol.style.Stroke}
+     */
+    var stroke_Green = new ol.style.Stroke({
+        color: 'rgba(56, 240, 20, 1)',
+        lineDash: [0,0],
+        width: 3
+    });
+    
+    /**
+     * Sample of style definition
+     * @type {ol.style.Fill}
+     */
+    var fill_Gray = new ol.style.Fill({
+        color: 'rgba(154, 146, 146, 1)'
+    });
+	
+	/**
+     * Sample of style definition
+     * @type {ol.style.Stroke}
+     */
+    var stroke_Gray = new ol.style.Stroke({
+        color: 'rgba(154, 146, 146, 1)',
+        lineDash: [0,0],
+        width: 3
+    });
 
     /**
      * Sample of style definition
@@ -186,6 +222,24 @@ function StyleDefinition() {
      */
     var stroke_Violet = new ol.style.Stroke({
         color: 'rgba(153, 35, 255, 1)',
+        lineDash: [0,0],
+        width: 3
+    });
+	
+	/**
+     * Sample of style definition
+     * @type {ol.style.Fill}
+     */
+    var fill_Blue = new ol.style.Fill({
+        color: 'rgba(20, 97, 240, 1)'
+    });
+
+    /**
+     * Sample of style definition
+     * @type {ol.style.Stroke}
+     */
+    var stroke_Blue = new ol.style.Stroke({
+        color: 'rgba(20, 97, 240, 1)',
         lineDash: [0,0],
         width: 3
     });
@@ -240,13 +294,6 @@ function StyleDefinition() {
           fill: new ol.style.Fill({
             color: 'rgba(150, 220, 255, 0.75)'
           }),
-          image: new ol.style.Circle({
-            radius: 6,
-            fill: null,
-            stroke: new ol.style.Stroke({
-              color: 'blue'
-            })
-          })
         });
 
  /**
@@ -263,6 +310,14 @@ this.defaultImmersiveViewMarkerStyle = new ol.style.Style({
     }))
 });    
 
+	/**
+	 * Sample of correspondence table
+	 * @type {Map}
+	 */
+	this.listMaps['map_Unique'] = {
+
+	};
+
     /**
      * Sample of correspondence table
      * @type {Map}
@@ -276,7 +331,7 @@ this.defaultImmersiveViewMarkerStyle = new ol.style.Style({
         'seck':'souche',
         'ADRNIVX_0000000268193673':'souche'
     };
-
+    
     /**
      * Sample of style definition
      * @type {}
@@ -317,93 +372,17 @@ this.defaultImmersiveViewMarkerStyle = new ol.style.Style({
         '6':"6"
     };
 
-    this.listStyles['arbreStyle'] = {
-        'vide': iconStyle,
-        'souche': new ol.style.Style({
-			image:new ol.style.Circle({
-				radius : 1,
-				fill: fill_Violet,
-				stroke: stroke_Violet
-			})
-        }),
-        'arbre': new ol.style.Style({
-            image:new ol.style.Circle({
-				radius : 1,
-				fill: fill_GreenWater,
-				stroke: stroke_Cyan
-			})
-        }),
-        'default': new ol.style.Style({
-			image:new ol.style.Circle({
-				radius : 1,
-				fill: fill_BlueSky,
-				stroke: stroke_BlueSky
-			})
-		})
-	};
-
-	    /**
-     * Sample of style definition
-     * @type {}
+ 
+    
+    /**
+     * Type d'encombrant
      */
-    this.listStyles['StyleSouillureComplex'] = {
-        '1': new ol.style.Style({
-            text: text_WhiteAndBlack,
-			image:new ol.style.Circle({
-				radius : 1,
-				fill: fill_Violet,
-				stroke: stroke_Violet
-			}),
-        }),
-        '2': new ol.style.Style({
-            text: text_WhiteAndBlack,
-			image:new ol.style.Circle({
-				radius : 1,
-				fill: fill_GreenWater,
-				stroke: stroke_Violet
-			})
-        }),
-        '3': new ol.style.Style({
-            text: text_WhiteAndBlack,
-			image:new ol.style.Circle({
-				radius : 1,
-				fill: fill_Violet,
-				stroke: stroke_Violet
-			}),
-        }),
-        '4': new ol.style.Style({
-            text: text_WhiteAndBlack,
-			image:new ol.style.Circle({
-				radius : 10,
-				fill: fill_GreenWater,
-				stroke: stroke_Cyan
-			}),
-        }),
-        '5': new ol.style.Style({
-            text: text_WhiteAndBlack,
-			image:new ol.style.Circle({
-				radius : 1,
-				fill: fill_Violet,
-				stroke: stroke_Cyan
-			}),
-        }),
-        '6': new ol.style.Style({
-            text: text_WhiteAndBlack,
-			image:new ol.style.Circle({
-				radius : 1,
-				fill: fill_White,
-				stroke: stroke_Cyan
-			}),
-        }),
-        'default': new ol.style.Style({
-            text: text_WhiteAndBlack,
-			image:new ol.style.Circle({
-				radius : 1,
-				fill: fill_BlueSky,
-				stroke: stroke_BlueSky
-			})
-        })
+    this.listMaps['map_TypeEncombrant'] = {
+        'nonaffecte':"pointNonAffecte",
+        'affecte':"pointAffecte"
     };
+
+
 
     /**
      * Sample of style definition
@@ -440,5 +419,78 @@ this.defaultImmersiveViewMarkerStyle = new ol.style.Style({
             fill: defaultFill,
             stroke: defaultStroke
         })
+    };
+    
+ 
+    var iconSquareBlue = new ol.style.Style({
+        image : new ol.style.Icon({
+			anchor : [0.5,0.5],
+			anchorXUnits: 'fraction',
+			anchorYUnits: 'fraction',
+			scale: 0.2,
+			src: 'css/img/square_blue_.png'
+		})
+    });
+    var iconSquareGray = new ol.style.Style({
+        image : new ol.style.Icon({
+			anchor : [0.5,0.5],
+			anchorXUnits: 'fraction',
+			anchorYUnits: 'fraction',
+			scale: 0.2,
+			src: 'css/img/square_gray_.png'
+		})
+    });
+    var iconSquareGreen = new ol.style.Style({
+        image : new ol.style.Icon({
+			anchor : [0.5,0.5],
+			anchorXUnits: 'fraction',
+			anchorYUnits: 'fraction',
+			scale: 0.2,
+			src: 'css/img/square_green_.png'
+		})
+    }); 
+    var iconCircleBlue = new ol.style.Style({
+        image : new ol.style.Icon({
+			anchor : [0.5,0.5],
+			anchorXUnits: 'fraction',
+			anchorYUnits: 'fraction',
+			scale: 0.2,
+			src: 'css/img/circle_blue_.png'
+		})
+    });
+    var iconCircleGray = new ol.style.Style({
+        image : new ol.style.Icon({
+			anchor : [0.5,0.5],
+			anchorXUnits: 'fraction',
+			anchorYUnits: 'fraction',
+			scale: 0.2,
+			src: 'css/img/circle_gray_.png'
+		})
+    });
+    var iconCircleGreen = new ol.style.Style({
+        image : new ol.style.Icon({
+			anchor : [0.5,0.5],
+			anchorXUnits: 'fraction',
+			anchorYUnits: 'fraction',
+			scale: 0.2,
+			src: 'css/img/circle_green_.png'
+		})
+    }); 
+	var iconCircleYellow = new ol.style.Style({
+        image : new ol.style.Icon({
+			anchor : [0.5,0.5],
+			anchorXUnits: 'fraction',
+			anchorYUnits: 'fraction',
+			scale: 0.2,
+			src: 'css/img/circle_yellow_.png'
+		})
+    });
+	
+	/**
+     * Encombrant style 
+     * @type {}
+     */
+    this.listStyles['StyleUnique'] = {
+        'default': iconCircleBlue
     };
 }
