@@ -54,7 +54,7 @@ public class AddressParam
     }
 
     /**
-     * @param _strUrl the _strUrl to set
+     * @param strUrl the strUrl to set
      */
     public void setUrl( String strUrl )
     {
@@ -70,7 +70,7 @@ public class AddressParam
     }
 
     /**
-     * @param _strDelay the _strDelay to set
+     * @param strDelay the strDelay to set
      */
     public void setDelay( String strDelay )
     {
@@ -86,7 +86,7 @@ public class AddressParam
     }
 
     /**
-     * @param _strMinLength the _strMinLength to set
+     * @param strMinLength the strMinLength to set
      */
     public void setMinLength( String strMinLength )
     {
@@ -102,7 +102,7 @@ public class AddressParam
     }
 
     /**
-     * @param _listType the _listType to set
+     * @param strListType the strListType to set
      */
     public void setListType( String strListType )
     {
@@ -118,7 +118,7 @@ public class AddressParam
     }
 
     /**
-     * @param _strNbResult the _strNbResult to set
+     * @param strNbResult the strNbResult to set
      */
     public void setNbResult( String strNbResult )
     {
@@ -134,7 +134,7 @@ public class AddressParam
     }
 
     /**
-     * @param _strClientId the _strClientId to set
+     * @param strClientId the strClientId to set
      */
     public void setClientId( String strClientId )
     {

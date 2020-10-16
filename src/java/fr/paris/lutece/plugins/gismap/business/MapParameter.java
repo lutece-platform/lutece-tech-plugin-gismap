@@ -51,7 +51,7 @@ public class MapParameter
     }
 
     /**
-     * @param _nId the _nId to set
+     * @param nId the nId to set
      */
     public void setId( int nId )
     {
@@ -67,7 +67,7 @@ public class MapParameter
     }
 
     /**
-     * @param _mapParameters the _mapParameters to set
+     * @param mapParameters the mapParameters to set
      */
     public void setParameters( Map<String, String> mapParameters )
     {
@@ -76,7 +76,7 @@ public class MapParameter
 
     /**
      * @return the _mapParameters
-     * @param strKey
+     * @param strKey key entry
      */
     public String getParameters( String strKey )
     {
