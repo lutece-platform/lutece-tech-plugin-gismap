@@ -73,10 +73,7 @@ public class GismapJspBean extends PluginAdminPageJspBean
      * Returns the Gismap HTML management page
      *
      * @param request The HTTP request.
-     * @param nMode The current mode. [not implemented]
-     * @throws UserNotSignedException
-     * @throws SiteMessageException occurs when a site message need to be
-     *             displayed
+     * @return gismap html page
      */
     public String getManageGismap( HttpServletRequest request )
     {

@@ -49,7 +49,7 @@ public class View
     }
 
     /**
-     * @param _nId the _nId to set
+     * @param nId the nId to set
      */
     public void setId( int nId )
     {
@@ -65,7 +65,7 @@ public class View
     }
 
     /**
-     * @param _strTemplateFile the _strTemplateFile to set
+     * @param strMapTemplateFile the strMapTemplateFile to set
      */
     public void setMapTemplateFile( String strMapTemplateFile )
     {
@@ -81,7 +81,7 @@ public class View
     }
 
     /**
-     * @param _mapParameter the _mapParameter to set
+     * @param mapParameter the mapParameter to set
      */
     public void setMapParameter( MapParameter mapParameter )
     {
@@ -97,7 +97,7 @@ public class View
     }
 
     /**
-     * @param _addressParam the _addressParam to set
+     * @param addressParam the addressParam to set
      */
     public void setAddressParam( AddressParam addressParam )
     {

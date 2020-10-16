@@ -98,9 +98,7 @@ public class GismapService
     /**
      * Gets the XPage view based on the given GIS code.
      *
-     * @param strGisCode
-     * @param parameters
-     * @param request
+     * @param request http request
      * @return The HTML page
      */
     public String getMapTemplate( HttpServletRequest request )
