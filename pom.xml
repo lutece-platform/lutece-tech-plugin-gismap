@@ -26,19 +26,19 @@
         <dependency>
             <groupId>fr.paris.lutece</groupId>
             <artifactId>lutece-core</artifactId>
-            <version>[5.0.0,)</version>
+            <version>[5.0.0,7.9.9)</version>
             <type>lutece-core</type>
         </dependency>
         <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
             <artifactId>plugin-rest</artifactId>
-            <version>[3.0.0,)</version>
+            <version>[3.0.0,3.9.9)</version>
             <type>lutece-plugin</type>
         </dependency>
         <dependency>
             <groupId>fr.paris.lutece.plugins</groupId>
             <artifactId>library-httpaccess</artifactId>
-            <version>[1.0.0,)</version>
+            <version>[1.0.0,3.9.9)</version>
         </dependency>
     </dependencies>
     <properties>
