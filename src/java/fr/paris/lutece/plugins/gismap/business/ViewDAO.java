@@ -37,11 +37,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.paris.lutece.plugins.gismap.utils.GismapUtils;
-import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * This class provides Data Access methods for View objects
  */
+@ApplicationScoped
 public final class ViewDAO implements IViewDAO
 {
     private static final String MAP_TEMPLATE                  = "/admin/plugins/gismap/include/map_gismap.html";

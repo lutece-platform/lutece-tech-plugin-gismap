@@ -448,7 +448,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
             interact.getEditor().writeGeoJSON(feature);
 		//Trigger a Change event on the geometry field
 		 var geometryFieldName = fieldName['GeomGeoJson'];
-		 $("#"+geometryFieldName).change();
+		 document.getElementById(geometryFieldName)?.dispatchEvent(new Event('change', {bubbles: true}));
         }
     });
 
@@ -494,7 +494,7 @@ function Editor(interact, layerEdit, fieldName, projection) {
         this.editAvailable = true;
 		//Trigger a Change event on the geometry field
 		 var geometryFieldName = fieldName['GeomGeoJson'];
-		 $("#"+geometryFieldName).change();
+		 document.getElementById(geometryFieldName)?.dispatchEvent(new Event('change', {bubbles: true}));
     };
 
     /**

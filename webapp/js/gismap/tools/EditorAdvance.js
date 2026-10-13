@@ -282,13 +282,11 @@ function EditorAdvance(layerEdit) {
         }
         var s = new XMLSerializer();
         var str = s.serializeToString(geom);
-        $.ajax({
-            url: editUrl,
-            origin: 'http://localhost:63342',
-            type: 'POST',
-            contentType: 'text/xml',
-            data: str
-        }).done();
+        fetch(editUrl, {
+            method: 'POST',
+            headers: {'Content-Type': 'text/xml'},
+            body: str
+        });
         this.restartEdition();
         return [feature.getId(), null, null];*/
     };
@@ -306,7 +304,7 @@ function EditorAdvance(layerEdit) {
                     dataProjection: editProj
                 }) + ']';
             var url = editUrl + '/addFeatures';
-            $.post(url, {f: 'json', features: payload}).done(function (data) {
+            GisHttp.post(url, {f: 'json', features: payload}).then(function (data) {
                 var result = JSON.parse(data);
                 if (result.addResults && result.addResults.length > 0) {
                     if (result.addResults[0].success === true) {
@@ -328,7 +326,7 @@ function EditorAdvance(layerEdit) {
                             dataProjection: editProj
                         }) + ']';
                     var urlEdit = editUrl + '/updateFeatures';
-                    $.post(urlEdit, {f: 'json', features: payloadEdit}).done(function (data) {
+                    GisHttp.post(urlEdit, {f: 'json', features: payloadEdit}).then(function (data) {
                         var result = JSON.parse(data);
                         if (result.updateResults && result.updateResults.length > 0) {
                             if (result.updateResults[0].success === true) {

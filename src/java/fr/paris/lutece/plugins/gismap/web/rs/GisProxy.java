@@ -33,148 +33,187 @@
  */
 package fr.paris.lutece.plugins.gismap.web.rs;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.spi.container.ContainerRequest;
-
+import fr.paris.lutece.plugins.rest.service.RestConstants;
 import fr.paris.lutece.portal.service.util.AppLogService;
-import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
 import java.io.InputStream;
-
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-@Path( "/rest/gismapp/gisproxy/" )
+/**
+ * Proxy forwarding a GET request to the GIS server given in the url parameter.
+ */
+@ApplicationScoped
+@Path( RestConstants.BASE_PATH + "gismapp/gisproxy/" )
 public class GisProxy
 {
-    final static private String PROPERTY_HTTP_PROXY_HOST = "gismap.gisproxy.host";
-    final static private String PROPERTY_HTTP_PROXY_PORT = "gismap.gisproxy.port";
-    final static private String PROPERTY_HTTP_NOPROXYFOR = "gismap.gisproxy.noProxyFor";
-    final static private String SYSTEM_HTTP_PROXY_HOST = "http.proxyHost";
-    final static private String SYSTEM_HTTP_PROXY_PORT = "http.proxyPort";
-    final static private String PARAMETER_URL = "url=";
-    final static private String CODAGE_UTF_8 = "UTF-8";
-    final static private String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
-    final static private String HTTP_HEADER_ACCESS_CTRL_ALLOW_ORGIN = "Access-Control-Allow-Origin";
-    final static private String HTTP_HEADER_ACCESS_CTRL_ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
-    final static private String HTTP_HEADER_ACCESS_CTRL_ALLOW_METHODS = "Access-Control-Allow-Methods";
+    private static final String PROPERTY_HTTP_PROXY_HOST = "gismap.gisproxy.host";
+    private static final String PROPERTY_HTTP_PROXY_PORT = "gismap.gisproxy.port";
+    private static final String PROPERTY_HTTP_NOPROXYFOR = "gismap.gisproxy.noProxyFor";
+    private static final String CLIENT_PROXY_HOST = "com.ibm.ws.jaxrs.client.proxy.host";
+    private static final String CLIENT_PROXY_PORT = "com.ibm.ws.jaxrs.client.proxy.port";
+    private static final String PARAMETER_URL = "url=";
+    private static final String HTTP_HEADER_CONTENT_TYPE = "Content-Type";
+    private static final String HTTP_HEADER_ACCESS_CTRL_ALLOW_ORGIN = "Access-Control-Allow-Origin";
+    private static final String HTTP_HEADER_ACCESS_CTRL_ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
+    private static final String HTTP_HEADER_ACCESS_CTRL_ALLOW_METHODS = "Access-Control-Allow-Methods";
 
-    private void manageProxyConfiguration( String decodedUrl )
-        throws MalformedURLException
+    private final Client _client = ClientBuilder.newClient( );
+
+    @Inject
+    @ConfigProperty( name = PROPERTY_HTTP_PROXY_HOST )
+    private Optional<String> _strProxyHost;
+
+    @Inject
+    @ConfigProperty( name = PROPERTY_HTTP_PROXY_PORT )
+    private Optional<String> _strProxyPort;
+
+    @Inject
+    @ConfigProperty( name = PROPERTY_HTTP_NOPROXYFOR )
+    private Optional<String> _strNoProxyFor;
+
+    /**
+     * Sets on the target the HTTP proxy configured for its host, unless the host matches gismap.gisproxy.noProxyFor.
+     *
+     * @param target
+     *            the target of the request
+     * @param strDecodedUrl
+     *            the url of the target
+     * @return the target
+     * @throws MalformedURLException
+     *             if the url is invalid
+     */
+    private WebTarget manageProxyConfiguration( WebTarget target, String strDecodedUrl ) throws MalformedURLException
     {
-        URL url = new URL( decodedUrl );
-        String hostname = url.getHost(  );
+        String strHostname = new URL( strDecodedUrl ).getHost( );
+        String strNoProxyFor = _strNoProxyFor.orElse( null );
 
-        String[] _listHostnames = null;
-        String strPropertyHttpNoProxyFor = AppPropertiesService.getProperty( PROPERTY_HTTP_NOPROXYFOR );
-
-        if ( strPropertyHttpNoProxyFor != null )
+        if ( strNoProxyFor != null && !strNoProxyFor.trim( ).isEmpty( ) )
         {
-            if ( !( strPropertyHttpNoProxyFor.trim(  ).equals( "" ) ) )
+            for ( String strPattern : strNoProxyFor.split( "," ) )
             {
-                _listHostnames = strPropertyHttpNoProxyFor.split( "," );
-            }
-        }
-
-        boolean matchNoProxy = false;
-
-        if ( _listHostnames != null )
-        {
-            for ( int i = 0; i < _listHostnames.length; i++ )
-            {
-                if ( hostname.matches( _listHostnames[i].trim(  ) ) )
+                if ( strHostname.matches( strPattern.trim( ) ) )
                 {
-                    matchNoProxy = true;
-
-                    break;
+                    return target;
                 }
             }
         }
 
-        System.clearProperty( SYSTEM_HTTP_PROXY_HOST );
-        System.clearProperty( SYSTEM_HTTP_PROXY_PORT );
+        String strProxyHost = _strProxyHost.orElse( null );
+        String strProxyPort = _strProxyPort.orElse( null );
 
-        if ( !matchNoProxy )
+        if ( strProxyHost != null && !strProxyHost.trim( ).isEmpty( ) )
         {
-            String strPropertyHttpProxyHost = AppPropertiesService.getProperty( PROPERTY_HTTP_PROXY_HOST );
-            String strPropertyHttpProxyPort = AppPropertiesService.getProperty( PROPERTY_HTTP_PROXY_PORT );
+            target.property( CLIENT_PROXY_HOST, strProxyHost.trim( ) );
 
-            if ( strPropertyHttpProxyHost != null )
+            if ( strProxyPort != null && !strProxyPort.trim( ).isEmpty( ) )
             {
-                if ( !( strPropertyHttpProxyHost.trim(  ).equals( "" ) ) )
-                {
-                    System.setProperty( SYSTEM_HTTP_PROXY_HOST, strPropertyHttpProxyHost );
-                }
-            }
-
-            if ( strPropertyHttpProxyPort != null )
-            {
-                if ( !( strPropertyHttpProxyPort.trim(  ).equals( "" ) ) )
-                {
-                    System.setProperty( SYSTEM_HTTP_PROXY_PORT, strPropertyHttpProxyPort );
-                }
+                target.property( CLIENT_PROXY_PORT, strProxyPort.trim( ) );
             }
         }
+
+        return target;
     }
 
-    @GET
-    public Response sendGisRequest( @Context
-    Request request )
+    /**
+     * Builds the URI of an url, quoting the characters a URI does not allow (a JSON value in the query).
+     *
+     * @param strDecodedUrl
+     *            the decoded url
+     * @return the URI
+     * @throws MalformedURLException
+     *             if the url is invalid
+     * @throws URISyntaxException
+     *             if the URI cannot be built
+     */
+    private URI toUri( String strDecodedUrl ) throws MalformedURLException, URISyntaxException
     {
-        AppLogService.info( "Enter the sendGisRequest function ..." );
+        URL url = new URL( strDecodedUrl );
+
+        return new URI( url.getProtocol( ), url.getUserInfo( ), url.getHost( ), url.getPort( ), url.getPath( ), url.getQuery( ), url.getRef( ) );
+    }
+
+    /**
+     * Forwards the request to the url given after url= in the query string and returns its content with its content
+     * type.
+     *
+     * @param uriInfo
+     *            the request uri
+     * @return the response of the GIS server, or null on error
+     */
+    @GET
+    public Response sendGisRequest( @Context UriInfo uriInfo )
+    {
+        AppLogService.debug( "Enter the sendGisRequest function ..." );
 
         Response responseToReturn = null;
 
         try
         {
-            String url = ( (ContainerRequest) request ).getRequestUri(  ).getQuery(  );
-            url = url.substring( PARAMETER_URL.length(  ) );
+            String strUrl = uriInfo.getRequestUri( ).getQuery( );
+            strUrl = strUrl.substring( PARAMETER_URL.length( ) );
 
-            int index = url.indexOf( "?" );
-
-            if ( index < 0 )
+            if ( strUrl.indexOf( "?" ) < 0 )
             {
-                url = url.replaceFirst( "&", "?" );
+                strUrl = strUrl.replaceFirst( "&", "?" );
             }
 
-            String decodedUrl = URLDecoder.decode( url, CODAGE_UTF_8 );
+            String strDecodedUrl = URLDecoder.decode( strUrl, StandardCharsets.UTF_8 );
 
-            AppLogService.info( "decodedUrl=" + decodedUrl );
+            AppLogService.debug( "decodedUrl={}", strDecodedUrl );
 
-            manageProxyConfiguration( decodedUrl );
+            WebTarget target = manageProxyConfiguration( _client.target( toUri( strDecodedUrl ) ), strDecodedUrl );
+            Response response = target.request( MediaType.WILDCARD ).get( );
 
-            Client client = Client.create(  );
-            WebResource webResource = client.resource( decodedUrl );
-            webResource.accept( MediaType.MEDIA_TYPE_WILDCARD );
+            String strContentType = response.getHeaderString( HTTP_HEADER_CONTENT_TYPE );
 
-            ClientResponse response = webResource.get( ClientResponse.class );
-
-            String contentType = "" + response.getHeaders(  ).get( HTTP_HEADER_CONTENT_TYPE ).get( 0 );
+            if ( strContentType == null )
+            {
+                response.close( );
+                throw new IllegalStateException( "No content type in the response of " + strDecodedUrl );
+            }
 
             responseToReturn = Response.status( Response.Status.OK ).header( HTTP_HEADER_ACCESS_CTRL_ALLOW_ORGIN, "*" )
-                                       .header( HTTP_HEADER_ACCESS_CTRL_ALLOW_CREDENTIALS, "false" )
-                                       .header( HTTP_HEADER_ACCESS_CTRL_ALLOW_METHODS, "GET, POST, DELETE, PUT" )
-                                       .header( HTTP_HEADER_CONTENT_TYPE, contentType )
-                                       .entity( response.getEntity( InputStream.class ) ).build(  );
+                    .header( HTTP_HEADER_ACCESS_CTRL_ALLOW_CREDENTIALS, "false" )
+                    .header( HTTP_HEADER_ACCESS_CTRL_ALLOW_METHODS, "GET, POST, DELETE, PUT" ).header( HTTP_HEADER_CONTENT_TYPE, strContentType )
+                    .entity( response.readEntity( InputStream.class ) ).build( );
         }
-        catch ( Exception e )
+        catch( Exception e )
         {
-            AppLogService.error( "Error when treating url, exception:" + e.getMessage(  ) );
+            AppLogService.error( "Error when treating url, exception:{}", e.getMessage( ) );
         }
 
-        AppLogService.info( "Exit the sendGisRequest function" );
+        AppLogService.debug( "Exit the sendGisRequest function" );
 
         return responseToReturn;
+    }
+
+    /**
+     * Closes the HTTP client.
+     */
+    @PreDestroy
+    public void close( )
+    {
+        _client.close( );
     }
 }

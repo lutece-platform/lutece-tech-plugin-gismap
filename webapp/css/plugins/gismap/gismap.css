@@ -239,3 +239,8 @@ img.olTileImage {
 .map .ol-popup-content {
 	color:black;
 }
+.gismap-autocomplete {
+	z-index: 1060;
+	max-height: 300px;
+	overflow-y: auto;
+}

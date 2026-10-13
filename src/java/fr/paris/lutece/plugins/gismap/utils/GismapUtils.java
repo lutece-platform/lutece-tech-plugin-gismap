@@ -38,11 +38,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
-import fr.paris.lutece.plugins.gismap.business.IViewDAO;
 import fr.paris.lutece.plugins.gismap.business.View;
 import fr.paris.lutece.plugins.gismap.business.ViewHome;
-import fr.paris.lutece.plugins.gismap.service.GismapPlugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.ReferenceList;
 
@@ -58,9 +55,6 @@ public final class GismapUtils
 
     /** The Constant GISMAP_PARAMETER. */
     public static final String GISMAP_PARAMETER = ".parameter";
-
-    // Static variable pointed at the DAO instance
-    private static IViewDAO    _dao             = ( IViewDAO ) SpringContextService.getPluginBean( GismapPlugin.PLUGIN_NAME, "viewDAO" );
 
     /**
      * GismapUtils.

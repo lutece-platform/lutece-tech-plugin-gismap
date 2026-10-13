@@ -36,25 +36,23 @@ package fr.paris.lutece.plugins.gismap.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 
-import fr.paris.lutece.plugins.gismap.business.MapParameter;
 import fr.paris.lutece.plugins.gismap.business.View;
 import fr.paris.lutece.plugins.gismap.business.ViewHome;
-import fr.paris.lutece.plugins.gismap.utils.GismapUtils;
-import fr.paris.lutece.portal.web.l10n.LocaleService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
-import fr.paris.lutece.portal.service.util.AppPathService;
-import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
-import java.util.Locale;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
  *
  * GismapService
  *
  */
+@ApplicationScoped
 public class GismapService
 {
     public static final String   GISMAP_DEFAULT_VIEW_PROPERTIES = "gismap.mainmap.defaultview";
@@ -65,9 +63,6 @@ public class GismapService
     private static final String  PARAMETER_ADD_PARAMETER        = "add_parameter";
     private static final String  PARAMETER_DEFAULT_VIEW         = "default_view";
 
-    // Templates
-    private static GismapService _singleton                     = new GismapService( );
-
     // Constant
     public static final String   GISMAP_URL_REST                = "rest/directory-gismap/listRecordField/";
     public static final String   PARAM_VIEW_URLGEOJSON          = "UrlGeoJSON1";
@@ -76,6 +71,10 @@ public class GismapService
     public static final String   PARAM_VIEW_POPUP1              = "Popup1";
     public static final String   PARAM_VIEW_SHOWLINK            = "Popup_ShowLink";
 
+    @Inject
+    @ConfigProperty( name = GISMAP_DEFAULT_VIEW_PROPERTIES, defaultValue = "1" )
+    private String               _strDefaultView;
+
     /**
      * Initialize the GISMAP service
      *
@@ -83,16 +82,6 @@ public class GismapService
     public void init( )
     {
         // TODO
-    }
-
-    /**
-     * Returns the instance of the singleton
-     *
-     * @return The instance of the singleton
-     */
-    public static GismapService getInstance( )
-    {
-        return _singleton;
     }
 
     /**
@@ -105,12 +94,11 @@ public class GismapService
     {
         Map<String, Object> model = new HashMap<String, Object>( );
 
-        // String strInitView = AppPropertiesService.getProperty( GISMAP_VIEW_INIT );
-        View view = ViewHome.findByPrimaryKey( Integer.parseInt( AppPropertiesService.getProperty( GISMAP_DEFAULT_VIEW_PROPERTIES ) ) );
+        View view = ViewHome.findByPrimaryKey( Integer.parseInt( _strDefaultView.trim( ) ) );
 
         model.put( PARAMETER_MAP_PARAMETER, view.getMapParameter( ) );
         model.put( PARAMETER_ADD_PARAMETER, view.getAddressParam( ) );
-        model.put( PARAMETER_DEFAULT_VIEW, AppPropertiesService.getProperty( GISMAP_DEFAULT_VIEW_PROPERTIES ) );
+        model.put( PARAMETER_DEFAULT_VIEW, _strDefaultView.trim( ) );
 
         HtmlTemplate templateList = AppTemplateService.getTemplate( view.getMapTemplateFile( ), request.getLocale( ), model );
 

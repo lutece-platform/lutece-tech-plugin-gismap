@@ -39,48 +39,64 @@ import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
 import fr.paris.lutece.portal.util.mvc.xpage.MVCApplication;
 import fr.paris.lutece.portal.util.mvc.xpage.annotations.Controller;
+import fr.paris.lutece.portal.web.cdi.mvc.Models;
 import fr.paris.lutece.portal.web.xpages.XPage;
 
-import java.util.Map;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
-
-
-@Controller( xpageName = "gismap", pageTitleI18nKey = "gismap.xpage.gismap.pageTitle", pagePathI18nKey = "gismap.xpage.gismap.pagePathLabel" )
+/**
+ * Front office page displaying the default map.
+ */
+@RequestScoped
+@Named( "gismap.xpage.gismap" )
+@Controller( xpageName = "gismap", pageTitleI18nKey = "gismap.xpage.gismap.pageTitle", pagePathI18nKey = "gismap.xpage.gismap.pagePathLabel", securityTokenEnabled = true )
 public class GismapXPageApplication extends MVCApplication
 {
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
-    // Templates
     private static final String TEMPLATE_DEFAULT = "/skin/plugins/gismap/manage_gismap.html";
 
-    // Views
     private static final String VIEW_DEFAULT = "default";
 
-    // Actions
     private static final String ACTION_CREATE_GEOM = "createGeom";
 
-    // Parameters
     private static final String PARAMETER_MAP = "map";
     private static final String PARAMETER_ADD = "add_parameter";
 
+    @Inject
+    private transient GismapService _gismapService;
+
+    /**
+     * Returns the default map page.
+     *
+     * @param model
+     *            the page model
+     * @param request
+     *            The HTTP request
+     * @return the page
+     */
     @View( value = VIEW_DEFAULT, defaultView = true )
-    public XPage getDefaultPage( HttpServletRequest request )
+    public XPage getDefaultPage( Models model, HttpServletRequest request )
     {
-        Map<String, Object> model = getModel(  );
+        model.put( PARAMETER_ADD, AddressParamHome.getAddressParameters( ) );
+        model.put( PARAMETER_MAP, _gismapService.getMapTemplate( request ) );
 
-        model.put( PARAMETER_ADD, AddressParamHome.getAddressParameters(  ) );
-        model.put( PARAMETER_MAP, GismapService.getInstance(  ).getMapTemplate( request ) );
-
-        return getXPage( TEMPLATE_DEFAULT, request.getLocale(  ), model );
+        return getXPage( TEMPLATE_DEFAULT, request.getLocale( ) );
     }
 
+    /**
+     * Geometry creation action, which creates nothing and goes back to the default view.
+     *
+     * @param request
+     *            The HTTP request
+     * @return the redirection to the default view
+     */
     @Action( ACTION_CREATE_GEOM )
     public XPage createGeom( HttpServletRequest request )
     {
-        return null;
+        return redirectView( request, VIEW_DEFAULT );
     }
 }

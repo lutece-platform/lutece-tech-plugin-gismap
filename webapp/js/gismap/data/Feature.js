@@ -148,7 +148,7 @@ function Feature(projection, proxy) {
                         ],
                         loader: function () {
                             var webService = dataUrlBbox;
-                            $.ajax({
+                            GisHttp.jsonp({
                                 url: webService,
                                 type: 'GET',
                                 dataType: 'jsonp',
@@ -184,7 +184,7 @@ function Feature(projection, proxy) {
                                 extent = projection.getExtent();
                             }
                             var webService = dataUrlBbox + "?bbox=" + extent.join(','); 
-                            $.ajax({
+                            GisHttp.jsonp({
                                 url: webService,
                                 type: 'GET',
                                 dataType: 'jsonp',
@@ -216,7 +216,7 @@ function Feature(projection, proxy) {
                     })
                 ],
                 loader: function () {
-                    $.ajax({
+                    GisHttp.jsonp({
                         url: dataUrlWithPostMethod,
                         type: 'POST',
 						contentType: 'application/json',
@@ -307,7 +307,7 @@ function Feature(projection, proxy) {
                             ',"spatialReference":{"wkid":' + projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length) +
                             '}}') + '&geometryType=esriGeometryEnvelope&inSR=&outFields=*&' + 'outSR=' +
                             projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length);
-                        $.ajax({
+                        GisHttp.jsonp({
                             url: webService,
                             dataType: 'jsonp',
                             success: function (response) {
@@ -344,7 +344,7 @@ function Feature(projection, proxy) {
                             ',"spatialReference":{"wkid":' + projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length) +
                             '}}') + '&geometryType=esriGeometryEnvelope&inSR=&outFields=*&' + 'outSR=' +
                             projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length);
-                        $.ajax({
+                        GisHttp.jsonp({
                             url: webService,
                             dataType: 'jsonp',
                             success: function (response) {
@@ -389,7 +389,7 @@ function Feature(projection, proxy) {
                         webService = url + '&outputFormat=text/javascript&format_options=callback:loadFeatures&' +
                             'srsname=' + projectionData.getCode() + '&bbox=' + extentCapture.join(',') + ',' + projectionData.getCode();
                     }
-                    $.ajax({
+                    GisHttp.jsonp({
                         url: webService,
                         dataType: 'jsonp'
                     });

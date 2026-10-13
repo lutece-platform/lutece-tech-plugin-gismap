@@ -5,6 +5,8 @@ package fr.paris.lutece.plugins.gismap.business;
 
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import java.util.List;
  * @author bass
  *
  */
+@ApplicationScoped
 public class MapParameterDAO implements IMapParameterDAO
 {
     public static final String GISMAP_VIEW = "gismap.view.";

@@ -41,7 +41,7 @@ function Control() {
             }
             if(activeControls[ctrl] === "MousePosition" ){
                 this.ListControl.push(new ol.control.MousePosition({
-                    undefinedHTML: 'Outside',
+                    undefinedHTML: '&#160;',
                     coordinateFormat: function (coordinate) {
                         return ol.coordinate.format(coordinate, '{x}, {y}', 4);
                     }

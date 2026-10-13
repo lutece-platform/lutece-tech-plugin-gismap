@@ -41,15 +41,10 @@ var Projection = function() {
      */
 	this.retrieveEpsgData = function(){
 		var projDefJson;
-		$.ajax({
-			type: "GET",
-			url: 'js/gismap/lib/EPSG.json',
-			dataType: "text",
-			async:false,
-			success: function (response) {
-				projDefJson = JSON.parse(response);
-			}
-		});
+		var response = GisHttp.getSync('js/gismap/lib/EPSG.json');
+		if (response !== undefined) {
+			projDefJson = JSON.parse(response);
+		}
 		return projDefJson;	
 	}
 	

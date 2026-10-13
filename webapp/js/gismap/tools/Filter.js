@@ -63,7 +63,7 @@ function Filter(layer, projection) {
                     if(extent[0] === -Infinity){
                        extent = projection.getExtent();
                     }
-                    $.ajax({
+                    GisHttp.jsonp({
                         url : urlGeoJson,
                         type : 'GET',
                         dataType: 'jsonp',
@@ -96,7 +96,7 @@ function Filter(layer, projection) {
             vectorSource = new ol.source.Vector({
                 attributions: this.ListLayers[name].getSource().getAttributions(),
                 loader: function () {
-                    $.ajax({
+                    GisHttp.jsonp({
                         url : urlGeoJson,
                         type : 'GET',
                         dataType: 'jsonp',
@@ -173,7 +173,7 @@ function Filter(layer, projection) {
                                 ',"spatialReference":{"wkid":' + projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length) +
                                 '}}') + '&geometryType=esriGeometryEnvelope&inSR=&outFields=*&' + 'outSR=' +
                             projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length);
-                        $.ajax({
+                        GisHttp.jsonp({
                             url: webService,
                             dataType: 'jsonp',
                             success: function (response) {
@@ -214,7 +214,7 @@ function Filter(layer, projection) {
                             ',"spatialReference":{"wkid":' + projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length) +
                             '}}') + '&geometryType=esriGeometryEnvelope&inSR=&outFields=*&' + 'outSR=' +
                             projection.getProjection().getCode().substring(5, projection.getProjection().getCode().length);
-                        $.ajax({
+                        GisHttp.jsonp({
                             url: webService,
                             dataType: 'jsonp',
                             success: function (response) {
@@ -263,7 +263,7 @@ function Filter(layer, projection) {
                         webService = url + '&outputFormat=text/javascript&format_options=callback:loadFeatures&' +
                             'srsname=' + projectionData.getCode() + '&bbox=' + extentCapture.join(',') + ',' + projectionData.getCode();
                     }
-                    $.ajax({
+                    GisHttp.jsonp({
                         url: webService,
                         dataType: 'jsonp'
                     });
