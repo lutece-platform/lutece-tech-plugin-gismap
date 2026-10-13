@@ -38,7 +38,6 @@
 </#list>
 </#if>
 <link rel="stylesheet" href="js/gismap/lib/css/${strValCss}" type="text/css">
-<script src="js/autocomplete/jquery.session.js"></script>
 
 <#if enableImmersiveView?? && enableImmersiveView?boolean>
 <script src ="http://s3.eu-central-1.amazonaws.com/rcscommons/public/realitylens/sdk/1.0.3/rlens.min.js"></script>
@@ -59,49 +58,63 @@
     <div id="${idEntry}_realitylens" class="${strValMapClass}"></div>
 </#if>
     <div id="${idEntry}_map" class="${strValMapClass}"><div id="popup"></div></div>
-    <div class="hidden"  id="measure"> #i18n{gismap.map.message.measure}</div>
-    <button class="btn btn-primary btn-sm" id="zoomSelect" type="button" onClick="GisMapDisplay${idEntry}.getZoom().zoomSelect()">Recentrer</button>
+    <div class="d-none" id="measure"> #i18n{gismap.map.message.measure}</div>
+    <div class="d-flex flex-wrap gap-2 mt-2">
+    <button class="btn btn-primary btn-sm" id="zoomSelect" type="button" onClick="GisMapDisplay${idEntry}.getZoom().zoomSelect()">#i18n{gismap.map.button.zoomSelect}</button>
     <#if editModeValue?? && editModeValue=="">
-	    <button class="btn btn-primary btn-sm" id="SelectVia" type="button" onClick="selectObjectLuteceViaMap(GisMapDisplay${idEntry}.getInteract().getSpecificInteract().getSpecificSelectedFeatures())">Sélection : Lutèce -> Carte</button>
-	    <button class="btn btn-primary btn-sm" id="SelectTo" type="button" onClick="GisMapDisplay${idEntry}.getInteract().getSpecificInteract().setSpecificSelectedFeatures(selectObjectMapViaLutece())">Sélection : Carte -> Lutèce</button>
+	    <button class="btn btn-primary btn-sm" id="SelectVia" type="button" onClick="selectObjectLuteceViaMap(GisMapDisplay${idEntry}.getInteract().getSpecificInteract().getSpecificSelectedFeatures())">#i18n{gismap.map.button.selectLuteceToMap}</button>
+	    <button class="btn btn-primary btn-sm" id="SelectTo" type="button" onClick="GisMapDisplay${idEntry}.getInteract().getSpecificInteract().setSpecificSelectedFeatures(selectObjectMapViaLutece())">#i18n{gismap.map.button.selectMapToLutece}</button>
     </#if>
-    <a id="mapPrint" class="btn"  download="map.png" <#if strValPrint == "false"> style="display: none" </#if> ><input type="button" class="btn btn-primary btn-sm"  value="Imprimer"></a>
-    
-    <!-- <script src="js/gismap/GisTest.js" type="text/javascript"></script> -->
-    
-    <!-- <script src="js/Gis.js" type="text/javascript"></script> </script> -->
+    <a id="mapPrint" class="btn btn-primary btn-sm" download="map.png" <#if strValPrint == "false"> style="display: none" </#if> >#i18n{gismap.map.button.print}</a>
+    </div>
 </div>
 <script>
- 
-$("#${idEntry}_address").autocomplete({
-	source : function(request, reponse){ // les deux arguments représentent les données nécessaires au plugin
-	var url = ${add_parameter.url};
-	$.ajax({
-		url : url +request.term,
-	    dataType: "jsonp",
-	    success : function(data){
-	    	if(data.result.length == 0){
-                $('#${idEntry}_x').val(0);
-                $('#${idEntry}_y').val(0);
-                $('#id_additional_address').val('');
-                $('#${idEntry}_idAddress').val('');
-                GisMapDisplay${idEntry}.getInteract().deleteFeatures();
-                
-       		}
-            reponse($.map(getResult(data.result), function(objet){
-            	return objet;           
-            }));
-        }
-    	});
-	},
-	select : function(event, ui){
-		$('#${idEntry}_x').val(ui.item.x);
-		$('#${idEntry}_y').val(ui.item.y);
-		$('#id_additional_address').val(getAdditionalAdd(ui.item.label));
-		$('#${idEntry}_idAddress').val(ui.item.id);
-		GisMapDisplay${idEntry}.getZoom().zoomSuggestPoi(ui.item.x, ui.item.y);
-	    }
-}).focus();
+function gismapField${idEntry}(strSuffix){
+	return document.getElementById('${idEntry}_' + strSuffix);
+};
+function gismapValue${idEntry}(strSuffix){
+	var field = gismapField${idEntry}(strSuffix);
+	return field === null ? undefined : field.value;
+};
+function gismapSetValue(strId, value){
+	var field = document.getElementById(strId);
+	if(field !== null){
+		field.value = value;
+	}
+};
+
+(function(){
+	var addressField = gismapField${idEntry}('address');
+	if(addressField === null){
+		return;
+	}
+	new GisAutocomplete(addressField, {
+		source : function(term, reponse){
+			var url = ${add_parameter.url};
+			GisHttp.jsonp({
+				url : url + term,
+				success : function(data){
+					if(data.result.length == 0){
+						gismapSetValue('${idEntry}_x', 0);
+						gismapSetValue('${idEntry}_y', 0);
+						gismapSetValue('id_additional_address', '');
+						gismapSetValue('${idEntry}_idAddress', '');
+						GisMapDisplay${idEntry}.getInteract().deleteFeatures();
+					}
+					reponse(getResult(data.result));
+				}
+			});
+		},
+		select : function(item){
+			gismapSetValue('${idEntry}_x', item.x);
+			gismapSetValue('${idEntry}_y', item.y);
+			gismapSetValue('id_additional_address', getAdditionalAdd(item.label));
+			gismapSetValue('${idEntry}_idAddress', item.id);
+			GisMapDisplay${idEntry}.getZoom().zoomSuggestPoi(item.x, item.y);
+		}
+	});
+	addressField.focus();
+})();
 function getResult(result) {
 	var resultArray = [];
 	var index;
@@ -117,35 +130,34 @@ function getResult(result) {
 	return resultArray;	
 };
 
-$( "#${idEntry}_map" )
-.on( "mouseleave", function() {
+gismapField${idEntry}('map').addEventListener('mouseleave', function() {
 	var typeEdit   = ${strValTypeEdit};
 	if(typeEdit !== ''){
-	var varX = $("#${idEntry}_x").val();
-	var varY = $("#${idEntry}_y").val();
+	var varX = gismapValue${idEntry}('x');
+	var varY = gismapValue${idEntry}('y');
 	if(varX != "" && varY != ""){
 			GisMapDisplay${idEntry}.getInteract().getEditor().forceValidate();
-			if($("#${idEntry}_geomState").val() === 'true'){
+			if(gismapValue${idEntry}('geomState') === 'true'){
 				geocodage${idEntry}();
 			}
 		}
 	}
 	else{
-		var varExtendCurrent = $("#${idEntry}_extent_current").val();
-		var varVisibleLayer = $("#${idEntry}_visible_layer").val();
+		var varExtendCurrent = gismapValue${idEntry}('extent_current');
+		var varVisibleLayer = gismapValue${idEntry}('visible_layer');
 		if(varExtendCurrent != "" && varVisibleLayer != ""){
-			$.session.set("extent_current", varExtendCurrent);
-			$.session.set("visible_layer", varVisibleLayer);
-			$.session.set("current_zoom", GisMapDisplay${idEntry}.getZoom().getCurrentZoom());
+			GisSession.set("extent_current", varExtendCurrent);
+			GisSession.set("visible_layer", varVisibleLayer);
+			GisSession.set("current_zoom", GisMapDisplay${idEntry}.getZoom().getCurrentZoom());
 		}		
-		$("#${idEntry}_extent_current_val").val($.session.get("extent_current"));
-		$("#${idEntry}_visible_layer_val").val($.session.get("visible_layer"));
+		gismapSetValue('${idEntry}_extent_current_val', GisSession.get("extent_current") || '');
+		gismapSetValue('${idEntry}_visible_layer_val', GisSession.get("visible_layer") || '');
 	}
 });
 
 function selectObjectLuteceViaMap( idSelected ){
-	$( ".selected-id" ).each(function(  ) {
-		var id = this.value;
+	document.querySelectorAll( ".selected-id" ).forEach(function( element ) {
+		var id = element.value;
 		if(inIdSelected(id, idSelected)==true){
 			document.getElementById("selected_record_" + id ).checked = true;
 		}
@@ -157,8 +169,8 @@ function selectObjectLuteceViaMap( idSelected ){
 function selectObjectMapViaLutece(  ){
 	var idSelected = [];
 	var i = 0;
-	$( ".selected-id" ).each(function(  ) {
-		var id = this.value;
+	document.querySelectorAll( ".selected-id" ).forEach(function( element ) {
+		var id = element.value;
 		if(document.getElementById("selected_record_" + id ).checked == true){
 			idSelected[i] = id;
 			i++;
@@ -168,7 +180,7 @@ function selectObjectMapViaLutece(  ){
 };
 function inIdSelected(id, idSelected){
 	var varBoolean = false;
-	for	(index = 0; index < idSelected.length; index++) {
+	for	(var index = 0; index < idSelected.length; index++) {
 		var idIndex = idSelected[index];
 		if(idIndex == id){
 			varBoolean = true;
@@ -178,23 +190,22 @@ function inIdSelected(id, idSelected){
 	return varBoolean;
 };
 function geocodage${idEntry}(){
-	var geocoding_url = $('#${idEntry}_reverse_geocoding_url').val();
-	var valX = $('#${idEntry}_geomCentroidXGeocodage').val();
-	var valY = $('#${idEntry}_geomCentroidYGeocodage').val();
+	var geocoding_url = gismapValue${idEntry}('reverse_geocoding_url');
+	var valX = gismapValue${idEntry}('geomCentroidXGeocodage');
+	var valY = gismapValue${idEntry}('geomCentroidYGeocodage');
 	if(geocoding_url != "" && valX != "" && valY != ""){
-		$.ajax({
+		GisHttp.jsonp({
 			url: geocoding_url + "%28" + valX + "," + valY + "%29",
-	        dataType: "jsonp",
             success: function (response) {
                 if (response.error) {
                     console.log(response.error.message + '\n' + response.error.details.join('\n'));
                 }else {
-                    if (response.result.Features.length >= 0) {
+                    if (response.result.Features.length > 0) {
         				var address = response.result.Features[0].properties.Adressetypo;
-        	        	$("#${idEntry}_address").val(address);
+        	        	gismapSetValue("${idEntry}_address", address);
         	        	var idAddress = response.result.Features[0].properties.Id;
-        	        	$("#${idEntry}_idAddress").val(idAddress);
-        				$("#id_additional_address").val(getAdditionalAdd(address));
+        	        	gismapSetValue("${idEntry}_idAddress", idAddress);
+        				gismapSetValue("id_additional_address", getAdditionalAdd(address));
                     }
                 }
             }
@@ -235,19 +246,28 @@ function getAdditionalAdd (address)
 	return additionalAddress;
 };
 
-$( document ).ready(function() {
-$("#${idEntry}_geometry").on("change", 	function() {
+function gismapWatchGeometry${idEntry}() {
+var geometryField = gismapField${idEntry}('geometry');
+if(geometryField === null){
+	return;
+}
+geometryField.addEventListener("change", 	function() {
 	var typeEdit   = "${strValTypeEdit}";
 	if(typeEdit != ""){
-	var varX = $("#${idEntry}_x").val();
-	var varY = $("#${idEntry}_y").val();
+	var varX = gismapValue${idEntry}('x');
+	var varY = gismapValue${idEntry}('y');
 		if(varX != "" && varY != ""){
 			geocodage${idEntry}();
 		}else{
-		$("#${idEntry}_address").val("");
-		$("#${idEntry}_idAddress").val("");
+		gismapSetValue("${idEntry}_address", "");
+		gismapSetValue("${idEntry}_idAddress", "");
 		}
 	}
 	});
-});
+};
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', gismapWatchGeometry${idEntry});
+} else {
+	gismapWatchGeometry${idEntry}();
+}
 </script>

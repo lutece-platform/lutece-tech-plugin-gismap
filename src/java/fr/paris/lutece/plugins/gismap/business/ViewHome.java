@@ -33,8 +33,7 @@
  */
 package fr.paris.lutece.plugins.gismap.business;
 
-import fr.paris.lutece.plugins.gismap.service.GismapPlugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 
 import java.util.List;
 
@@ -46,7 +45,7 @@ import java.util.List;
 public final class ViewHome
 {
     // Static variable pointed at the DAO instance
-    private static IViewDAO _dao = (IViewDAO) SpringContextService.getPluginBean( GismapPlugin.PLUGIN_NAME, "viewDAO" );
+    private static IViewDAO _dao = CDI.current( ).select( IViewDAO.class ).get( );
 
     public static View findByPrimaryKey( Integer nKey )
     {

@@ -152,17 +152,14 @@ function LayerRaster(projection, proxy) {
 	
 	this.defineSourceFromCapabilitiesFile = function(url){
 		var options;
-		$.ajax({
-		url: url,
-		success: function(response) {
+		var response = GisHttp.getSync(url);
+		if (response !== undefined) {
 		  	var parser = new ol.format.WMTSCapabilities();
 			var result = parser.read(response);
 			//var wmtsLayerName = result.Contents.Layer[0].Identifier;
 			var wmtsLayerName = result.ServiceIdentification.Title;
 			options = ol.source.WMTS.optionsFromCapabilities(result,{layer: wmtsLayerName, crossOrigin:'anonymous'});
-		},
-		async:false
-		});
+		}
 		return options;
 	};	
 

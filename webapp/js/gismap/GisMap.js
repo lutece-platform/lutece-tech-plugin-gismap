@@ -36,6 +36,13 @@ var GisMap = function (idMapInit, idInit) {
 		interactions: ol.interaction.defaults({}),
     });
 
+    var mapElement = document.getElementById(this.idMap);
+    if (mapElement !== null && typeof ResizeObserver !== 'undefined') {
+        new ResizeObserver(function () {
+            GlobalMap.updateSize();
+        }).observe(mapElement);
+    }
+
     var fieldExtent = [];
     var fieldLayerVisible = [];
 

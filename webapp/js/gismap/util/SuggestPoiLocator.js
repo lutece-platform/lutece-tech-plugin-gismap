@@ -13,25 +13,27 @@ var SuggestPoiLocator = function(zoom, suggestPoiParams) {
      * locateBySuggestPoi ask the suggest poi web service and diffuse their results
      */
     var locateBySuggestPoi = function() {
-        $('#addressSuggestPoi').autocomplete({
-            source: function (request, reponse) {
-                $.ajax({
-                    url: url + request.term,
-                    dataType: "jsonp",
+        var input = document.getElementById('addressSuggestPoi');
+        if (input === null) {
+            return;
+        }
+        new GisAutocomplete(input, {
+            source: function (term, reponse) {
+                GisHttp.jsonp({
+                    url: url + term,
                     data: {
                         Parms: "{\"Entites\":\"" + valEntites+ "\",\"toSrid\":\"" + valToSRID + "\"}"
                     },
                     success: function (data) {
-                        reponse($.map(getResult(data.result), function (objet) {
-                            return objet;
-                        }));
+                        reponse(getResult(data.result));
                     }
                 });
             },
-            select: function (event, ui) {
-                zoom.zoomSuggestPoi(ui.item.x, ui.item.y);
+            select: function (item) {
+                zoom.zoomSuggestPoi(item.x, item.y);
             }
-        }).focus();
+        });
+        input.focus();
     };
 
     /**

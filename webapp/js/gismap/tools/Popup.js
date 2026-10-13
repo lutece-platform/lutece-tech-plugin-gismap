@@ -127,7 +127,7 @@ var Popup = function(GlobalMap, idMap, parameters, isEditLayerPopupOnInfo) {
                         GlobalMap.getView().getResolution(),
                         GlobalMap.getView().getProjection(),
                         {'INFO_FORMAT': 'text/javascript'});
-                    $.ajax({
+                    GisHttp.jsonp({
                         url: url,
                         dataType: 'jsonp',
                         jsonpCallback: 'parseResponse',
@@ -164,7 +164,7 @@ var Popup = function(GlobalMap, idMap, parameters, isEditLayerPopupOnInfo) {
                         GlobalMap.getView().getResolution(),
                         GlobalMap.getView().getProjection(),
                         {'INFO_FORMAT': 'text/javascript'});
-                    $.ajax({
+                    GisHttp.jsonp({
                         url: urlWms,
                         dataType: 'jsonp',
                         jsonpCallback: 'parseResponse',
